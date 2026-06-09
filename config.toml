@@ -1,0 +1,32 @@
+# Vic3 Economic Analyser configuration.
+# Paths may be left blank to use auto-detection (see config.py defaults).
+
+[paths]
+# Root of the Victoria 3 game install (the folder containing `game/common/...`).
+# Leave blank to try common Steam locations.
+vic3_install = ""
+
+# Folder containing your save games (.v3). Leave blank to auto-detect
+# the default "Documents/Paradox Interactive/Victoria 3/save games".
+save_dir = ""
+
+# Optional: extra mod common/ roots to overlay on top of base game defs,
+# in load order (later overrides earlier). Usually leave empty.
+mod_dirs = []
+
+# Path to the `rakaly` melter binary, used to convert binary/ironman saves
+# to plaintext. Leave blank to look it up on PATH. If you save in plaintext
+# (save_file_format = "text" in pdx_settings.json) this is not needed.
+rakaly_bin = ""
+
+# Where the analyser stores its SQLite time-series DB and parsed-def cache.
+data_dir = ".vic3analyser"
+
+[game]
+# Your country's tag (e.g. "GBR", "USA"). Leave blank to use the
+# player-controlled country recorded in the save.
+player_tag = ""
+
+[server]
+host = "127.0.0.1"
+port = 8000

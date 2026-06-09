@@ -19,6 +19,9 @@ graphify-out/.graphify_*.json
 graphify-out/.graphify_*.txt
 graphify-out/.graphify_manifest.json
 
+# analyser runtime data (SQLite time-series + parsed-def cache)
+.vic3analyser/
+
 # OS
 .DS_Store
 Thumbs.db
