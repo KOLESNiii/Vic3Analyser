@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vic3 Economic Analyser</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <header>
+    <h1>Vic3 Economic Analyser</h1>
+    <div id="status" class="status">connecting…</div>
+  </header>
+
+  <nav id="tabs">
+    <button data-tab="recommendations" class="active">Recommendations</button>
+    <button data-tab="overview">Overview</button>
+    <button data-tab="market">Market</button>
+    <button data-tab="buildings">Buildings &amp; PMs</button>
+    <button data-tab="build">Build</button>
+    <button data-tab="states">States</button>
+    <button data-tab="construction">Construction</button>
+    <button data-tab="tech">Tech</button>
+  </nav>
+
+  <main>
+    <section id="banner" class="banner hidden"></section>
+
+    <section data-panel="recommendations" class="panel active">
+      <h2>Actionable recommendations</h2>
+      <p class="hint">Ranked by estimated value-added per week at current market prices.</p>
+      <div id="recs"></div>
+    </section>
+
+    <section data-panel="overview" class="panel">
+      <h2>Overview</h2>
+      <div class="cards" id="overview-cards"></div>
+      <canvas id="gdp-chart" height="120"></canvas>
+    </section>
+
+    <section data-panel="market" class="panel">
+      <h2>Market — shortages &amp; gluts</h2>
+      <div id="market-table"></div>
+    </section>
+
+    <section data-panel="buildings" class="panel">
+      <h2>Buildings &amp; production methods</h2>
+      <h3>Recommended PM switches</h3>
+      <div id="pm-table"></div>
+      <h3>Profitability</h3>
+      <div id="profit-table"></div>
+    </section>
+
+    <section data-panel="build" class="panel">
+      <h2>What to build</h2>
+      <div id="build-what-table"></div>
+    </section>
+
+    <section data-panel="states" class="panel">
+      <h2>Where to build</h2>
+      <div id="build-where-table"></div>
+    </section>
+
+    <section data-panel="construction" class="panel">
+      <h2>Construction</h2>
+      <div id="construction-table"></div>
+    </section>
+
+    <section data-panel="tech" class="panel">
+      <h2>Research priorities</h2>
+      <div id="tech-table"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

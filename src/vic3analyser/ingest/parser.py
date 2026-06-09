@@ -216,4 +216,8 @@ def as_list(value: Any) -> list:
         return []
     if isinstance(value, list):
         return list(value)
+    # Empty braces `{}` parse to an empty dict; for "list of tokens" fields
+    # (unlocking_technologies, production_methods, ...) that means "none".
+    if isinstance(value, dict):
+        return [] if not value else [value]
     return [value]
