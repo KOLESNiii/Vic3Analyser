@@ -1,0 +1,212 @@
+{
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/config.py": {
+    "mtime": 1781001278.3717484,
+    "ast_hash": "11d26ce63a70bce68de555963ac48ccc",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/__init__.py": {
+    "mtime": 1781001203.0579047,
+    "ast_hash": "da40ca84c08448a50c6b4881d5bba514",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/pipeline.py": {
+    "mtime": 1781002089.7402449,
+    "ast_hash": "f5fc4dc5e1ff84eb972aec3c5df123d0",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/visibility.py": {
+    "mtime": 1781001685.577302,
+    "ast_hash": "eec2af587f659c4f094dc09d54415558",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/snapshot.py": {
+    "mtime": 1781001718.557287,
+    "ast_hash": "de40bbe1c2a0a906f73e4602b72deb21",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/models.py": {
+    "mtime": 1781001621.2103386,
+    "ast_hash": "e32e168c433561842a794cefcab3239d",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/defs.py": {
+    "mtime": 1781001510.7814267,
+    "ast_hash": "0223148a5036dddd66a26b153566924c",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/parser.py": {
+    "mtime": 1781002289.2082884,
+    "ast_hash": "736697dbeb30e173721d73ed4e2855f3",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/melt.py": {
+    "mtime": 1781001464.6744742,
+    "ast_hash": "f4262e9d844fcb090ca8e46b71a0034d",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/server.py": {
+    "mtime": 1781002305.5662932,
+    "ast_hash": "c651d543345a49d1504d3342f29d72b8",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/watcher.py": {
+    "mtime": 1781002136.0842519,
+    "ast_hash": "ddbf44f96ef78fe091d00608465d7870",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/market.py": {
+    "mtime": 1781001805.5232577,
+    "ast_hash": "9de29519e3895eaf3cd2d872e2f34402",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/recommend.py": {
+    "mtime": 1781002047.4112403,
+    "ast_hash": "7f48faa773b3111b44d7416ce6647a77",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/pricing.py": {
+    "mtime": 1781001796.44126,
+    "ast_hash": "d218273095db410dbfcbca0110360a64",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/profitability.py": {
+    "mtime": 1781001817.147255,
+    "ast_hash": "6ced9760bc080f4ec3434d797bfc6ffb",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/build_what.py": {
+    "mtime": 1781001913.1322398,
+    "ast_hash": "29e687c69e2227771f26fc642d48513f",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/build_where.py": {
+    "mtime": 1781001926.9252388,
+    "ast_hash": "4647f8b4500bd9e53249a1c737a1d7c4",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/pm_optimizer.py": {
+    "mtime": 1781001837.3432505,
+    "ast_hash": "217eb1fcc83927c48e2a04736ec4f36b",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/construction.py": {
+    "mtime": 1781001951.4062376,
+    "ast_hash": "ee1c6e77c1421145237c5d6a707d7955",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/tech.py": {
+    "mtime": 1781001968.9652374,
+    "ast_hash": "e12067fae2f6283742c7e325ae897ca6",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/store/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/store/db.py": {
+    "mtime": 1781001637.8023283,
+    "ast_hash": "8a78cd62674c4e7276e61a42895f826b",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/app.js": {
+    "mtime": 1781002205.116266,
+    "ast_hash": "5eb845dde8dd06a139f454ed1aa1669b",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_snapshot.py": {
+    "mtime": 1781001736.4702797,
+    "ast_hash": "0abba13a9bc7a464467ae040fd536bd6",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_melt.py": {
+    "mtime": 1781001538.2664015,
+    "ast_hash": "c35a75ea855eea4c720b54eecf5c8caa",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/__init__.py": {
+    "mtime": 1781001231.8314428,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_analysis_extra.py": {
+    "mtime": 1781001992.2622373,
+    "ast_hash": "9bc86dbd4735a1033e473df61edd530b",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_parser.py": {
+    "mtime": 1781001386.404572,
+    "ast_hash": "21eb8f336f5937104f540ebae6cf4c48",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_recommend.py": {
+    "mtime": 1781002059.6312413,
+    "ast_hash": "ed700452407c8b3ea111b708460e9347",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_analysis_core.py": {
+    "mtime": 1781001879.6532435,
+    "ast_hash": "9f43f18db748582d8a147bfd710c0e87",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_store.py": {
+    "mtime": 1781001649.1033216,
+    "ast_hash": "8ef72cae255802a053ff3a167af0d06a",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_defs.py": {
+    "mtime": 1781001529.2664094,
+    "ast_hash": "480cd47a6ce544d28bd1a7ce12f69be5",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_api.py": {
+    "mtime": 1781002238.2942743,
+    "ast_hash": "210fb09b76abf3ad2cf789897b17e512",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/.claude/settings.json": {
+    "mtime": 1780999830.8646233,
+    "ast_hash": "87f0d903477984d0587a02f8fe185263",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/SCHEMA.md": {
+    "mtime": 1781001579.9473677,
+    "ast_hash": "b9b3ee51d1faa343c83125ed1422d8c9",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/CLAUDE.md": {
+    "mtime": 1780999830.864404,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/README.md": {
+    "mtime": 1781001241.6198208,
+    "ast_hash": "a32655ac9e0d7410d2c45216064f8b4b",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/index.html": {
+    "mtime": 1781002151.3852546,
+    "ast_hash": "004f974cbddc1c00ecc64ed20aa0aff6",
+    "semantic_hash": ""
+  }
+}
