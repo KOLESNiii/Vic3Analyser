@@ -214,7 +214,8 @@ def load_config(config_path: str | os.PathLike[str] | None = None) -> Config:
     if rakaly:
         rakaly_path: Path | None = _resolve(root, rakaly)
     else:
-        found = shutil.which("rakaly")
+        # Prefer the librakaly thin-wrapper `melter`; fall back to the rakaly CLI.
+        found = shutil.which("melter") or shutil.which("rakaly")
         rakaly_path = Path(found) if found else None
 
     mod_dirs = [_resolve(root, m) for m in p.get("mod_dirs", [])]

@@ -15,9 +15,10 @@ save_dir = "/home/kolesniii/.steam/steam/steamapps/compatdata/2912822744/pfx/dri
 # in load order (later overrides earlier). Usually leave empty.
 mod_dirs = []
 
-# Path to the `rakaly` melter binary, used to convert binary/ironman saves
-# to plaintext. Leave blank to look it up on PATH. If you save in plaintext
-# (save_file_format = "text" in pdx_settings.json) this is not needed.
+# Path to the rakaly melter binary, used to convert binary/ironman saves to
+# plaintext. Leave blank to look it up on PATH (a `melter` binary built from
+# rakaly/librakaly is preferred, else the `rakaly` CLI). If you save in
+# plaintext (save_file_format = "text" in pdx_settings.json) this is not needed.
 rakaly_bin = ""
 
 # Where the analyser stores its SQLite time-series DB and parsed-def cache.

@@ -6,17 +6,26 @@ A ``.v3`` save can be:
   directly, no external tool needed;
 * a **zip** container holding ``meta`` + ``gamestate`` members, which may
   themselves be plaintext or binary-tokenised;
-* a **binary** save (default ``zip_binary_all``, including ironman) — needs the
-  `rakaly <https://github.com/rakaly/cli>`_ melter to convert tokens to text.
+* a **binary** save (default ``zip_binary_all``, including ironman) — needs a
+  `rakaly <https://github.com/rakaly>`_ melter to convert tokens to text.
 
 This module decides which case applies and returns plaintext for the gamestate
 (and, when available, the meta block).
+
+The melter is an external binary configured as ``paths.rakaly_bin``. Two forms
+are supported, picked by the binary's name:
+
+* the librakaly thin-wrapper **melter** (recommended) — built from
+  ``rakaly/librakaly``'s sample wrapper, which has explicit ``parseVic3``
+  support; invoked as ``melter save <file>``;
+* the standalone **rakaly** CLI (``rakaly/cli``); invoked as
+  ``rakaly melt --to-stdout --format vic3 ...``.
 
 .. note::
    The exact byte layout of the ``.v3`` header is version-specific and best
    confirmed against a real save (see the Phase 1 schema-discovery task). The
    heuristics here are conservative: anything that doesn't clearly look like
-   text is handed to ``rakaly``, which understands the container and binary
+   text is handed to the melter, which understands the container and binary
    tokens natively.
 """
 
@@ -65,32 +74,46 @@ def _decode(data: bytes) -> str:
         return data.decode("latin-1")
 
 
+def _melt_cmd(melter: Path, path: Path) -> list[str]:
+    """Build the melt command line for whichever melter binary is configured.
+
+    The librakaly thin-wrapper (``melter save <file>``) is the default; a binary
+    whose name contains ``rakaly`` is treated as the standalone CLI instead.
+    """
+    if "rakaly" in melter.name.lower():
+        return [
+            str(melter),
+            "melt",
+            "--to-stdout",
+            "--format",
+            "vic3",
+            "--unknown-key",
+            "stringify",
+            str(path),
+        ]
+    # librakaly thin-wrapper melter: `melter save <file>` writes the melted
+    # gamestate to stdout (diagnostics, e.g. unknown tokens, go to stderr).
+    return [str(melter), "save", str(path)]
+
+
 def _run_rakaly(path: Path, cfg: Config) -> str:
-    rakaly = cfg.paths.rakaly_bin
-    if rakaly is None:
+    melter = cfg.paths.rakaly_bin
+    if melter is None:
         raise MeltError(
-            "Save appears to be binary/ironman but the `rakaly` melter was not "
-            "found. Install it (https://github.com/rakaly/cli) and put it on "
+            "Save appears to be binary/ironman but no rakaly melter was found. "
+            "Build the librakaly `melter` (https://github.com/rakaly/librakaly) "
+            "or install the rakaly CLI (https://github.com/rakaly/cli), put it on "
             "PATH or set paths.rakaly_bin in config.toml — or set "
             'save_file_format = "text" in your Victoria 3 pdx_settings.json.'
         )
-    cmd = [
-        str(rakaly),
-        "melt",
-        "--to-stdout",
-        "--format",
-        "vic3",
-        "--unknown-key",
-        "stringify",
-        str(path),
-    ]
+    cmd = _melt_cmd(melter, path)
     try:
         proc = subprocess.run(cmd, capture_output=True, check=True)
-    except FileNotFoundError as exc:  # rakaly path invalid
-        raise MeltError(f"Could not execute rakaly at {rakaly}: {exc}") from exc
+    except FileNotFoundError as exc:  # melter path invalid
+        raise MeltError(f"Could not execute melter at {melter}: {exc}") from exc
     except subprocess.CalledProcessError as exc:
         stderr = exc.stderr.decode("utf-8", "replace")[:2000]
-        raise MeltError(f"rakaly melt failed (exit {exc.returncode}): {stderr}") from exc
+        raise MeltError(f"melt failed (exit {exc.returncode}): {stderr}") from exc
     return _decode(proc.stdout)
 
 

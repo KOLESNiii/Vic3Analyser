@@ -10,8 +10,8 @@ queue, researched techs). It does **not** read AI strategic plans or hidden stat
 ## How it works
 
 1. Watches your Victoria 3 autosave folder.
-2. On each new save: melts it to plaintext (via [rakaly](https://github.com/rakaly/cli) for binary/ironman
-   saves), parses it, and extracts your country's economic state.
+2. On each new save: melts it to plaintext (via a [rakaly](https://github.com/rakaly) melter for
+   binary/ironman saves), parses it, and extracts your country's economic state.
 3. Joins that dynamic state with the static game rules from your install's `common/`
    (`building_types`, `production_methods`, `goods`, `technology`) to compute counterfactuals.
 4. Serves an interactive dashboard on `http://127.0.0.1:8000` with analysis + a ranked action list.
@@ -49,9 +49,29 @@ uv sync
 uv run vic3analyser
 ```
 
-For binary/ironman saves, install the `rakaly` CLI and put it on PATH (or set `rakaly_bin` in
-`config.toml`). Alternatively set `save_file_format = "text"` in your Vic3 `pdx_settings.json` to skip
-melting.
+### Melting binary/ironman saves
+
+Binary saves (the `zip_binary_all` default, including ironman) must be melted to plaintext first. The
+analyser shells out to an external [rakaly](https://github.com/rakaly) melter for this. Two options,
+auto-detected on PATH (`melter` preferred, then `rakaly`) or set explicitly via `rakaly_bin` in
+`config.toml`:
+
+- **`melter` (recommended).** Build the small thin wrapper from
+  [rakaly/librakaly](https://github.com/rakaly/librakaly): grab `rakaly.h` and the prebuilt library
+  from its Releases, drop in the sample `melter.cpp`, and compile:
+
+  ```bash
+  g++ -std=c++17 melter.cpp -I. -L. -lrakaly -o melter   # add -lpthread -ldl -lm on Linux
+  ```
+
+  This wrapper has explicit Vic3 support (`rakaly::parseVic3`) and handles the `.v3` container
+  natively. The analyser invokes it as `melter save <file>`.
+
+- **`rakaly` CLI.** Alternatively install the standalone [rakaly CLI](https://github.com/rakaly/cli);
+  it shares the same Rust core and also supports Vic3 (`rakaly melt --format vic3`).
+
+Either way, if you'd rather skip melting entirely, set `save_file_format = "text"` in your Vic3
+`pdx_settings.json` so the game writes plaintext saves.
 
 ## Status
 
