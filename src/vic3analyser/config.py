@@ -8,6 +8,7 @@ Linux, Windows and macOS.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 from dataclasses import dataclass, field
@@ -57,45 +58,111 @@ class Config:
 
 # --- auto-detection ---------------------------------------------------------
 
+# Victoria 3's Steam application id, used to locate the game under
+# ``steamapps/common`` and its Proton prefix under ``steamapps/compatdata``.
+VIC3_APP_ID = "529340"
+GAME_FOLDER = "Victoria 3"
+# Tail of the save-games path relative to a (Windows) "Documents" folder.
+SAVE_TAIL = Path("Paradox Interactive/Victoria 3/save games")
+
+
 def _home() -> Path:
     return Path.home()
 
 
-def _candidate_installs() -> list[Path]:
+def _steam_roots() -> list[Path]:
+    """Base Steam install directories to probe, OS-dependent."""
     home = _home()
-    cands: list[Path] = []
     if sys.platform.startswith("linux"):
-        cands += [
-            home / ".steam/steam/steamapps/common/Victoria 3",
-            home / ".local/share/Steam/steamapps/common/Victoria 3",
-            home / ".var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/Victoria 3",
+        return [
+            home / ".steam/steam",
+            home / ".steam/root",
+            home / ".local/share/Steam",
+            home / ".var/app/com.valvesoftware.Steam/data/Steam",
         ]
-    elif sys.platform == "darwin":
-        cands += [
-            home / "Library/Application Support/Steam/steamapps/common/Victoria 3",
+    if sys.platform == "darwin":
+        return [home / "Library/Application Support/Steam"]
+    if sys.platform.startswith("win"):
+        return [
+            Path("C:/Program Files (x86)/Steam"),
+            Path("C:/Program Files/Steam"),
         ]
-    elif sys.platform.startswith("win"):
-        cands += [
-            Path("C:/Program Files (x86)/Steam/steamapps/common/Victoria 3"),
-            Path("C:/Program Files/Steam/steamapps/common/Victoria 3"),
-        ]
+    return []
+
+
+def _steam_libraries() -> list[Path]:
+    """All Steam library folders, including extra drives/dirs the user added.
+
+    Each Steam install records every library folder in
+    ``steamapps/libraryfolders.vdf``; games may live in any of them rather than
+    the primary install. We parse the (loosely-structured) VDF for ``"path"``
+    entries and always include the roots themselves as a fallback.
+    """
+    libs: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(p: Path) -> None:
+        try:
+            rp = p.resolve()
+        except OSError:
+            rp = p
+        if rp not in seen:
+            seen.add(rp)
+            libs.append(p)
+
+    for root in _steam_roots():
+        add(root)
+        vdf = root / "steamapps" / "libraryfolders.vdf"
+        if not vdf.is_file():
+            continue
+        try:
+            text = vdf.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        # Lines look like:   "path"   "/mnt/games/SteamLibrary"
+        for match in re.finditer(r'"path"\s*"([^"]+)"', text):
+            add(Path(match.group(1).replace("\\\\", "/").replace("\\", "/")))
+    return libs
+
+
+def _candidate_installs() -> list[Path]:
+    cands: list[Path] = []
+    for lib in _steam_libraries():
+        cands.append(lib / "steamapps" / "common" / GAME_FOLDER)
     return cands
+
+
+def _proton_documents() -> list[Path]:
+    """`Documents` folders inside the Proton/Wine prefix for Victoria 3.
+
+    When the Windows build runs through Proton on Linux, the game writes saves
+    into its compatdata prefix rather than the native ``~/.local/share`` tree.
+    """
+    docs: list[Path] = []
+    users = ("steamuser", os.environ.get("USER") or "")
+    for lib in _steam_libraries():
+        pfx = lib / "steamapps" / "compatdata" / VIC3_APP_ID / "pfx" / "drive_c" / "users"
+        for user in users:
+            if user:
+                docs.append(pfx / user / "Documents")
+    return docs
 
 
 def _candidate_save_dirs() -> list[Path]:
     home = _home()
-    pdx = "Paradox Interactive/Victoria 3/save games"
     cands: list[Path] = []
     if sys.platform.startswith("linux"):
+        # Native Linux build writes here ...
         cands += [
-            home / ".local/share" / pdx,
-            home / "Documents" / pdx,
-            # Proton / Steam compatdata path is install-specific; skip auto-probe.
+            home / ".local/share" / SAVE_TAIL,
+            home / "Documents" / SAVE_TAIL,
         ]
+        # ... while the Windows build under Proton writes into its prefix.
+        cands += [docs / SAVE_TAIL for docs in _proton_documents()]
     elif sys.platform == "darwin":
-        cands += [home / "Documents" / pdx]
+        cands += [home / "Documents" / SAVE_TAIL]
     elif sys.platform.startswith("win"):
-        cands += [home / "Documents" / pdx]
+        cands += [home / "Documents" / SAVE_TAIL]
     return cands
 
 

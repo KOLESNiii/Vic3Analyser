@@ -6,8 +6,9 @@
 # Leave blank to try common Steam locations.
 vic3_install = ""
 
-# Folder containing your save games (.v3). Leave blank to auto-detect
-# the default "Documents/Paradox Interactive/Victoria 3/save games".
+# Folder containing your save games (.v3). Leave blank to auto-detect.
+# Auto-detection covers native Windows/macOS/Linux locations and the
+# Proton prefix on Linux (steamapps/compatdata/529340/.../save games).
 save_dir = ""
 
 # Optional: extra mod common/ roots to overlay on top of base game defs,

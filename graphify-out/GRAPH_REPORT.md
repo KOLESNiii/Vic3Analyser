@@ -1,16 +1,16 @@
 # Graph Report - analyser  (2026-06-09)
 
 ## Corpus Check
-- 41 files · ~13,728 words
+- 41 files · ~14,004 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 446 nodes · 1165 edges · 26 communities (23 shown, 3 thin omitted)
+- 454 nodes · 1181 edges · 26 communities (23 shown, 3 thin omitted)
 - Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 250 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d430037b`
+- Built from commit: `54e06254`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -67,24 +67,24 @@ Cohesion: 0.16
 Nodes (52): BaseModel, ConstructionState, CountryEconomy, ActivePM, Building, ConstructionItem, ConstructionState, CountryEconomy (+44 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.07
-Nodes (42): analyse_where_to_build(), _free_arable(), _norm(), Where to build: rank the player's states by capacity to host new economic buildi, StateCapacity, analyse_construction(), ConstructionReport, QueueItemAnalysis (+34 more)
+Cohesion: 0.08
+Nodes (38): analyse_what_to_build(), _best_available_pm(), BuildCandidate, _mean_signal(), What to build: rank building types by projected value-added at current prices, w, analyse_where_to_build(), _free_arable(), _norm() (+30 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.08
-Nodes (31): AppState, create_app(), main(), FastAPI server: serves the dashboard and analysis API, and watches the autosave, Holds shared, mutable server state behind a lock., Process one save (thread-safe). Returns the snapshot date., On startup, ingest the newest save already in the folder., Watchdog handler that fires on new/updated ``.v3`` saves.  Saves are large and w (+23 more)
+Cohesion: 0.11
+Nodes (15): AppState, Holds shared, mutable server state behind a lock., Process one save (thread-safe). Returns the snapshot date., On startup, ingest the newest save already in the folder., Watchdog handler that fires on new/updated ``.v3`` saves.  Saves are large and w, SaveHandler, FileSystemEvent, FileSystemEventHandler (+7 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.08
-Nodes (39): analyse_what_to_build(), _best_available_pm(), BuildCandidate, _mean_signal(), What to build: rank building types by projected value-added at current prices, w, GoodsValue, market_map(), price_of() (+31 more)
+Nodes (36): analyse_market(), GoodSignal, MarketReport, Market analysis: which goods are in shortage (expensive) or glut (cheap).  A sho, GoodsValue, market_map(), price_of(), Shared economic helpers for valuing goods flows at current market prices.  All f (+28 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.12
-Nodes (26): _category_files(), _common_roots(), GameDefs, _good_from_modifier(), _load_category(), load_defs(), _manifest(), Load the static game-rule definitions from a Victoria 3 ``common/`` tree.  These (+18 more)
+Cohesion: 0.18
+Nodes (19): _category_files(), _common_roots(), GameDefs, _good_from_modifier(), _load_category(), load_defs(), _manifest(), Load the static game-rule definitions from a Victoria 3 ``common/`` tree.  These (+11 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.12
-Nodes (25): coerce_key(), coerce_scalar(), parse(), _Parser, Parse Clausewitz text into a nested dict., Return significant tokens (whitespace and comments stripped)., Convert a bare/quoted token to a native Python scalar., _tokenize() (+17 more)
+Cohesion: 0.09
+Nodes (32): coerce_key(), coerce_scalar(), _MultiList, parse(), parse_file(), _Parser, A parser for the Clausewitz/Jomini text format used by Paradox files.  Handles t, A list produced by collapsing duplicate keys (vs an array literal). (+24 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.15
@@ -103,8 +103,8 @@ Cohesion: 0.36
 Nodes (17): $(), drawGdp(), el(), fmt(), refreshAnalysis(), refreshStatus(), renderBuildWhat(), renderBuildWhere() (+9 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.22
-Nodes (8): Connection, Path, Snapshot, str, SQLite time-series store for extracted snapshots.  Each snapshot is stored whole, Insert or replace a snapshot (idempotent on player_tag+date)., Return denormalised headline metrics over time for charting.          ``metrics`, SnapshotStore
+Cohesion: 0.27
+Nodes (7): Connection, Path, Snapshot, str, Insert or replace a snapshot (idempotent on player_tag+date)., Return denormalised headline metrics over time for charting.          ``metrics`, SnapshotStore
 
 ### Community 11 - "Community 11"
 Cohesion: 0.15
@@ -115,8 +115,8 @@ Cohesion: 0.29
 Nodes (12): _as_int(), _country_database(), _find_country_by_tag(), _is_int(), Enforce the player-visibility rule and resolve which country is the player.  The, Return ``(country_id, tag)`` for the player country.      Resolution order: conf, resolve_player(), _tag_of() (+4 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.50
-Nodes (8): _defs(), _market(), _snap(), test_construction_payback_and_suggestions(), test_tech_priorities_uplift(), test_what_to_build_demand_weighting(), test_what_to_build_ranks_and_filters(), test_where_to_build_ranking()
+Cohesion: 0.09
+Nodes (40): create_app(), main(), FastAPI server: serves the dashboard and analysis API, and watches the autosave, FastAPI, PathLike, SnapshotStore, Path, str (+32 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.33
@@ -138,12 +138,12 @@ Nodes (3): _defs(), _snap(), test_recommendations_include_categories_and_rank()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Snapshot` connect `Community 0` to `Community 8`, `Community 1`, `Community 10`, `Community 3`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
-- **Why does `parse()` connect `Community 5` to `Community 1`, `Community 4`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
-- **Why does `GameDefs` connect `Community 4` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 6`, `Community 8`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+- **Why does `Snapshot` connect `Community 0` to `Community 8`, `Community 1`, `Community 3`, `Community 13`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+- **Why does `Config` connect `Community 13` to `Community 0`, `Community 4`, `Community 6`, `Community 7`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+- **Why does `parse()` connect `Community 5` to `Community 13`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 21 inferred relationships involving `Snapshot` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
   _`Snapshot` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 21 inferred relationships involving `MarketGood` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
