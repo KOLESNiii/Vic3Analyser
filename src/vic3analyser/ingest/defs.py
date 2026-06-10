@@ -31,16 +31,17 @@ from typing import Any
 from ..config import Config
 from .parser import as_list, parse_file
 
-# category -> path relative to the common/ dir
+# category -> path relative to the common/ dir. NB: building *types* are defined
+# under common/buildings/ (not common/building_types/).
 _CATEGORY_DIRS = {
     "goods": "goods",
     "production_methods": "production_methods",
     "production_method_groups": "production_method_groups",
-    "building_types": "building_types",
+    "building_types": "buildings",
     "technologies": "technology/technologies",
 }
 
-_CACHE_VERSION = 1
+_CACHE_VERSION = 2
 
 
 @dataclass
@@ -102,6 +103,11 @@ class GameDefs:
     def building_pm_groups(self, building: str) -> list[str]:
         bt = self.building_types.get(building, {})
         return [str(g) for g in as_list(bt.get("production_method_groups"))]
+
+    def building_unlocking_techs(self, building: str) -> list[str]:
+        """Technologies required before this building type can be built."""
+        bt = self.building_types.get(building, {})
+        return [str(t) for t in as_list(bt.get("unlocking_technologies"))]
 
     def group_pms(self, group: str) -> list[str]:
         grp = self.production_method_groups.get(group, {})

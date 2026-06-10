@@ -85,6 +85,8 @@ tr:hover td { background: var(--panel-2); }
 .tag { font-size: 11px; padding: 2px 6px; border-radius: 4px; background: var(--panel-2); color: var(--muted); }
 .tag.shortage { color: #f0c674; }
 .tag.glut { color: var(--bad); }
+/* High price but no producer the player can build yet (e.g. aeroplanes in 1836). */
+.tag.locked { color: var(--muted); border: 1px solid var(--border); opacity: 0.7; }
 .tag.est { color: var(--muted); border: 1px dashed var(--border); }
 
 .cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }

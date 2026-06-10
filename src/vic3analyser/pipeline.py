@@ -11,7 +11,7 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
 
-from .analysis.build_what import analyse_what_to_build
+from .analysis.build_what import analyse_what_to_build, producible_goods
 from .analysis.build_where import analyse_where_to_build
 from .analysis.construction import analyse_construction
 from .analysis.market import analyse_market
@@ -56,9 +56,18 @@ def _ser(obj: Any) -> Any:
     return obj
 
 
+def _ser_good(g: Any) -> dict[str, Any]:
+    """Serialise a GoodSignal including its computed ``status`` (asdict drops
+    properties, and the dashboard's market table renders ``status``)."""
+    d = _ser(g)
+    d["status"] = g.status
+    return d
+
+
 def analyse_all(snap: Snapshot, defs: GameDefs) -> dict[str, Any]:
     """Run every analysis and return one JSON-able payload."""
-    market = analyse_market(snap)
+    producible = producible_goods(snap, defs)
+    market = analyse_market(snap, producible)
     return {
         "date": snap.date,
         "player_tag": snap.player_tag,
@@ -66,9 +75,9 @@ def analyse_all(snap: Snapshot, defs: GameDefs) -> dict[str, Any]:
         "source": snap.source,
         "country": snap.country.model_dump(),
         "market": {
-            "goods": _ser(market.goods),
-            "shortages": _ser(market.shortages),
-            "gluts": _ser(market.gluts),
+            "goods": [_ser_good(g) for g in market.goods],
+            "shortages": [_ser_good(g) for g in market.shortages],
+            "gluts": [_ser_good(g) for g in market.gluts],
         },
         "profitability": _ser(analyse_profitability(snap, defs)),
         "pm_switches": _ser(analyse_pm_switches(snap, defs)),

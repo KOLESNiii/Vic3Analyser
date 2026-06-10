@@ -23,13 +23,16 @@ class GoodSignal:
     supply: float | None
     demand: float | None
     signal: float  # >0 shortage, <0 glut
+    actionable: bool = True  # can the player produce this good now?
 
     @property
     def status(self) -> str:
         if self.price_ratio is None:
             return "unknown"
         if self.price_ratio >= 1.10:
-            return "shortage"
+            # A "shortage" in a good the player can't produce yet (no unlocked
+            # producer) is locked, not an opportunity — e.g. aeroplanes in 1836.
+            return "shortage" if self.actionable else "locked"
         if self.price_ratio <= 0.90:
             return "glut"
         return "balanced"
@@ -48,7 +51,12 @@ class MarketReport:
         return [g for g in self.goods if g.status == "glut"]
 
 
-def analyse_market(snap: Snapshot) -> MarketReport:
+def analyse_market(snap: Snapshot, producible: set[str] | None = None) -> MarketReport:
+    """Classify every traded good's price signal.
+
+    ``producible`` (goods the player can make now) marks which shortages are
+    actionable; when omitted, all are treated as actionable.
+    """
     signals: list[GoodSignal] = []
     for mg in snap.market:
         signals.append(
@@ -60,6 +68,7 @@ def analyse_market(snap: Snapshot) -> MarketReport:
                 supply=mg.supply,
                 demand=mg.demand,
                 signal=shortage_score(mg),
+                actionable=(producible is None or mg.good in producible),
             )
         )
     # Most acute shortages first, then gluts.

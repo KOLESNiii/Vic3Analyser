@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 
 from ..extract.models import Snapshot
 from ..ingest.defs import GameDefs
-from .build_what import analyse_what_to_build
+from .build_what import analyse_what_to_build, producible_goods
 from .build_where import analyse_where_to_build
 from .construction import analyse_construction
 from .market import analyse_market
@@ -112,9 +112,13 @@ def build_recommendations(
             )
         )
 
-    # 5. Market context: most acute shortages (lower direct impact weight).
+    # 5. Market context: acute shortages — but only for goods the player can
+    # actually produce. A shortage in a good nobody can make yet (aeroplanes in
+    # 1836, pegged at the price ceiling) is not an action, just noise.
     market = analyse_market(snap)
-    for g in market.shortages[:3]:
+    producible = producible_goods(snap, defs)
+    actionable = [g for g in market.shortages if g.good in producible]
+    for g in actionable[:3]:
         recs.append(
             Recommendation(
                 category="market",

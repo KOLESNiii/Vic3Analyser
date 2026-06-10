@@ -54,7 +54,7 @@ state_manager = {
 
 def _make_install(tmp_path: Path) -> Path:
     common = tmp_path / "game" / "common"
-    for sub in ("goods", "production_methods", "production_method_groups", "building_types"):
+    for sub in ("goods", "production_methods", "production_method_groups", "buildings"):
         (common / sub).mkdir(parents=True)
     (common / "technology" / "technologies").mkdir(parents=True)
     (common / "goods" / "g.txt").write_text("iron = { cost = 40 }\nsteel = { cost = 70 }")
@@ -71,7 +71,7 @@ def _make_install(tmp_path: Path) -> Path:
     (common / "production_method_groups" / "g.txt").write_text(
         "pmg_steel = { production_methods = { pm_basic_steel pm_automated_steel } }"
     )
-    (common / "building_types" / "b.txt").write_text(
+    (common / "buildings" / "b.txt").write_text(
         "building_steel_mills = { production_method_groups = { pmg_steel } }"
     )
     return tmp_path

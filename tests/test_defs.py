@@ -9,7 +9,7 @@ def _make_install(tmp_path: Path) -> Path:
     (common / "goods").mkdir(parents=True)
     (common / "production_methods").mkdir(parents=True)
     (common / "production_method_groups").mkdir(parents=True)
-    (common / "building_types").mkdir(parents=True)
+    (common / "buildings").mkdir(parents=True)
     (common / "technology" / "technologies").mkdir(parents=True)
 
     (common / "goods" / "00_goods.txt").write_text(
@@ -47,7 +47,7 @@ def _make_install(tmp_path: Path) -> Path:
         }
         """
     )
-    (common / "building_types" / "01.txt").write_text(
+    (common / "buildings" / "01.txt").write_text(
         """
         building_steel_mills = {
             production_method_groups = { pmg_base_building_steel_mills }

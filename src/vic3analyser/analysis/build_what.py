@@ -51,6 +51,10 @@ def analyse_what_to_build(snap: Snapshot, defs: GameDefs) -> list[BuildCandidate
         groups = defs.building_pm_groups(btype)
         if not groups:
             continue
+        # Gate on the building's *own* unlocking techs — not just its PMs'. A
+        # building the player can't build yet is not an actionable suggestion.
+        if any(t not in researched for t in defs.building_unlocking_techs(btype)):
+            continue
         total_value = 0.0
         best_pms: list[str] = []
         all_outputs: dict[str, float] = {}
@@ -108,3 +112,26 @@ def _mean_signal(goods: dict[str, float], market) -> float:
         if mg is not None:
             signals.append(shortage_score(mg))
     return sum(signals) / len(signals) if signals else 0.0
+
+
+def producible_goods(snap: Snapshot, defs: GameDefs) -> set[str]:
+    """Goods the player can actually produce now.
+
+    A good is producible if some building the player can build (its unlocking
+    techs are researched) has an available PM that outputs it. This is what
+    separates a real shortage ("build a factory and cash in") from a fake one
+    (aeroplanes in 1836 — pegged at the price ceiling because *nobody* can make
+    them yet).
+    """
+    market = market_map(snap)
+    researched = set(snap.tech.researched)
+    out: set[str] = set()
+    for btype in defs.building_types:
+        if any(t not in researched for t in defs.building_unlocking_techs(btype)):
+            continue
+        for group in defs.building_pm_groups(btype):
+            pm = _best_available_pm(defs.group_pms(group), researched, defs, market)
+            if pm is None:
+                continue
+            out.update(defs.pm_goods(pm)["output"])
+    return out
