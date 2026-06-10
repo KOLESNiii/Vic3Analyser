@@ -76,9 +76,9 @@ def build_snapshot(
     country = _extract_country(gamestate, player_id, tag)
     market = _extract_market(gamestate, defs)
     buildings = _extract_buildings(gamestate, player_id)
-    states = _extract_states(gamestate, player_id)
+    states = _extract_states(gamestate, player_id, defs)
     tech = _extract_tech(gamestate, player_id)
-    construction = _extract_construction(gamestate, player_id)
+    construction = _extract_construction(gamestate, player_id, buildings)
 
     return Snapshot(
         date=date,
@@ -188,6 +188,7 @@ def _extract_market(gamestate: dict, defs: GameDefs) -> list[MarketGood]:
                 good=good_name,
                 price=price,
                 base_price=defs.good_base_price(good_name),
+                category=defs.good_category(good_name),
             )
         )
     return goods
@@ -253,7 +254,7 @@ def _extract_buildings(gamestate: dict, player_id: int | None) -> list[Building]
     return out
 
 
-def _extract_states(gamestate: dict, player_id: int | None) -> list[StateInfo]:
+def _extract_states(gamestate: dict, player_id: int | None, defs: GameDefs) -> list[StateInfo]:
     sdb = _db(_first(gamestate, "state_manager", "states", default={}))
     out: list[StateInfo] = []
     for sid, s in sdb.items():
@@ -271,18 +272,24 @@ def _extract_states(gamestate: dict, player_id: int | None) -> list[StateInfo]:
                 _first(stats, "population_upper_strata"),
             ]
         )
+        region = _first(s, "region", "name")
         out.append(
             StateInfo(
                 id=int_or(sid),
-                name=_first(s, "region", "name"),
+                name=region,
                 population=int_or(pop),
                 workforce=int_or(_first(stats, "population_salaried_workforce")),
                 # State-level unemployment isn't stored as a scalar in the save.
                 unemployment=int_or(_first(s, "unemployment")),
                 infrastructure=_num(_first(s, "infrastructure")),
                 infrastructure_used=_num(_first(s, "infrastructure_usage", "infrastructure_used")),
+                # The save's ``arable_land`` is land already in use; the total
+                # capacity comes from the static state-region definition.
                 arable_land=int_or(_first(s, "arable_land")),
-                arable_used=int_or(_first(s, "arable_used")),
+                arable_used=int_or(_first(s, "arable_land")),
+                arable_total=defs.region_arable(region),
+                arable_buildings=defs.region_arable_buildings(region),
+                capped_resources=defs.region_capped_resources(region),
             )
         )
     return out
@@ -302,15 +309,27 @@ def _extract_tech(gamestate: dict, player_id: int | None) -> TechState:
     return TechState(researched=researched, available=[])
 
 
-def _extract_construction(gamestate: dict, player_id: int | None) -> ConstructionState:
+def _extract_construction(
+    gamestate: dict, player_id: int | None, buildings: list[Building]
+) -> ConstructionState:
     c = _country_record(gamestate, player_id)
-    cnode = _first(c, "construction", "government_queue", default={}) or {}
-    points = _num(_first(cnode, "construction_points", "points_per_week"))
+    cnode = _first(c, "government_queue", "construction", default={}) or {}
+    elements = as_list(
+        _first(cnode, "construction_elements", "queue", "elements", default=[])
+    )
+
     queue: list[ConstructionItem] = []
-    for item in as_list(_first(cnode, "queue", "elements", default=[])):
+    # The country's construction throughput is the rate applied to the queue —
+    # every element reports the same country-wide ``construction_speed``; the
+    # max is the pool. (No standalone points/week scalar is stored.)
+    speed = 0.0
+    for item in as_list(elements):
         if not isinstance(item, dict):
             continue
-        btype = _first(item, "building_type", "type", "building")
+        spd = _num(_first(item, "construction_speed", "base_construction_speed"))
+        if spd is not None:
+            speed = max(speed, spd)
+        btype = _first(item, "type", "building_type", "building")
         if btype is None:
             continue
         queue.append(
@@ -318,10 +337,31 @@ def _extract_construction(gamestate: dict, player_id: int | None) -> Constructio
                 building_type=str(btype),
                 state_id=int_or(_first(item, "state", "state_id")),
                 levels=int(_num(_first(item, "levels", default=1)) or 1),
-                remaining_cost=_num(_first(item, "remaining_cost", "cost")),
+                remaining_cost=_num(
+                    _first(item, "construction_left", "remaining_cost", "cost")
+                ),
             )
         )
-    return ConstructionState(points_per_week=points, queue=queue)
+
+    points = speed if speed > 0 else _num(_first(cnode, "construction_points"))
+
+    # Construction-sector levels (for modelling capacity expansion). One level
+    # contributes roughly the whole current pool ÷ levels.
+    sector_levels = sum(
+        max(b.level, 0)
+        for b in buildings
+        if b.building_type == "building_construction_sector"
+    )
+    per_level = (
+        (points / sector_levels) if (points and sector_levels) else None
+    )
+
+    return ConstructionState(
+        points_per_week=points,
+        queue=queue,
+        sector_levels=sector_levels or None,
+        points_per_sector_level=per_level,
+    )
 
 
 def int_or(value: Any, default: int | None = None) -> int | None:

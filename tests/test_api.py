@@ -54,10 +54,19 @@ state_manager = {
 
 def _make_install(tmp_path: Path) -> Path:
     common = tmp_path / "game" / "common"
-    for sub in ("goods", "production_methods", "production_method_groups", "buildings"):
+    for sub in ("goods", "production_methods", "production_method_groups", "buildings", "script_values"):
         (common / sub).mkdir(parents=True)
     (common / "technology" / "technologies").mkdir(parents=True)
-    (common / "goods" / "g.txt").write_text("iron = { cost = 40 }\nsteel = { cost = 70 }")
+    (tmp_path / "game" / "map_data" / "state_regions").mkdir(parents=True)
+    (common / "goods" / "g.txt").write_text(
+        """
+        iron = { cost = 40 category = industrial traded_quantity = 10 }
+        steel = { cost = 70 category = industrial traded_quantity = 10 }
+        """
+    )
+    (common / "script_values" / "building_values.txt").write_text(
+        "construction_cost_medium = 400"
+    )
     (common / "production_methods" / "p.txt").write_text(
         """
         pm_basic_steel = { unlocking_technologies = {}
@@ -72,7 +81,16 @@ def _make_install(tmp_path: Path) -> Path:
         "pmg_steel = { production_methods = { pm_basic_steel pm_automated_steel } }"
     )
     (common / "buildings" / "b.txt").write_text(
-        "building_steel_mills = { production_method_groups = { pmg_steel } }"
+        """
+        building_steel_mills = {
+            production_method_groups = { pmg_steel }
+            building_group = bg_heavy_industry
+            required_construction = construction_cost_medium
+        }
+        """
+    )
+    (tmp_path / "game" / "map_data" / "state_regions" / "r.txt").write_text(
+        "STATE_LONDON = { arable_land = 0 capped_resources = {} }"
     )
     return tmp_path
 
@@ -118,6 +136,16 @@ def test_full_api_flow(tmp_path):
 
         series = client.get("/api/series", params={"player_tag": "GBR"}).json()
         assert series and series[0]["gdp"] == 500.0
+
+        strategy = client.get(
+            "/api/strategy",
+            params={"horizon": 6, "effort": 0, "objective": "composite"},
+        )
+        assert strategy.status_code == 200, strategy.text
+        payload = strategy.json()
+        assert payload["summary"]["horizon_months"] == 6
+        assert "build_order" in payload
+        assert "series" in payload and len(payload["series"]["months"]) == 6
 
 
 def test_on_demand_analysis(tmp_path):

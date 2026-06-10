@@ -35,7 +35,8 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
 | Technology | top-level `technology.database[]` | each entry `{country=<id>, acquired_technologies={...}}`; researchable set is derived, not stored |
 | Country trends | `<country>.{gdp,literacy,avgsoltrend}` | GraphData blocks (`channels[].values`); latest value is current |
 | Budget | `<country>.budget` | `money` (treasury), `credit`, `weekly_income`/`weekly_expenses` (category arrays, summed), `balance_trend.current` |
-| Construction queue | _not found_ | empty at turn 0; no stored points/queue scalar located — still unmapped |
+| Construction queue | `<country>.government_queue.construction_elements[]` | queued type/state/cost; `construction_speed` on elements gives current country construction points/week when a queue exists |
+| Static state regions | `map_data/state_regions/*.txt` | `arable_land`, `arable_resources`, `capped_resources` define visible land/deposit limits for state placement |
 
 ## Fields the analysis needs (per area)
 
@@ -59,14 +60,54 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
 
 ### Where to build (`analysis/build_where.py`)
 * per state: infrastructure (used vs available), market access, arable land /
-  resource capacity (`*_resource` caps), local unemployment, building slots.
+  resource capacity (`map_data/state_regions.capped_resources`), local
+  unemployment, building slots.
 
 ### Construction (`analysis/construction.py`)
-* construction points/week, queue contents, per-item cost → ROI ordering.
+* construction points/week from active queue element `construction_speed`, queue
+  contents from `government_queue.construction_elements[]`, per-item cost → ROI
+  ordering. If no queue exists, the save may not expose a points/week scalar and
+  the strategy engine falls back to a user-overridable estimate.
 
 ### Tech (`analysis/tech.py`)
 * researched set + available techs → which unlock high-margin PMs or throughput
   bonuses for buildings the player operates.
+
+### Strategy & forecast (`analysis/econ_model.py`, `simulate.py`, `optimize.py`, `strategy.py`)
+System-level optimization/forecasting. Static game-rule inputs it relies on, all
+from `common/` (loaded by `ingest/defs.py`):
+
+* **`goods.<g>.traded_quantity`** — reference market depth, the relative
+  yardstick for how much added supply/demand moves a good's price.
+* **`goods.<g>.category`** — to detect consumer goods (`staple`/`luxury`) for the
+  standard-of-living proxy.
+* **`building_types.<b>.required_construction`** — construction points per level.
+  Usually a *named alias* (e.g. `construction_cost_very_high`) resolved through
+  `common/script_values` (newly loaded into `GameDefs.script_values`).
+* **`building_types.<b>.building_group`** — classifies resource/land-gated
+  buildings (`bg_mining`, `bg_agriculture`, …) vs urban industry.
+* **`map_data/state_regions.<state>.arable_land`** and
+  **`capped_resources`** — hard state capacity for farms/plantations/ranches and
+  extractive buildings. The optimizer enforces country-level remaining capacity;
+  the report allocates levels back to feasible state slices.
+* **PM `building_employment_<poptype>_add` modifiers** — per-level headcount,
+  used for labour demand and the SoL proxy.
+* **Construction-sector PM goods basket** — valued at current forecast prices to
+  estimate the treasury cost per construction point. New construction-sector
+  levels increase future points/week while raising demand for their input goods.
+
+Dynamic inputs are all already-extracted, player-visible `Snapshot` fields
+(buildings + active PMs, market prices, budget, tech, and the SQLite snapshot
+**history** for price-elasticity calibration). The engine reads nothing else —
+structurally it cannot see AI plans or other countries' ledgers.
+
+**Estimation caveats (flagged in the report's assumptions block):** absolute
+world supply/demand volumes and the exact in-game GDP/SoL formulas are not in
+saves. GDP is tracked as a scale-invariant ratio of modeled value-added
+(value-added × ~52 ≈ Vic3 GDP, confirmed within ~16% on a real save); market
+depth is anchored on the player's own scale × an assumed/ calibrated market
+share; construction capacity falls back to a GDP-based estimate when no active
+queue exposes `construction_speed`.
 
 ## How to (re)confirm this map
 
@@ -82,9 +123,9 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
 
 ## Known gaps
 
-* **Construction** (`points/week`, queue): not located in the save. The turn-0
-  autosave has an empty queue, so the structure couldn't be observed. Revisit
-  with a save that has buildings under construction.
 * **State unemployment** and **per-building employment headcount**: not stored
   as scalars; would need to be derived from pops. Left `None`.
 * **Market supply/demand**: not persisted at world-market level (only price).
+* **Urban building slots**: no hard per-state slot limit is currently extracted,
+  so urban industry placement remains a soft ranking by infrastructure and
+  workforce rather than a hard cap.

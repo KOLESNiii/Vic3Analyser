@@ -90,6 +90,9 @@ def analyse_where_to_build(snap: Snapshot) -> list[StateCapacity]:
 
 
 def _free_arable(s: StateInfo) -> int | None:
+    if s.arable_total is not None:
+        used = s.arable_used if s.arable_used is not None else s.arable_land or 0
+        return max(0, int(s.arable_total - used))
     if s.arable_land is None:
         return None
     used = s.arable_used or 0

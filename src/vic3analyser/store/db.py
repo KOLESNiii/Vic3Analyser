@@ -28,6 +28,25 @@ CREATE INDEX IF NOT EXISTS idx_snapshots_tag ON snapshots(player_tag);
 """
 
 
+def _date_key(date: str) -> tuple[int, int, int, str]:
+    """Sortable key for Vic3 dates like ``1836.10.1``.
+
+    SQLite only sees the date as text, which makes ``1836.8.1`` sort after
+    ``1836.10.1``. Parse the numeric parts in Python; keep the raw string as a
+    final tie-breaker for defensive handling of unusual date formats.
+    """
+    parts = str(date).split(".")
+    nums: list[int] = []
+    for part in parts[:3]:
+        try:
+            nums.append(int(part))
+        except ValueError:
+            nums.append(-1)
+    while len(nums) < 3:
+        nums.append(-1)
+    return nums[0], nums[1], nums[2], str(date)
+
+
 class SnapshotStore:
     def __init__(self, data_dir: str | Path) -> None:
         self.path = Path(data_dir) / "snapshots.db"
@@ -64,24 +83,43 @@ class SnapshotStore:
     def dates(self, player_tag: str) -> list[str]:
         with closing(self._connect()) as con:
             rows = con.execute(
-                "SELECT date FROM snapshots WHERE player_tag = ? ORDER BY date",
+                "SELECT date FROM snapshots WHERE player_tag = ?",
                 (player_tag,),
             ).fetchall()
-        return [r["date"] for r in rows]
+        return sorted((r["date"] for r in rows), key=_date_key)
 
     def latest(self, player_tag: str | None = None) -> Snapshot | None:
         with closing(self._connect()) as con:
             if player_tag is None:
                 row = con.execute(
-                    "SELECT payload FROM snapshots ORDER BY date DESC LIMIT 1"
-                ).fetchone()
+                    "SELECT date, payload FROM snapshots"
+                ).fetchall()
             else:
                 row = con.execute(
-                    "SELECT payload FROM snapshots WHERE player_tag = ? "
-                    "ORDER BY date DESC LIMIT 1",
+                    "SELECT date, payload FROM snapshots WHERE player_tag = ?",
                     (player_tag,),
-                ).fetchone()
-        return Snapshot.model_validate_json(row["payload"]) if row else None
+                ).fetchall()
+        if not row:
+            return None
+        latest = max(row, key=lambda r: _date_key(r["date"]))
+        return Snapshot.model_validate_json(latest["payload"])
+
+    def history(self, player_tag: str, limit: int = 24) -> list[Snapshot]:
+        """Recent snapshots oldest→newest (up to ``limit``) for calibration.
+
+        The optimizer uses this to learn how the player's own market responded
+        to their own production over time. Rehydrates full snapshots from the
+        stored JSON payloads.
+        """
+        with closing(self._connect()) as con:
+            rows = con.execute(
+                "SELECT payload FROM snapshots WHERE player_tag = ? "
+                "ORDER BY date",
+                (player_tag,),
+            ).fetchall()
+        snaps = [Snapshot.model_validate_json(r["payload"]) for r in rows]
+        snaps.sort(key=lambda s: _date_key(s.date))
+        return snaps[-limit:]
 
     def get(self, player_tag: str, date: str) -> Snapshot | None:
         with closing(self._connect()) as con:
@@ -101,10 +139,12 @@ class SnapshotStore:
         select = ", ".join(["date", *cols]) if cols else "date"
         with closing(self._connect()) as con:
             rows = con.execute(
-                f"SELECT {select} FROM snapshots WHERE player_tag = ? ORDER BY date",
+                f"SELECT {select} FROM snapshots WHERE player_tag = ?",
                 (player_tag,),
             ).fetchall()
-        return [dict(r) for r in rows]
+        out = [dict(r) for r in rows]
+        out.sort(key=lambda r: _date_key(r["date"]))
+        return out
 
     def tags(self) -> list[str]:
         with closing(self._connect()) as con:

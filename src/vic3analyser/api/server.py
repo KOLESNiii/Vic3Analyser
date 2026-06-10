@@ -16,9 +16,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from dataclasses import replace
+
+from ..analysis.strategy import build_strategy
 from ..config import Config, load_config
 from ..ingest.defs import GameDefs, load_defs
-from ..pipeline import analyse_all, process_save
+from ..pipeline import _ser, analyse_all, process_save
 from ..store.db import SnapshotStore
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
@@ -71,6 +74,33 @@ class AppState:
             return None
         with self._lock:
             return analyse_all(snap, self.defs)
+
+    def strategy(
+        self,
+        player_tag: str | None = None,
+        horizon: int | None = None,
+        capacity: float | None = None,
+        objective: str | None = None,
+        effort: int | None = None,
+    ) -> dict[str, Any] | None:
+        """Run the advanced optimizer/forecaster on demand (it's not cheap, so
+        it's separate from the per-refresh ``analyse_all``)."""
+        snap = self.store.latest(player_tag)
+        if snap is None or self.defs is None:
+            return None
+        history = self.store.history(snap.player_tag)
+        opt = self.cfg.optimize
+        if objective:
+            opt = replace(opt, objective=objective)
+        if effort is not None:
+            opt = replace(opt, search_effort=max(0, effort))
+        if horizon is not None:
+            opt = replace(opt, horizon_months=max(6, horizon))
+        with self._lock:
+            report = build_strategy(
+                snap, self.defs, opt, history=history, capacity=capacity
+            )
+        return _ser(report)
 
     # --- save discovery ----------------------------------------------------
 
@@ -241,6 +271,31 @@ def create_app(cfg: Config | None = None) -> FastAPI:
                     or "No snapshot yet. Ingest a save (autosave watcher, or "
                     "POST /api/ingest?path=...)."
                 ),
+            )
+        return JSONResponse(data)
+
+    @app.get("/api/strategy")
+    def strategy(
+        player_tag: str | None = Query(default=None),
+        horizon: int | None = Query(default=None),
+        capacity: float | None = Query(default=None),
+        objective: str | None = Query(default=None),
+        effort: int | None = Query(default=None),
+    ) -> Any:
+        """Growth-maximizing build plan + forecast for the latest snapshot.
+
+        Parameters override the ``[optimize]`` config for this run so the
+        dashboard can re-plan with a different horizon, capacity, objective or
+        search effort.
+        """
+        try:
+            data = state.strategy(player_tag, horizon, capacity, objective, effort)
+        except Exception as exc:  # noqa: BLE001 - surface optimizer errors to UI
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+        if data is None:
+            raise HTTPException(
+                status_code=503,
+                detail=state.defs_error or "No snapshot yet. Ingest a save first.",
             )
         return JSONResponse(data)
 

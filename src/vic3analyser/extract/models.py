@@ -19,6 +19,7 @@ class MarketGood(BaseModel):
     good: str
     price: float
     base_price: float | None = None
+    category: str | None = None  # defs category (e.g. staple/luxury/industrial)
     supply: float | None = None
     demand: float | None = None
 
@@ -67,6 +68,14 @@ class StateInfo(BaseModel):
     # capped resources (coal, iron, oil, ...) discovered/exploitable
     resources: dict[str, int] = Field(default_factory=dict)
     resources_used: dict[str, int] = Field(default_factory=dict)
+    # Static land/resource capacity from the state-region definition (the player
+    # sees this on the state's resource panel):
+    #   arable_total      — total arable land levels the state can host
+    #   arable_buildings  — building types that draw on that shared arable pool
+    #   capped_resources  — per-building-type maximum levels (mines, logging, …)
+    arable_total: float | None = None
+    arable_buildings: list[str] = Field(default_factory=list)
+    capped_resources: dict[str, float] = Field(default_factory=dict)
 
     @property
     def infrastructure_free(self) -> float | None:
@@ -94,6 +103,10 @@ class ConstructionItem(BaseModel):
 class ConstructionState(BaseModel):
     points_per_week: float | None = None
     queue: list[ConstructionItem] = Field(default_factory=list)
+    # Construction sector levels and the points each level contributes, so the
+    # forecaster can model expanding construction (the key growth lever).
+    sector_levels: int | None = None
+    points_per_sector_level: float | None = None
 
 
 class CountryEconomy(BaseModel):

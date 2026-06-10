@@ -127,3 +127,18 @@ button.mini { padding: 3px 10px; font-size: 12px; }
 button.primary:hover, button.mini:hover { background: var(--panel); }
 button:disabled { opacity: .5; cursor: default; }
 .hint.err { color: var(--bad); }
+
+/* strategy & forecast */
+.strategy-controls { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin: 10px 0 14px; }
+.strategy-controls label { display: flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 12px; }
+.strategy-controls select, .strategy-controls input {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 13px;
+}
+.strategy-controls input[type="number"] { width: 100px; }
+ul.cascade { margin: 6px 0 14px; padding-left: 18px; }
+ul.cascade li { color: var(--muted); font-size: 13px; margin: 4px 0; line-height: 1.4; }

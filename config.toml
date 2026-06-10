@@ -45,3 +45,35 @@ auto_watch = true
 #   "autosave" — only Vic3's autosave*.v3 files
 # Also switchable at runtime from the Settings tab.
 watch_mode = "any"
+
+[optimize]
+# Strategy optimizer / forecaster (the "Strategy & Forecast" tab). All of these
+# can also be overridden per-request from the dashboard.
+
+# Planning horizon, in game-months, for the forecast trajectory.
+horizon_months = 60
+
+# What to maximize:
+#   "composite" — GDP + standard of living + staying solvent (default)
+#   "gdp"       — projected GDP at the horizon
+#   "growth"    — sustained compounding GDP growth rate
+#   "cash"      — treasury / construction ROI
+objective = "composite"
+
+# Construction points/week available to the plan. Leave blank to read it from
+# the save (often missing) and otherwise estimate it from your economy.
+construction_capacity = ""
+
+# Assumed share of each good's market your own production represents. Used to
+# size how much your building decisions move prices when there isn't enough
+# save history to calibrate it directly. 0..1.
+world_market_share = 0.25
+
+# Local-search effort: number of plan-perturbation rounds after the greedy
+# pass. Higher = explores more combinations (slower). 0 = greedy only.
+search_effort = 200
+
+# Composite-objective weights (only used when objective = "composite").
+weight_gdp = 1.0
+weight_sol = 0.4
+weight_solvency = 1.0

@@ -40,6 +40,21 @@ def test_series_and_tags(tmp_path):
     assert store.tags() == ["GBR"]
 
 
+def test_vic3_dates_sort_numerically(tmp_path):
+    store = SnapshotStore(tmp_path)
+    store.save(_snap("1836.8.1", 108.0))
+    store.save(_snap("1836.10.1", 110.0))
+    store.save(_snap("1836.9.1", 109.0))
+
+    assert store.dates("GBR") == ["1836.8.1", "1836.9.1", "1836.10.1"]
+    assert store.latest("GBR").date == "1836.10.1"
+    assert [r["date"] for r in store.series("GBR", ["gdp"])] == [
+        "1836.8.1",
+        "1836.9.1",
+        "1836.10.1",
+    ]
+
+
 def test_get_specific_date(tmp_path):
     store = SnapshotStore(tmp_path)
     store.save(_snap("1836.5.1", 123.0))

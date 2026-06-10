@@ -7,6 +7,46 @@ research, and what to focus the economy on**.
 It uses only **player-visible** data (market prices, your own buildings/balances/pops, construction
 queue, researched techs). It does **not** read AI strategic plans or hidden state.
 
+On top of the per-item recommendations, a **Strategy & Forecast** engine plans the whole economy at
+once (see below).
+
+## Strategy & Forecast — system-level optimization
+
+The per-item analyses (PM switches, what/where to build, tech) each value a single change at the
+*current, frozen* market price. That is locally correct but ignores that acting on a recommendation
+**moves the whole system**: building eight steel mills floods steel (its price falls, so the eighth
+mill earns far less than the first) and drains iron and coal (their prices rise, so *those* become
+the next best thing to build).
+
+The Strategy engine models that feedback and searches for the plan that **maximizes economic
+growth** over a multi-year horizon:
+
+- **Cascading prices.** It inverts Vic3's price mechanic (price is clamped to ±75% of base by
+  supply/demand), so the *current* price reveals the *current* imbalance. Market depth is anchored
+  on your own observed production scale — and *calibrated from your save history* (how your prices
+  actually moved as your production changed) when enough snapshots exist.
+- **Forecasting.** It steps the economy month-by-month: construction capacity is spent against the
+  queue, buildings phase in over time, the market re-settles to equilibrium each step, and GDP,
+  treasury, employment and standard-of-living are projected — charted against a do-nothing baseline.
+  Real construction points/week are read from the save when a queue exists, and construction-sector
+  expansion is modeled as a growth lever: extra sectors add capacity but consume construction goods
+  and can strain the treasury.
+- **Trying many combinations.** A greedy water-filling pass allocates each slice of construction to
+  the best marginal building *at the evolving equilibrium* (so the marginal winner rotates as goods
+  saturate — the cascade), then a local search perturbs the plan to escape local optima.
+- **Capacity-aware placement.** Static state-region definitions supply total arable land and
+  capped resource deposits, so farms/mines/logging/fishing are bounded by visible state capacity.
+  The build order includes state-level placement slices where those levels can actually fit.
+- **Objectives.** Composite (GDP + standard of living + staying solvent), or pure GDP / growth-rate
+  / treasury — switchable on the dashboard.
+
+Open the **Strategy & Forecast** tab and click **Plan**. Everything is an *estimate* from
+player-visible data: absolute world supply/demand and the exact GDP/SoL formulas aren't in saves, so
+market depth, GDP and SoL are modeled (the assumptions banner says exactly what was assumed or
+calibrated). Construction capacity is a first-class, overridable input; when the save has no active
+queue it falls back to an estimate. Tune the horizon, capacity, objective and search effort right on
+the tab, or set defaults under `[optimize]` in `config.toml`.
+
 ## How it works
 
 1. Watches your Victoria 3 autosave folder.

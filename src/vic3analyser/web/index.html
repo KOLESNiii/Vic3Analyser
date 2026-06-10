@@ -15,6 +15,7 @@
 
   <nav id="tabs">
     <button data-tab="recommendations" class="active">Recommendations</button>
+    <button data-tab="strategy">Strategy &amp; Forecast</button>
     <button data-tab="overview">Overview</button>
     <button data-tab="market">Market</button>
     <button data-tab="buildings">Buildings &amp; PMs</button>
@@ -32,6 +33,60 @@
       <h2>Actionable recommendations</h2>
       <p class="hint">Ranked by estimated value-added per week at current market prices.</p>
       <div id="recs"></div>
+    </section>
+
+    <section data-panel="strategy" class="panel">
+      <h2>Strategy &amp; Forecast</h2>
+      <p class="hint">A growth-maximizing build plan that accounts for the
+        cascading price effects of your own production. The optimizer spends your
+        construction capacity where it adds the most value at the evolving market
+        equilibrium, then forecasts the result against doing nothing. All figures
+        are estimates from player-visible data.</p>
+
+      <div class="strategy-controls">
+        <label>Objective
+          <select id="strat-objective">
+            <option value="composite">Composite (GDP + SoL + solvency)</option>
+            <option value="gdp">Max GDP</option>
+            <option value="growth">Max growth rate</option>
+            <option value="cash">Max treasury</option>
+          </select>
+        </label>
+        <label>Horizon (months)
+          <input id="strat-horizon" type="number" min="6" max="240" step="6" value="60" />
+        </label>
+        <label>Capacity / wk
+          <input id="strat-capacity" type="number" min="0" step="10" placeholder="auto" />
+        </label>
+        <label>Search effort
+          <input id="strat-effort" type="number" min="0" max="2000" step="50" value="200" />
+        </label>
+        <button id="strat-run" class="primary">Plan</button>
+        <span id="strat-msg" class="hint"></span>
+      </div>
+
+      <div id="strat-assumptions" class="banner hidden"></div>
+      <div class="cards" id="strat-cards"></div>
+
+      <h3>GDP forecast — optimized vs. do-nothing</h3>
+      <canvas id="strat-gdp-chart" height="110"></canvas>
+      <h3>Treasury forecast</h3>
+      <canvas id="strat-treasury-chart" height="90"></canvas>
+
+      <h3>Why — cascading effects</h3>
+      <ul id="strat-cascade" class="cascade"></ul>
+
+      <h3>Recommended build order</h3>
+      <div id="strat-build"></div>
+
+      <h3>Production-method switches (free value on top)</h3>
+      <div id="strat-pm"></div>
+
+      <h3>Research order</h3>
+      <div id="strat-tech"></div>
+
+      <h3>Projected price outlook</h3>
+      <div id="strat-prices"></div>
     </section>
 
     <section data-panel="overview" class="panel">

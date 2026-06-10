@@ -17,6 +17,9 @@ const fmt = (x, d = 0) =>
 
 let lastDate = null;
 let gdpChart = null;
+let stratGdpChart = null;
+let stratTreasuryChart = null;
+let currentTag = null;
 
 // --- tabs -------------------------------------------------------------------
 document.querySelectorAll("#tabs button").forEach((btn) => {
@@ -26,18 +29,19 @@ document.querySelectorAll("#tabs button").forEach((btn) => {
     btn.classList.add("active");
     $(`[data-panel="${btn.dataset.tab}"]`).classList.add("active");
     if (btn.dataset.tab === "settings") loadSettings();
+    if (btn.dataset.tab === "strategy" && !stratGdpChart) runStrategy();
   });
 });
 
 // --- table helper -----------------------------------------------------------
 function table(cols, rows) {
   const thead = el("tr", {}, cols.map((c) => el("th", { class: c.num ? "num" : "" }, c.label)));
-  const body = rows.map((r) =>
+  const body = rows.map((r, ri) =>
     el(
       "tr",
       {},
       cols.map((c) => {
-        const v = c.render ? c.render(r) : r[c.key];
+        const v = c.render ? c.render(r, ri) : r[c.key];
         const td = el("td", { class: c.num ? "num" : "" });
         if (v instanceof Node) td.append(v);
         else td.innerHTML = v === undefined || v === null ? "—" : v;
@@ -211,6 +215,169 @@ function renderTech(rows) {
   );
 }
 
+// --- strategy & forecast ----------------------------------------------------
+async function runStrategy() {
+  const btn = $("#strat-run");
+  const msg = $("#strat-msg");
+  btn.disabled = true;
+  msg.textContent = "Optimizing… (this can take a few seconds)";
+  const params = new URLSearchParams();
+  if (currentTag) params.set("player_tag", currentTag);
+  params.set("objective", $("#strat-objective").value);
+  params.set("horizon", $("#strat-horizon").value || "60");
+  params.set("effort", $("#strat-effort").value || "200");
+  const cap = $("#strat-capacity").value;
+  if (cap) params.set("capacity", cap);
+  try {
+    const res = await fetch("/api/strategy?" + params.toString());
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.detail || "failed");
+    renderStrategy(body);
+    msg.textContent = "";
+  } catch (e) {
+    msg.textContent = "Could not build a strategy: " + e.message;
+    msg.className = "hint err";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderStrategy(d) {
+  const s = d.summary;
+  const cards = $("#strat-cards");
+  cards.innerHTML = "";
+  const insolvent = s.ever_insolvent;
+  const items = [
+    ["GDP uplift", s.gdp_uplift_pct == null ? "—" : signed(s.gdp_uplift_pct, 1) + "%"],
+    ["Annual growth", signed(s.annual_growth_pct, 1) + "%"],
+    ["GDP " + s.horizon_months + "mo", fmt(s.optimized_gdp)],
+    ["Final treasury", fmt(s.final_treasury)],
+    ["Std. of living", `${fmt(s.sol0, 1)} → ${fmt(s.final_sol, 1)}`],
+    ["Levels to build", fmt(s.total_levels)],
+    ["Construction", `${fmt(s.construction_start_capacity, 0)} → ${fmt(s.construction_final_capacity, 0)}/wk`],
+  ];
+  for (const [label, value] of items) {
+    cards.append(el("div", { class: "card" }, [el("div", { class: "label" }, label), el("div", { class: "value", html: String(value) })]));
+  }
+
+  const a = d.assumptions;
+  const banner = $("#strat-assumptions");
+  banner.classList.remove("hidden");
+  const notes = (a.notes || []).join(" ");
+  banner.innerHTML =
+    `<b>Assumptions (estimates):</b> objective “${s.objective}”, horizon ${s.horizon_months} months, ` +
+    `construction ${fmt(a.construction_capacity, 0)}/wk ${a.capacity_from_save ? "(from save)" : "(estimated)"}, ` +
+    `market share ${fmt(a.world_market_share * 100, 0)}% ${a.elasticity_calibrated ? "(calibrated from history)" : "(assumed)"}. ` +
+    notes + (insolvent ? ' <span class="neg">⚠ plan risks insolvency — consider a safer objective.</span>' : "");
+
+  // forecast charts
+  const labels = d.series.months;
+  stratGdpChart = lineChart("#strat-gdp-chart", stratGdpChart, labels, [
+    { label: "Optimized GDP", data: d.series.optimized_gdp, color: "#d4a23a" },
+    { label: "Do nothing", data: d.series.baseline_gdp, color: "#6b7280" },
+  ]);
+  stratTreasuryChart = lineChart("#strat-treasury-chart", stratTreasuryChart, labels, [
+    { label: "Optimized treasury", data: d.series.optimized_treasury, color: "#3a9bd4" },
+    { label: "Do nothing", data: d.series.baseline_treasury, color: "#6b7280" },
+  ]);
+
+  // cascade narrative
+  const ul = $("#strat-cascade");
+  ul.innerHTML = "";
+  for (const line of d.cascade || []) ul.append(el("li", {}, line));
+
+  // build order
+  $("#strat-build").replaceChildren(
+    table(
+      [
+        { label: "#", num: true, render: (_r, i) => i + 1 },
+        { label: "Building", key: "name" },
+        { label: "Levels", num: true, key: "levels" },
+        { label: "Constr. cost", num: true, render: (r) => fmt(r.construction_cost) },
+        { label: "Placement", render: placementText },
+        { label: "Production methods", render: (r) => (r.pms || []).map((p) => p.replace(/^pm_/, "")).join(", ") },
+      ],
+      d.build_order || []
+    )
+  );
+
+  // PM switches
+  $("#strat-pm").replaceChildren(
+    table(
+      [
+        { label: "Building", key: "name" },
+        { label: "State", num: true, render: (r) => (r.state_id == null ? "—" : r.state_id) },
+        { label: "Switch", render: (r) => `${(r.from_pm || "(none)").replace(/^pm_/, "")} → <b>${r.to_pm.replace(/^pm_/, "")}</b>` },
+        { label: "+ value", num: true, render: (r) => signed(r.delta_value) },
+      ],
+      d.pm_switches || []
+    )
+  );
+
+  // tech
+  $("#strat-tech").replaceChildren(
+    table(
+      [
+        { label: "Technology", key: "tech" },
+        { label: "Era", render: (r) => (r.era || "—").replace(/^era_/, "Era ") },
+        { label: "~Weeks", num: true, render: (r) => fmt(r.weeks) },
+        { label: "Unlocks", render: (r) => [...(r.unlocks_pms || []), ...(r.unlocks_buildings || [])].slice(0, 5).join(", ") },
+      ],
+      d.tech_program || []
+    )
+  );
+
+  // price outlook
+  $("#strat-prices").replaceChildren(
+    table(
+      [
+        { label: "Good", key: "good" },
+        { label: "Now (×base)", num: true, render: (r) => fmt(r.start_ratio, 2) },
+        { label: "Projected (×base)", num: true, render: (r) => fmt(r.projected_ratio, 2) },
+        { label: "Change", num: true, render: (r) => signed(r.change_pct, 0) + "%" },
+      ],
+      d.price_outlook || []
+    )
+  );
+}
+
+function placementText(r) {
+  const alloc = r.state_allocations || [];
+  if (!alloc.length) return r.suggested_state == null ? "—" : String(r.suggested_state);
+  return alloc
+    .map((a) => {
+      const name = a.state_name || (a.state_id == null ? "Unknown" : `State ${a.state_id}`);
+      return `${name}: ${fmt(a.levels, 0)}`;
+    })
+    .join(", ");
+}
+
+function lineChart(sel, existing, labels, datasets) {
+  const ctx = $(sel);
+  if (existing) existing.destroy();
+  return new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: datasets.map((ds) => ({
+        label: ds.label,
+        data: ds.data,
+        borderColor: ds.color,
+        backgroundColor: ds.color,
+        tension: 0.2,
+        pointRadius: 0,
+        borderWidth: 2,
+      })),
+    },
+    options: {
+      plugins: { legend: { labels: { color: "#9aa3b2" } } },
+      scales: { x: { ticks: { color: "#9aa3b2", maxTicksLimit: 12 } }, y: { ticks: { color: "#9aa3b2" } } },
+    },
+  });
+}
+
+$("#strat-run").addEventListener("click", runStrategy);
+
 // --- settings ---------------------------------------------------------------
 function setMsg(text, isError = false) {
   const m = $("#settings-msg");
@@ -355,6 +522,7 @@ async function refreshStatus() {
 }
 
 async function refreshAnalysis(tag) {
+  currentTag = tag || null;
   const data = await (await fetch("/api/analysis")).json();
   const series = tag ? await (await fetch(`/api/series?player_tag=${tag}`)).json() : [];
   renderRecommendations(data.recommendations || []);

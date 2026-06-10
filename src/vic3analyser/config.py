@@ -33,11 +33,35 @@ class Paths:
 
 
 @dataclass
+class OptimizeConfig:
+    """Tuning for the strategy optimizer / forecaster (see ``[optimize]``)."""
+
+    # Planning horizon in game-months for the forecast trajectory.
+    horizon_months: int = 60
+    # Objective the optimizer maximizes: "composite" (GDP + SoL + solvency),
+    # "gdp" (end-state GDP), "growth" (compounding GDP rate), "cash" (treasury).
+    objective: str = "composite"
+    # Construction points/week. None → read from the save, else estimate.
+    construction_capacity: float | None = None
+    # Assumed fraction of each good's market the player's own production
+    # represents, used to size price elasticity when history can't calibrate it.
+    world_market_share: float = 0.25
+    # Effort for the local-search refinement pass (number of perturbation
+    # rounds). 0 disables refinement (greedy only).
+    search_effort: int = 200
+    # Composite-objective weights (only used when objective == "composite").
+    weight_gdp: float = 1.0
+    weight_sol: float = 0.4
+    weight_solvency: float = 1.0
+
+
+@dataclass
 class Config:
     paths: Paths
     player_tag: str | None
     host: str = "127.0.0.1"
     port: int = 8000
+    optimize: OptimizeConfig = field(default_factory=OptimizeConfig)
     # When true, continuously watch ``save_dir`` and ingest new saves. When
     # false, analysis is on-demand only: trigger it from the Settings page
     # (e.g. once at game start, or after a major event). See ``[server]
@@ -203,6 +227,7 @@ def load_config(config_path: str | os.PathLike[str] | None = None) -> Config:
     p = data.get("paths", {})
     game = data.get("game", {})
     server = data.get("server", {})
+    opt = data.get("optimize", {})
 
     install = p.get("vic3_install") or ""
     install_path = _resolve(root, install) if install else _first_existing(_candidate_installs())
@@ -234,5 +259,22 @@ def load_config(config_path: str | os.PathLike[str] | None = None) -> Config:
         port=int(server.get("port", 8000)),
         auto_watch=bool(server.get("auto_watch", True)),
         watch_mode=("autosave" if server.get("watch_mode") == "autosave" else "any"),
+        optimize=_optimize_config(opt),
         root=root,
+    )
+
+
+def _optimize_config(opt: dict) -> OptimizeConfig:
+    """Build an :class:`OptimizeConfig`, falling back to defaults per field."""
+    d = OptimizeConfig()
+    cap = opt.get("construction_capacity")
+    return OptimizeConfig(
+        horizon_months=int(opt.get("horizon_months", d.horizon_months)),
+        objective=str(opt.get("objective", d.objective)),
+        construction_capacity=(float(cap) if cap not in (None, "", 0) else None),
+        world_market_share=float(opt.get("world_market_share", d.world_market_share)),
+        search_effort=int(opt.get("search_effort", d.search_effort)),
+        weight_gdp=float(opt.get("weight_gdp", d.weight_gdp)),
+        weight_sol=float(opt.get("weight_sol", d.weight_sol)),
+        weight_solvency=float(opt.get("weight_solvency", d.weight_solvency)),
     )
