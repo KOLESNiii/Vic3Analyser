@@ -15,9 +15,17 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 
 class SaveHandler(FileSystemEventHandler):
-    def __init__(self, on_save: Callable[[str], None], settle_seconds: float = 2.0) -> None:
+    def __init__(
+        self,
+        on_save: Callable[[str], None],
+        settle_seconds: float = 2.0,
+        accept: Callable[[Path], bool] | None = None,
+    ) -> None:
         self._on_save = on_save
         self._settle = settle_seconds
+        # Optional predicate to filter which saves trigger ingestion (e.g. only
+        # autosaves). Defaults to accepting every ``.v3``.
+        self._accept = accept or (lambda _p: True)
         self._pending: dict[str, float] = {}
         self._lock = threading.Lock()
 
@@ -32,6 +40,8 @@ class SaveHandler(FileSystemEventHandler):
             return
         path = event.src_path
         if not path.endswith(".v3"):
+            return
+        if not self._accept(Path(path)):
             return
         with self._lock:
             already = path in self._pending

@@ -24,6 +24,11 @@ from ..store.db import SnapshotStore
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 
 
+def is_autosave(path: Path) -> bool:
+    """Vic3 names its autosaves ``autosave*.v3`` (e.g. ``autosave.v3``)."""
+    return path.name.lower().startswith("autosave")
+
+
 class AppState:
     """Holds shared, mutable server state behind a lock."""
 
@@ -67,24 +72,99 @@ class AppState:
         with self._lock:
             return analyse_all(snap, self.defs)
 
-    # --- autosave watching -------------------------------------------------
+    # --- save discovery ----------------------------------------------------
 
-    def start_watcher(self) -> None:
+    def list_saves(self) -> list[dict[str, Any]]:
+        """All ``.v3`` saves in ``save_dir``, newest first.
+
+        Autosaves and manual saves are both included; ``is_autosave`` flags the
+        former (Vic3 names them ``autosave*.v3``) so the UI can tell them apart.
+        """
         save_dir = self.cfg.paths.save_dir
         if save_dir is None or not Path(save_dir).is_dir():
-            return
+            return []
+        saves = []
+        for p in Path(save_dir).rglob("*.v3"):
+            try:
+                st = p.stat()
+            except OSError:
+                continue
+            saves.append(
+                {
+                    "path": str(p),
+                    "name": p.name,
+                    "mtime": st.st_mtime,
+                    "size": st.st_size,
+                    "is_autosave": is_autosave(p),
+                }
+            )
+        saves.sort(key=lambda s: s["mtime"], reverse=True)
+        return saves
+
+    def latest_save_path(self, autosave_only: bool = False) -> str | None:
+        saves = self.list_saves()
+        if autosave_only:
+            saves = [s for s in saves if s["is_autosave"]]
+        return saves[0]["path"] if saves else None
+
+    # --- save watching -----------------------------------------------------
+
+    @property
+    def watching(self) -> bool:
+        return self._observer is not None
+
+    def start_watcher(self) -> bool:
+        """Begin watching ``save_dir`` for new saves. Returns whether it ran."""
+        if self._observer is not None:
+            return True
+        save_dir = self.cfg.paths.save_dir
+        if save_dir is None or not Path(save_dir).is_dir():
+            return False
         try:
             from watchdog.observers import Observer
 
             from .watcher import SaveHandler
         except Exception:  # noqa: BLE001
-            return
-        handler = SaveHandler(self._on_new_save)
+            return False
+        accept = is_autosave if self.cfg.watch_mode == "autosave" else None
+        handler = SaveHandler(self._on_new_save, accept=accept)
         obs = Observer()
         obs.schedule(handler, str(save_dir), recursive=True)
         obs.daemon = True
         obs.start()
         self._observer = obs
+        return True
+
+    def stop_watcher(self) -> None:
+        obs = self._observer
+        if obs is not None:
+            self._observer = None
+            obs.stop()
+
+    def set_auto_watch(self, enabled: bool) -> bool:
+        """Toggle continuous watching at runtime. Returns the effective state.
+
+        Enabling also seeds from the newest save already in the folder, since
+        the observer itself only reacts to saves created/modified afterwards.
+        """
+        self.cfg.auto_watch = enabled
+        if enabled:
+            if self.start_watcher():
+                self.ingest_latest_existing()
+        else:
+            self.stop_watcher()
+        return self.watching
+
+    def set_watch_mode(self, mode: str) -> str:
+        """Set which saves the watcher reacts to ("any"/"autosave").
+
+        Restarts the watcher if it is running so the new filter takes effect.
+        """
+        self.cfg.watch_mode = "autosave" if mode == "autosave" else "any"
+        if self.watching:
+            self.stop_watcher()
+            self.start_watcher()
+        return self.cfg.watch_mode
 
     def _on_new_save(self, path: str) -> None:
         try:
@@ -92,14 +172,29 @@ class AppState:
         except Exception:  # noqa: BLE001
             self.last_error = traceback.format_exc(limit=3)
 
+    def analyse_latest(self, autosave_only: bool = False) -> str:
+        """Ingest the newest save in ``save_dir`` on demand. Returns its date.
+
+        With ``autosave_only`` it picks the newest autosave rather than the
+        newest save of any kind.
+        """
+        path = self.latest_save_path(autosave_only=autosave_only)
+        if path is None:
+            kind = "autosaves" if autosave_only else ".v3 saves"
+            raise RuntimeError(
+                f"No {kind} found in {self.cfg.paths.save_dir or '(no save_dir set)'}."
+            )
+        return self.ingest(path)
+
     def ingest_latest_existing(self) -> None:
-        """On startup, ingest the newest save already in the folder."""
-        save_dir = self.cfg.paths.save_dir
-        if save_dir is None or not Path(save_dir).is_dir():
-            return
-        saves = sorted(Path(save_dir).rglob("*.v3"), key=lambda p: p.stat().st_mtime)
-        if saves:
-            self._on_new_save(str(saves[-1]))
+        """On startup, ingest the newest save already in the folder.
+
+        Honours ``watch_mode`` so an autosave-only watcher seeds from the
+        latest autosave rather than a stray manual save.
+        """
+        path = self.latest_save_path(autosave_only=self.cfg.watch_mode == "autosave")
+        if path is not None:
+            self._on_new_save(path)
 
 
 def create_app(cfg: Config | None = None) -> FastAPI:
@@ -108,9 +203,11 @@ def create_app(cfg: Config | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
-        state.ingest_latest_existing()
-        state.start_watcher()
+        if cfg.auto_watch:
+            state.ingest_latest_existing()
+            state.start_watcher()
         yield
+        state.stop_watcher()
 
     app = FastAPI(title="Vic3 Economic Analyser", lifespan=lifespan)
     app.state.app_state = state
@@ -128,6 +225,9 @@ def create_app(cfg: Config | None = None) -> FastAPI:
             "player_tags": tags,
             "last_ingest": state.last_ingest,
             "last_error": state.last_error,
+            "auto_watch": state.cfg.auto_watch,
+            "watching": state.watching,
+            "watch_mode": state.cfg.watch_mode,
         }
 
     @app.get("/api/analysis")
@@ -167,6 +267,48 @@ def create_app(cfg: Config | None = None) -> FastAPI:
         except Exception as exc:  # noqa: BLE001
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return {"ingested": date}
+
+    @app.get("/api/saves")
+    def saves() -> Any:
+        """List available .v3 saves (newest first) for on-demand analysis."""
+        return JSONResponse(state.list_saves())
+
+    @app.post("/api/analyse-latest")
+    def analyse_latest(autosave_only: bool = Query(default=False)) -> dict[str, str]:
+        """Analyse the most recent save now (game start, major event, …).
+
+        With ``autosave_only=true`` it analyses the latest autosave instead of
+        the latest save of any kind.
+        """
+        try:
+            date = state.analyse_latest(autosave_only=autosave_only)
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return {"ingested": date}
+
+    @app.get("/api/settings")
+    def get_settings() -> dict[str, Any]:
+        return {
+            "auto_watch": state.cfg.auto_watch,
+            "watching": state.watching,
+            "watch_mode": state.cfg.watch_mode,
+            "save_dir": str(cfg.paths.save_dir) if cfg.paths.save_dir else None,
+        }
+
+    @app.post("/api/settings")
+    def set_settings(
+        auto_watch: bool | None = Query(default=None),
+        watch_mode: str | None = Query(default=None),
+    ) -> dict[str, Any]:
+        if watch_mode is not None:
+            state.set_watch_mode(watch_mode)
+        if auto_watch is not None:
+            state.set_auto_watch(auto_watch)
+        return {
+            "auto_watch": state.cfg.auto_watch,
+            "watching": state.watching,
+            "watch_mode": state.cfg.watch_mode,
+        }
 
     @app.post("/api/reload-defs")
     def reload_defs() -> dict[str, Any]:

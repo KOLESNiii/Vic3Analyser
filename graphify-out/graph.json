@@ -27,14 +27,14 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L36",
       "id": "vic3analyser_config_config",
-      "community": 13,
+      "community": 6,
       "norm_label": "config"
     },
     {
       "label": ".common_dir()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L45",
+      "source_location": "L53",
       "id": "vic3analyser_config_config_common_dir",
       "community": 13,
       "norm_label": ".common_dir()"
@@ -43,7 +43,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L45",
+      "source_location": "L53",
       "id": "src_vic3analyser_config_py_path",
       "community": 13,
       "norm_label": "path"
@@ -52,7 +52,7 @@
       "label": "_home()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L69",
+      "source_location": "L77",
       "id": "vic3analyser_config_home",
       "community": 13,
       "norm_label": "_home()"
@@ -61,7 +61,7 @@
       "label": "_steam_roots()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L73",
+      "source_location": "L81",
       "id": "vic3analyser_config_steam_roots",
       "community": 13,
       "norm_label": "_steam_roots()"
@@ -70,7 +70,7 @@
       "label": "_steam_libraries()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L93",
+      "source_location": "L101",
       "id": "vic3analyser_config_steam_libraries",
       "community": 13,
       "norm_label": "_steam_libraries()"
@@ -79,7 +79,7 @@
       "label": "_candidate_installs()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L128",
+      "source_location": "L136",
       "id": "vic3analyser_config_candidate_installs",
       "community": 13,
       "norm_label": "_candidate_installs()"
@@ -88,7 +88,7 @@
       "label": "_proton_documents()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L135",
+      "source_location": "L143",
       "id": "vic3analyser_config_proton_documents",
       "community": 13,
       "norm_label": "_proton_documents()"
@@ -97,7 +97,7 @@
       "label": "_candidate_save_dirs()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L151",
+      "source_location": "L159",
       "id": "vic3analyser_config_candidate_save_dirs",
       "community": 13,
       "norm_label": "_candidate_save_dirs()"
@@ -106,7 +106,7 @@
       "label": "_first_existing()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L169",
+      "source_location": "L177",
       "id": "vic3analyser_config_first_existing",
       "community": 13,
       "norm_label": "_first_existing()"
@@ -115,7 +115,7 @@
       "label": "_resolve()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L178",
+      "source_location": "L186",
       "id": "vic3analyser_config_resolve",
       "community": 13,
       "norm_label": "_resolve()"
@@ -124,7 +124,7 @@
       "label": "str",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L178",
+      "source_location": "L186",
       "id": "src_vic3analyser_config_py_str",
       "community": 13,
       "norm_label": "str"
@@ -133,7 +133,7 @@
       "label": "load_config()",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L183",
+      "source_location": "L191",
       "id": "vic3analyser_config_load_config",
       "community": 13,
       "norm_label": "load_config()"
@@ -142,7 +142,7 @@
       "label": "PathLike",
       "file_type": "code",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L183",
+      "source_location": "L191",
       "id": "pathlike",
       "community": 13,
       "norm_label": "pathlike"
@@ -160,8 +160,8 @@
       "label": "The active game ``common/`` directory (base game).",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L46",
-      "id": "vic3analyser_config_rationale_46",
+      "source_location": "L54",
+      "id": "vic3analyser_config_rationale_54",
       "community": 13,
       "norm_label": "the active game ``common/`` directory (base game)."
     },
@@ -169,8 +169,8 @@
       "label": "Base Steam install directories to probe, OS-dependent.",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L74",
-      "id": "vic3analyser_config_rationale_74",
+      "source_location": "L82",
+      "id": "vic3analyser_config_rationale_82",
       "community": 13,
       "norm_label": "base steam install directories to probe, os-dependent."
     },
@@ -178,8 +178,8 @@
       "label": "All Steam library folders, including extra drives/dirs the user added.      Each",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L94",
-      "id": "vic3analyser_config_rationale_94",
+      "source_location": "L102",
+      "id": "vic3analyser_config_rationale_102",
       "community": 13,
       "norm_label": "all steam library folders, including extra drives/dirs the user added.      each"
     },
@@ -187,8 +187,8 @@
       "label": "`Documents` folders inside the Proton/Wine prefix for Victoria 3.      When the",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L136",
-      "id": "vic3analyser_config_rationale_136",
+      "source_location": "L144",
+      "id": "vic3analyser_config_rationale_144",
       "community": 13,
       "norm_label": "`documents` folders inside the proton/wine prefix for victoria 3.      when the"
     },
@@ -196,8 +196,8 @@
       "label": "Load configuration, applying auto-detection for any blank paths.",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/config.py",
-      "source_location": "L184",
-      "id": "vic3analyser_config_rationale_184",
+      "source_location": "L192",
+      "id": "vic3analyser_config_rationale_192",
       "community": 13,
       "norm_label": "load configuration, applying auto-detection for any blank paths."
     },
@@ -225,7 +225,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L1",
       "id": "src_vic3analyser_pipeline_py",
-      "community": 13,
+      "community": 26,
       "norm_label": "pipeline.py"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "vic3analyser_pipeline_process_save",
-      "community": 13,
+      "community": 6,
       "norm_label": "process_save()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "src_vic3analyser_pipeline_py_str",
-      "community": 13,
+      "community": 6,
       "norm_label": "str"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "src_vic3analyser_pipeline_py_path",
-      "community": 13,
+      "community": 6,
       "norm_label": "path"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "src_vic3analyser_pipeline_py_config",
-      "community": 13,
+      "community": 6,
       "norm_label": "config"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "src_vic3analyser_pipeline_py_gamedefs",
-      "community": 13,
+      "community": 6,
       "norm_label": "gamedefs"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "snapshotstore",
-      "community": 13,
+      "community": 6,
       "norm_label": "snapshotstore"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L31",
       "id": "src_vic3analyser_pipeline_py_snapshot",
-      "community": 13,
+      "community": 6,
       "norm_label": "snapshot"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L46",
       "id": "vic3analyser_pipeline_ser",
-      "community": 13,
+      "community": 31,
       "norm_label": "_ser()"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L46",
       "id": "src_vic3analyser_pipeline_py_any",
-      "community": 13,
+      "community": 31,
       "norm_label": "any"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L59",
       "id": "vic3analyser_pipeline_analyse_all",
-      "community": 13,
+      "community": 31,
       "norm_label": "analyse_all()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L1",
       "id": "vic3analyser_pipeline_rationale_1",
-      "community": 13,
+      "community": 26,
       "norm_label": "end-to-end ingestion: a ``.v3`` save in, a stored :class:`snapshot` out.      me"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L37",
       "id": "vic3analyser_pipeline_rationale_37",
-      "community": 13,
+      "community": 6,
       "norm_label": "melt, parse, extract and (optionally) persist a save."
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L47",
       "id": "vic3analyser_pipeline_rationale_47",
-      "community": 13,
+      "community": 31,
       "norm_label": "recursively convert dataclasses/pydantic/containers to json-able data."
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L60",
       "id": "vic3analyser_pipeline_rationale_60",
-      "community": 13,
+      "community": 31,
       "norm_label": "run every analysis and return one json-able payload."
     },
     {
@@ -1611,14 +1611,41 @@
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L1",
       "id": "src_vic3analyser_api_server_py",
-      "community": 13,
+      "community": 2,
       "norm_label": "server.py"
+    },
+    {
+      "label": "is_autosave()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "id": "api_server_is_autosave",
+      "community": 2,
+      "norm_label": "is_autosave()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "id": "src_vic3analyser_api_server_py_path",
+      "community": 2,
+      "norm_label": "path"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "id": "src_vic3analyser_api_server_py_bool",
+      "community": 2,
+      "norm_label": "bool"
     },
     {
       "label": "AppState",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L27",
+      "source_location": "L32",
       "id": "api_server_appstate",
       "community": 2,
       "norm_label": "appstate"
@@ -1627,7 +1654,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L30",
+      "source_location": "L35",
       "id": "api_server_appstate_init",
       "community": 2,
       "norm_label": ".__init__()"
@@ -1636,7 +1663,7 @@
       "label": "Config",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L30",
+      "source_location": "L35",
       "id": "src_vic3analyser_api_server_py_config",
       "community": 2,
       "norm_label": "config"
@@ -1645,7 +1672,7 @@
       "label": "._load_defs()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L41",
+      "source_location": "L46",
       "id": "api_server_appstate_load_defs",
       "community": 2,
       "norm_label": "._load_defs()"
@@ -1654,7 +1681,7 @@
       "label": ".reload_defs()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L49",
+      "source_location": "L54",
       "id": "api_server_appstate_reload_defs",
       "community": 2,
       "norm_label": ".reload_defs()"
@@ -1663,7 +1690,7 @@
       "label": ".ingest()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L53",
+      "source_location": "L58",
       "id": "api_server_appstate_ingest",
       "community": 2,
       "norm_label": ".ingest()"
@@ -1672,25 +1699,16 @@
       "label": "str",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L53",
+      "source_location": "L58",
       "id": "src_vic3analyser_api_server_py_str",
       "community": 2,
       "norm_label": "str"
     },
     {
-      "label": "Path",
-      "file_type": "code",
-      "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L53",
-      "id": "src_vic3analyser_api_server_py_path",
-      "community": 2,
-      "norm_label": "path"
-    },
-    {
       "label": ".analysis()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L63",
+      "source_location": "L68",
       "id": "api_server_appstate_analysis",
       "community": 2,
       "norm_label": ".analysis()"
@@ -1699,34 +1717,97 @@
       "label": "Any",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L63",
+      "source_location": "L68",
       "id": "src_vic3analyser_api_server_py_any",
       "community": 2,
       "norm_label": "any"
     },
     {
+      "label": ".list_saves()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L77",
+      "id": "api_server_appstate_list_saves",
+      "community": 2,
+      "norm_label": ".list_saves()"
+    },
+    {
+      "label": ".latest_save_path()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L104",
+      "id": "api_server_appstate_latest_save_path",
+      "community": 2,
+      "norm_label": ".latest_save_path()"
+    },
+    {
+      "label": ".watching()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L113",
+      "id": "api_server_appstate_watching",
+      "community": 2,
+      "norm_label": ".watching()"
+    },
+    {
       "label": ".start_watcher()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L72",
+      "source_location": "L116",
       "id": "api_server_appstate_start_watcher",
       "community": 2,
       "norm_label": ".start_watcher()"
     },
     {
+      "label": ".stop_watcher()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L138",
+      "id": "api_server_appstate_stop_watcher",
+      "community": 2,
+      "norm_label": ".stop_watcher()"
+    },
+    {
+      "label": ".set_auto_watch()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L144",
+      "id": "api_server_appstate_set_auto_watch",
+      "community": 2,
+      "norm_label": ".set_auto_watch()"
+    },
+    {
+      "label": ".set_watch_mode()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L158",
+      "id": "api_server_appstate_set_watch_mode",
+      "community": 2,
+      "norm_label": ".set_watch_mode()"
+    },
+    {
       "label": "._on_new_save()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L89",
+      "source_location": "L169",
       "id": "api_server_appstate_on_new_save",
       "community": 2,
       "norm_label": "._on_new_save()"
     },
     {
+      "label": ".analyse_latest()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L175",
+      "id": "api_server_appstate_analyse_latest",
+      "community": 2,
+      "norm_label": ".analyse_latest()"
+    },
+    {
       "label": ".ingest_latest_existing()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L95",
+      "source_location": "L189",
       "id": "api_server_appstate_ingest_latest_existing",
       "community": 2,
       "norm_label": ".ingest_latest_existing()"
@@ -1735,27 +1816,27 @@
       "label": "create_app()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L105",
+      "source_location": "L200",
       "id": "api_server_create_app",
-      "community": 13,
+      "community": 2,
       "norm_label": "create_app()"
     },
     {
       "label": "FastAPI",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L105",
+      "source_location": "L200",
       "id": "fastapi",
-      "community": 13,
+      "community": 2,
       "norm_label": "fastapi"
     },
     {
       "label": "main()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L182",
+      "source_location": "L324",
       "id": "api_server_main",
-      "community": 13,
+      "community": 2,
       "norm_label": "main()"
     },
     {
@@ -1764,15 +1845,24 @@
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L1",
       "id": "api_server_rationale_1",
-      "community": 13,
+      "community": 2,
       "norm_label": "fastapi server: serves the dashboard and analysis api, and watches the autosave"
+    },
+    {
+      "label": "Vic3 names its autosaves ``autosave*.v3`` (e.g. ``autosave.v3``).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L28",
+      "id": "api_server_rationale_28",
+      "community": 2,
+      "norm_label": "vic3 names its autosaves ``autosave*.v3`` (e.g. ``autosave.v3``)."
     },
     {
       "label": "Holds shared, mutable server state behind a lock.",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L28",
-      "id": "api_server_rationale_28",
+      "source_location": "L33",
+      "id": "api_server_rationale_33",
       "community": 2,
       "norm_label": "holds shared, mutable server state behind a lock."
     },
@@ -1780,19 +1870,64 @@
       "label": "Process one save (thread-safe). Returns the snapshot date.",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L54",
-      "id": "api_server_rationale_54",
+      "source_location": "L59",
+      "id": "api_server_rationale_59",
       "community": 2,
       "norm_label": "process one save (thread-safe). returns the snapshot date."
     },
     {
-      "label": "On startup, ingest the newest save already in the folder.",
+      "label": "All ``.v3`` saves in ``save_dir``, newest first.          Autosaves and manual s",
       "file_type": "rationale",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L96",
-      "id": "api_server_rationale_96",
+      "source_location": "L78",
+      "id": "api_server_rationale_78",
       "community": 2,
-      "norm_label": "on startup, ingest the newest save already in the folder."
+      "norm_label": "all ``.v3`` saves in ``save_dir``, newest first.          autosaves and manual s"
+    },
+    {
+      "label": "Begin watching ``save_dir`` for new saves. Returns whether it ran.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L117",
+      "id": "api_server_rationale_117",
+      "community": 2,
+      "norm_label": "begin watching ``save_dir`` for new saves. returns whether it ran."
+    },
+    {
+      "label": "Toggle continuous watching at runtime. Returns the effective state.          Ena",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L145",
+      "id": "api_server_rationale_145",
+      "community": 2,
+      "norm_label": "toggle continuous watching at runtime. returns the effective state.          ena"
+    },
+    {
+      "label": "Set which saves the watcher reacts to (\"any\"/\"autosave\").          Restarts the",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L159",
+      "id": "api_server_rationale_159",
+      "community": 2,
+      "norm_label": "set which saves the watcher reacts to (\"any\"/\"autosave\").          restarts the"
+    },
+    {
+      "label": "Ingest the newest save in ``save_dir`` on demand. Returns its date.          Wit",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L176",
+      "id": "api_server_rationale_176",
+      "community": 2,
+      "norm_label": "ingest the newest save in ``save_dir`` on demand. returns its date.          wit"
+    },
+    {
+      "label": "On startup, ingest the newest save already in the folder.          Honours ``wat",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L190",
+      "id": "api_server_rationale_190",
+      "community": 2,
+      "norm_label": "on startup, ingest the newest save already in the folder.          honours ``wat"
     },
     {
       "label": "watcher.py",
@@ -1849,10 +1984,28 @@
       "norm_label": "float"
     },
     {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L18",
+      "id": "src_vic3analyser_api_watcher_py_path",
+      "community": 2,
+      "norm_label": "path"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L18",
+      "id": "src_vic3analyser_api_watcher_py_bool",
+      "community": 2,
+      "norm_label": "bool"
+    },
+    {
       "label": ".on_created()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/watcher.py",
-      "source_location": "L24",
+      "source_location": "L32",
       "id": "api_watcher_savehandler_on_created",
       "community": 2,
       "norm_label": ".on_created()"
@@ -1861,7 +2014,7 @@
       "label": "FileSystemEvent",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/watcher.py",
-      "source_location": "L24",
+      "source_location": "L32",
       "id": "filesystemevent",
       "community": 2,
       "norm_label": "filesystemevent"
@@ -1870,7 +2023,7 @@
       "label": ".on_modified()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/watcher.py",
-      "source_location": "L27",
+      "source_location": "L35",
       "id": "api_watcher_savehandler_on_modified",
       "community": 2,
       "norm_label": ".on_modified()"
@@ -1879,7 +2032,7 @@
       "label": "._maybe()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/watcher.py",
-      "source_location": "L30",
+      "source_location": "L38",
       "id": "api_watcher_savehandler_maybe",
       "community": 2,
       "norm_label": "._maybe()"
@@ -1888,7 +2041,7 @@
       "label": "._settle_and_fire()",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/watcher.py",
-      "source_location": "L42",
+      "source_location": "L52",
       "id": "api_watcher_savehandler_settle_and_fire",
       "community": 2,
       "norm_label": "._settle_and_fire()"
@@ -1908,7 +2061,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_market_py",
-      "community": 3,
+      "community": 26,
       "norm_label": "market.py"
     },
     {
@@ -1917,7 +2070,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L18",
       "id": "analysis_market_goodsignal",
-      "community": 3,
+      "community": 26,
       "norm_label": "goodsignal"
     },
     {
@@ -1926,7 +2079,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L28",
       "id": "analysis_market_goodsignal_status",
-      "community": 3,
+      "community": 26,
       "norm_label": ".status()"
     },
     {
@@ -1935,7 +2088,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L28",
       "id": "src_vic3analyser_analysis_market_py_str",
-      "community": 3,
+      "community": 26,
       "norm_label": "str"
     },
     {
@@ -1944,7 +2097,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L39",
       "id": "analysis_market_marketreport",
-      "community": 3,
+      "community": 26,
       "norm_label": "marketreport"
     },
     {
@@ -1953,7 +2106,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L43",
       "id": "analysis_market_marketreport_shortages",
-      "community": 3,
+      "community": 26,
       "norm_label": ".shortages()"
     },
     {
@@ -1962,7 +2115,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L47",
       "id": "analysis_market_marketreport_gluts",
-      "community": 3,
+      "community": 26,
       "norm_label": ".gluts()"
     },
     {
@@ -1971,7 +2124,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L51",
       "id": "analysis_market_analyse_market",
-      "community": 3,
+      "community": 26,
       "norm_label": "analyse_market()"
     },
     {
@@ -1980,7 +2133,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L51",
       "id": "src_vic3analyser_analysis_market_py_snapshot",
-      "community": 3,
+      "community": 26,
       "norm_label": "snapshot"
     },
     {
@@ -1989,7 +2142,7 @@
       "source_file": "src/vic3analyser/analysis/market.py",
       "source_location": "L1",
       "id": "analysis_market_rationale_1",
-      "community": 3,
+      "community": 26,
       "norm_label": "market analysis: which goods are in shortage (expensive) or glut (cheap).  a sho"
     },
     {
@@ -1998,7 +2151,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_recommend_py",
-      "community": 1,
+      "community": 26,
       "norm_label": "recommend.py"
     },
     {
@@ -2007,7 +2160,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L25",
       "id": "analysis_recommend_recommendation",
-      "community": 1,
+      "community": 26,
       "norm_label": "recommendation"
     },
     {
@@ -2016,7 +2169,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L34",
       "id": "analysis_recommend_build_recommendations",
-      "community": 1,
+      "community": 26,
       "norm_label": "build_recommendations()"
     },
     {
@@ -2025,7 +2178,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L34",
       "id": "src_vic3analyser_analysis_recommend_py_snapshot",
-      "community": 1,
+      "community": 26,
       "norm_label": "snapshot"
     },
     {
@@ -2034,7 +2187,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L34",
       "id": "src_vic3analyser_analysis_recommend_py_gamedefs",
-      "community": 1,
+      "community": 26,
       "norm_label": "gamedefs"
     },
     {
@@ -2043,7 +2196,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L34",
       "id": "src_vic3analyser_analysis_recommend_py_int",
-      "community": 1,
+      "community": 26,
       "norm_label": "int"
     },
     {
@@ -2052,7 +2205,7 @@
       "source_file": "src/vic3analyser/analysis/recommend.py",
       "source_location": "L1",
       "id": "analysis_recommend_rationale_1",
-      "community": 1,
+      "community": 26,
       "norm_label": "synthesize all analyses into one prioritized, explained action list.  this is th"
     },
     {
@@ -2196,7 +2349,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_profitability_py",
-      "community": 3,
+      "community": 27,
       "norm_label": "profitability.py"
     },
     {
@@ -2205,7 +2358,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L20",
       "id": "analysis_profitability_buildingprofit",
-      "community": 3,
+      "community": 27,
       "norm_label": "buildingprofit"
     },
     {
@@ -2214,7 +2367,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "analysis_profitability_estimate_value_added",
-      "community": 3,
+      "community": 27,
       "norm_label": "_estimate_value_added()"
     },
     {
@@ -2223,7 +2376,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_building",
-      "community": 3,
+      "community": 27,
       "norm_label": "building"
     },
     {
@@ -2232,7 +2385,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_gamedefs",
-      "community": 3,
+      "community": 27,
       "norm_label": "gamedefs"
     },
     {
@@ -2241,7 +2394,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_float",
-      "community": 3,
+      "community": 27,
       "norm_label": "float"
     },
     {
@@ -2250,7 +2403,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L48",
       "id": "analysis_profitability_analyse_profitability",
-      "community": 3,
+      "community": 27,
       "norm_label": "analyse_profitability()"
     },
     {
@@ -2259,7 +2412,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L48",
       "id": "src_vic3analyser_analysis_profitability_py_snapshot",
-      "community": 3,
+      "community": 27,
       "norm_label": "snapshot"
     },
     {
@@ -2268,7 +2421,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L1",
       "id": "analysis_profitability_rationale_1",
-      "community": 3,
+      "community": 27,
       "norm_label": "per-building profitability ranking for the player's buildings.  prefers the real"
     },
     {
@@ -2277,7 +2430,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L32",
       "id": "analysis_profitability_rationale_32",
-      "community": 3,
+      "community": 27,
       "norm_label": "sum value-added across the building's active pms, scaled by level."
     },
     {
@@ -2286,7 +2439,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_build_what_py",
-      "community": 1,
+      "community": 3,
       "norm_label": "build_what.py"
     },
     {
@@ -2295,7 +2448,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L21",
       "id": "analysis_build_what_buildcandidate",
-      "community": 1,
+      "community": 3,
       "norm_label": "buildcandidate"
     },
     {
@@ -2304,7 +2457,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "analysis_build_what_best_available_pm",
-      "community": 1,
+      "community": 3,
       "norm_label": "_best_available_pm()"
     },
     {
@@ -2313,7 +2466,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_build_what_py_str",
-      "community": 1,
+      "community": 3,
       "norm_label": "str"
     },
     {
@@ -2322,7 +2475,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_build_what_py_gamedefs",
-      "community": 1,
+      "community": 3,
       "norm_label": "gamedefs"
     },
     {
@@ -2331,7 +2484,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L45",
       "id": "analysis_build_what_analyse_what_to_build",
-      "community": 1,
+      "community": 3,
       "norm_label": "analyse_what_to_build()"
     },
     {
@@ -2340,7 +2493,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L45",
       "id": "src_vic3analyser_analysis_build_what_py_snapshot",
-      "community": 1,
+      "community": 3,
       "norm_label": "snapshot"
     },
     {
@@ -2349,7 +2502,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L104",
       "id": "analysis_build_what_mean_signal",
-      "community": 1,
+      "community": 3,
       "norm_label": "_mean_signal()"
     },
     {
@@ -2358,7 +2511,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L104",
       "id": "src_vic3analyser_analysis_build_what_py_float",
-      "community": 1,
+      "community": 3,
       "norm_label": "float"
     },
     {
@@ -2367,7 +2520,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L1",
       "id": "analysis_build_what_rationale_1",
-      "community": 1,
+      "community": 3,
       "norm_label": "what to build: rank building types by projected value-added at current prices, w"
     },
     {
@@ -2619,7 +2772,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_construction_py",
-      "community": 1,
+      "community": 30,
       "norm_label": "construction.py"
     },
     {
@@ -2628,7 +2781,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L18",
       "id": "analysis_construction_queueitemanalysis",
-      "community": 1,
+      "community": 30,
       "norm_label": "queueitemanalysis"
     },
     {
@@ -2637,7 +2790,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L28",
       "id": "analysis_construction_constructionreport",
-      "community": 1,
+      "community": 30,
       "norm_label": "constructionreport"
     },
     {
@@ -2646,7 +2799,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L34",
       "id": "analysis_construction_constructionreport_queue_by_payback",
-      "community": 1,
+      "community": 30,
       "norm_label": ".queue_by_payback()"
     },
     {
@@ -2655,7 +2808,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "analysis_construction_analyse_construction",
-      "community": 1,
+      "community": 30,
       "norm_label": "analyse_construction()"
     },
     {
@@ -2664,7 +2817,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "src_vic3analyser_analysis_construction_py_snapshot",
-      "community": 1,
+      "community": 30,
       "norm_label": "snapshot"
     },
     {
@@ -2673,7 +2826,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "src_vic3analyser_analysis_construction_py_gamedefs",
-      "community": 1,
+      "community": 30,
       "norm_label": "gamedefs"
     },
     {
@@ -2682,7 +2835,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L1",
       "id": "analysis_construction_rationale_1",
-      "community": 1,
+      "community": 30,
       "norm_label": "construction focus: payback ranking of the queue and suggested additions.  const"
     },
     {
@@ -2691,7 +2844,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_tech_py",
-      "community": 3,
+      "community": 28,
       "norm_label": "tech.py"
     },
     {
@@ -2700,7 +2853,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L21",
       "id": "analysis_tech_techpriority",
-      "community": 3,
+      "community": 28,
       "norm_label": "techpriority"
     },
     {
@@ -2709,7 +2862,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "analysis_tech_pm_value",
-      "community": 3,
+      "community": 28,
       "norm_label": "_pm_value()"
     },
     {
@@ -2718,7 +2871,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_str",
-      "community": 3,
+      "community": 28,
       "norm_label": "str"
     },
     {
@@ -2727,7 +2880,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_gamedefs",
-      "community": 3,
+      "community": 28,
       "norm_label": "gamedefs"
     },
     {
@@ -2736,7 +2889,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_float",
-      "community": 3,
+      "community": 28,
       "norm_label": "float"
     },
     {
@@ -2745,7 +2898,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L32",
       "id": "analysis_tech_analyse_tech_priorities",
-      "community": 3,
+      "community": 28,
       "norm_label": "analyse_tech_priorities()"
     },
     {
@@ -2754,7 +2907,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_tech_py_snapshot",
-      "community": 3,
+      "community": 28,
       "norm_label": "snapshot"
     },
     {
@@ -2763,7 +2916,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L1",
       "id": "analysis_tech_rationale_1",
-      "community": 3,
+      "community": 28,
       "norm_label": "research priorities: which technologies unlock the most economic value.  for the"
     },
     {
@@ -2781,7 +2934,7 @@
       "source_file": "src/vic3analyser/store/db.py",
       "source_location": "L1",
       "id": "src_vic3analyser_store_db_py",
-      "community": 13,
+      "community": 10,
       "norm_label": "db.py"
     },
     {
@@ -2907,7 +3060,7 @@
       "source_file": "src/vic3analyser/store/db.py",
       "source_location": "L1",
       "id": "store_db_rationale_1",
-      "community": 13,
+      "community": 10,
       "norm_label": "sqlite time-series store for extracted snapshots.  each snapshot is stored whole"
     },
     {
@@ -2968,7 +3121,7 @@
       "label": "table()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L32",
+      "source_location": "L33",
       "id": "web_app_table",
       "community": 9,
       "norm_label": "table()"
@@ -2977,7 +3130,7 @@
       "label": "signed()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L51",
+      "source_location": "L52",
       "id": "web_app_signed",
       "community": 9,
       "norm_label": "signed()"
@@ -2986,7 +3139,7 @@
       "label": "renderRecommendations()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L57",
+      "source_location": "L58",
       "id": "web_app_renderrecommendations",
       "community": 9,
       "norm_label": "renderrecommendations()"
@@ -2995,7 +3148,7 @@
       "label": "renderOverview()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L74",
+      "source_location": "L75",
       "id": "web_app_renderoverview",
       "community": 9,
       "norm_label": "renderoverview()"
@@ -3004,7 +3157,7 @@
       "label": "drawGdp()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L91",
+      "source_location": "L92",
       "id": "web_app_drawgdp",
       "community": 9,
       "norm_label": "drawgdp()"
@@ -3013,7 +3166,7 @@
       "label": "renderMarket()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L103",
+      "source_location": "L104",
       "id": "web_app_rendermarket",
       "community": 9,
       "norm_label": "rendermarket()"
@@ -3022,7 +3175,7 @@
       "label": "renderPM()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L118",
+      "source_location": "L119",
       "id": "web_app_renderpm",
       "community": 9,
       "norm_label": "renderpm()"
@@ -3031,7 +3184,7 @@
       "label": "renderProfit()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L133",
+      "source_location": "L134",
       "id": "web_app_renderprofit",
       "community": 9,
       "norm_label": "renderprofit()"
@@ -3040,7 +3193,7 @@
       "label": "renderBuildWhat()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L149",
+      "source_location": "L150",
       "id": "web_app_renderbuildwhat",
       "community": 9,
       "norm_label": "renderbuildwhat()"
@@ -3049,7 +3202,7 @@
       "label": "renderBuildWhere()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L164",
+      "source_location": "L165",
       "id": "web_app_renderbuildwhere",
       "community": 9,
       "norm_label": "renderbuildwhere()"
@@ -3058,7 +3211,7 @@
       "label": "renderConstruction()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L179",
+      "source_location": "L180",
       "id": "web_app_renderconstruction",
       "community": 9,
       "norm_label": "renderconstruction()"
@@ -3067,16 +3220,79 @@
       "label": "renderTech()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L200",
+      "source_location": "L201",
       "id": "web_app_rendertech",
       "community": 9,
       "norm_label": "rendertech()"
     },
     {
+      "label": "setMsg()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L215",
+      "id": "web_app_setmsg",
+      "community": 9,
+      "norm_label": "setmsg()"
+    },
+    {
+      "label": "loadSettings()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L221",
+      "id": "web_app_loadsettings",
+      "community": 9,
+      "norm_label": "loadsettings()"
+    },
+    {
+      "label": "loadSaves()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L235",
+      "id": "web_app_loadsaves",
+      "community": 9,
+      "norm_label": "loadsaves()"
+    },
+    {
+      "label": "renderSaves()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L244",
+      "id": "web_app_rendersaves",
+      "community": 9,
+      "norm_label": "rendersaves()"
+    },
+    {
+      "label": "analyseSave()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L265",
+      "id": "web_app_analysesave",
+      "community": 9,
+      "norm_label": "analysesave()"
+    },
+    {
+      "label": "postSettings()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L281",
+      "id": "web_app_postsettings",
+      "community": 9,
+      "norm_label": "postsettings()"
+    },
+    {
+      "label": "runAnalyseLatest()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L305",
+      "id": "web_app_runanalyselatest",
+      "community": 9,
+      "norm_label": "runanalyselatest()"
+    },
+    {
       "label": "refreshStatus()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L214",
+      "source_location": "L326",
       "id": "web_app_refreshstatus",
       "community": 9,
       "norm_label": "refreshstatus()"
@@ -3085,7 +3301,7 @@
       "label": "refreshAnalysis()",
       "file_type": "code",
       "source_file": "src/vic3analyser/web/app.js",
-      "source_location": "L243",
+      "source_location": "L357",
       "id": "web_app_refreshanalysis",
       "community": 9,
       "norm_label": "refreshanalysis()"
@@ -3276,7 +3492,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L1",
       "id": "tests_test_analysis_extra_py",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_analysis_extra.py"
     },
     {
@@ -3285,7 +3501,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L19",
       "id": "tests_test_analysis_extra_defs",
-      "community": 1,
+      "community": 29,
       "norm_label": "_defs()"
     },
     {
@@ -3303,7 +3519,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L59",
       "id": "tests_test_analysis_extra_market",
-      "community": 1,
+      "community": 29,
       "norm_label": "_market()"
     },
     {
@@ -3312,7 +3528,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L67",
       "id": "tests_test_analysis_extra_snap",
-      "community": 1,
+      "community": 29,
       "norm_label": "_snap()"
     },
     {
@@ -3321,7 +3537,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L80",
       "id": "tests_test_analysis_extra_test_what_to_build_ranks_and_filters",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_what_to_build_ranks_and_filters()"
     },
     {
@@ -3330,7 +3546,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L91",
       "id": "tests_test_analysis_extra_test_what_to_build_demand_weighting",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_what_to_build_demand_weighting()"
     },
     {
@@ -3339,7 +3555,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L100",
       "id": "tests_test_analysis_extra_test_where_to_build_ranking",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_where_to_build_ranking()"
     },
     {
@@ -3348,7 +3564,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L110",
       "id": "tests_test_analysis_extra_test_construction_payback_and_suggestions",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_construction_payback_and_suggestions()"
     },
     {
@@ -3357,7 +3573,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L123",
       "id": "tests_test_analysis_extra_test_tech_priorities_uplift",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_tech_priorities_uplift()"
     },
     {
@@ -3847,6 +4063,15 @@
       "norm_label": "test_full_api_flow()"
     },
     {
+      "label": "test_on_demand_analysis()",
+      "file_type": "code",
+      "source_file": "tests/test_api.py",
+      "source_location": "L110",
+      "id": "tests_test_api_test_on_demand_analysis",
+      "community": 6,
+      "norm_label": "test_on_demand_analysis()"
+    },
+    {
       "label": "End-to-end API test: synthetic install + crafted plaintext save through the full",
       "file_type": "rationale",
       "source_file": "tests/test_api.py",
@@ -3854,6 +4079,15 @@
       "id": "tests_test_api_rationale_1",
       "community": 6,
       "norm_label": "end-to-end api test: synthetic install + crafted plaintext save through the full"
+    },
+    {
+      "label": "Settings/saves endpoints: list saves and analyse the latest on demand.",
+      "file_type": "rationale",
+      "source_file": "tests/test_api.py",
+      "source_location": "L111",
+      "id": "tests_test_api_rationale_111",
+      "community": 6,
+      "norm_label": "settings/saves endpoints: list saves and analyse the latest on demand."
     },
     {
       "label": "settings.json",
@@ -4045,10 +4279,28 @@
       "norm_label": "how it works"
     },
     {
-      "label": "Setup",
+      "label": "Watch mode",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L21",
+      "id": "analyser_readme_watch_mode",
+      "community": 14,
+      "norm_label": "watch mode"
+    },
+    {
+      "label": "On-demand analysis",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L31",
+      "id": "analyser_readme_on_demand_analysis",
+      "community": 14,
+      "norm_label": "on-demand analysis"
+    },
+    {
+      "label": "Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L44",
       "id": "analyser_readme_setup",
       "community": 14,
       "norm_label": "setup"
@@ -4057,7 +4309,7 @@
       "label": "code:bash (uv sync)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L23",
+      "source_location": "L46",
       "id": "analyser_readme_codeblock_1",
       "community": 14,
       "norm_label": "code:bash (uv sync)"
@@ -4066,10 +4318,190 @@
       "label": "Status",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L33",
+      "source_location": "L56",
       "id": "analyser_readme_status",
       "community": 14,
       "norm_label": "status"
+    },
+    {
+      "label": "Set which saves the watcher reacts to (\"any\"/\"autosave\").          Restarts the",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L154",
+      "community": 2,
+      "norm_label": "set which saves the watcher reacts to (\"any\"/\"autosave\").          restarts the",
+      "id": "api_server_rationale_154"
+    },
+    {
+      "label": "Ingest the newest save in ``save_dir`` on demand. Returns its date.          Wit",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L171",
+      "community": 2,
+      "norm_label": "ingest the newest save in ``save_dir`` on demand. returns its date.          wit",
+      "id": "api_server_rationale_171"
+    },
+    {
+      "label": "On startup, ingest the newest save already in the folder.          Honours ``wat",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L185",
+      "community": 2,
+      "norm_label": "on startup, ingest the newest save already in the folder.          honours ``wat",
+      "id": "api_server_rationale_185"
+    },
+    {
+      "label": "The active game ``common/`` directory (base game).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L51",
+      "community": 13,
+      "norm_label": "the active game ``common/`` directory (base game).",
+      "id": "vic3analyser_config_rationale_51"
+    },
+    {
+      "label": "Base Steam install directories to probe, OS-dependent.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L79",
+      "community": 13,
+      "norm_label": "base steam install directories to probe, os-dependent.",
+      "id": "vic3analyser_config_rationale_79"
+    },
+    {
+      "label": "All Steam library folders, including extra drives/dirs the user added.      Each",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L99",
+      "community": 13,
+      "norm_label": "all steam library folders, including extra drives/dirs the user added.      each",
+      "id": "vic3analyser_config_rationale_99"
+    },
+    {
+      "label": "`Documents` folders inside the Proton/Wine prefix for Victoria 3.      When the",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L141",
+      "community": 13,
+      "norm_label": "`documents` folders inside the proton/wine prefix for victoria 3.      when the",
+      "id": "vic3analyser_config_rationale_141"
+    },
+    {
+      "label": "Load configuration, applying auto-detection for any blank paths.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L189",
+      "community": 13,
+      "norm_label": "load configuration, applying auto-detection for any blank paths.",
+      "id": "vic3analyser_config_rationale_189"
+    },
+    {
+      "label": "Process one save (thread-safe). Returns the snapshot date.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L54",
+      "community": 2,
+      "norm_label": "process one save (thread-safe). returns the snapshot date.",
+      "id": "api_server_rationale_54"
+    },
+    {
+      "label": "All ``.v3`` saves in ``save_dir``, newest first.          Autosaves and manual s",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L73",
+      "community": 2,
+      "norm_label": "all ``.v3`` saves in ``save_dir``, newest first.          autosaves and manual s",
+      "id": "api_server_rationale_73"
+    },
+    {
+      "label": "Begin watching ``save_dir`` for new saves. Returns whether it ran.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L110",
+      "community": 2,
+      "norm_label": "begin watching ``save_dir`` for new saves. returns whether it ran.",
+      "id": "api_server_rationale_110"
+    },
+    {
+      "label": "Toggle continuous watching at runtime. Returns the effective state.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L137",
+      "community": 2,
+      "norm_label": "toggle continuous watching at runtime. returns the effective state.",
+      "id": "api_server_rationale_137"
+    },
+    {
+      "label": "Ingest the newest save in ``save_dir`` on demand. Returns its date.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L152",
+      "community": 2,
+      "norm_label": "ingest the newest save in ``save_dir`` on demand. returns its date.",
+      "id": "api_server_rationale_152"
+    },
+    {
+      "label": "On startup, ingest the newest save already in the folder.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L162",
+      "community": 2,
+      "norm_label": "on startup, ingest the newest save already in the folder.",
+      "id": "api_server_rationale_162"
+    },
+    {
+      "label": "The active game ``common/`` directory (base game).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L46",
+      "community": 13,
+      "norm_label": "the active game ``common/`` directory (base game).",
+      "id": "vic3analyser_config_rationale_46"
+    },
+    {
+      "label": "Base Steam install directories to probe, OS-dependent.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L74",
+      "community": 13,
+      "norm_label": "base steam install directories to probe, os-dependent.",
+      "id": "vic3analyser_config_rationale_74"
+    },
+    {
+      "label": "All Steam library folders, including extra drives/dirs the user added.      Each",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L94",
+      "community": 13,
+      "norm_label": "all steam library folders, including extra drives/dirs the user added.      each",
+      "id": "vic3analyser_config_rationale_94"
+    },
+    {
+      "label": "`Documents` folders inside the Proton/Wine prefix for Victoria 3.      When the",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L136",
+      "community": 13,
+      "norm_label": "`documents` folders inside the proton/wine prefix for victoria 3.      when the",
+      "id": "vic3analyser_config_rationale_136"
+    },
+    {
+      "label": "Load configuration, applying auto-detection for any blank paths.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L184",
+      "community": 13,
+      "norm_label": "load configuration, applying auto-detection for any blank paths.",
+      "id": "vic3analyser_config_rationale_184"
+    },
+    {
+      "label": "On startup, ingest the newest save already in the folder.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L96",
+      "community": 2,
+      "norm_label": "on startup, ingest the newest save already in the folder.",
+      "id": "api_server_rationale_96"
     },
     {
       "label": "The active game ``common/`` directory (base game).",
@@ -4178,9 +4610,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L135",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_vic3analyser_config_py",
-      "target": "vic3analyser_config_proton_documents",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_proton_documents"
     },
     {
       "relation": "contains",
@@ -4198,9 +4630,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_vic3analyser_config_py",
-      "target": "vic3analyser_config_steam_libraries",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_libraries"
     },
     {
       "relation": "contains",
@@ -4208,9 +4640,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_vic3analyser_config_py",
-      "target": "vic3analyser_config_steam_roots",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_roots"
     },
     {
       "relation": "imports_from",
@@ -4685,9 +5117,29 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_rationale_46",
-      "target": "vic3analyser_config_config_common_dir",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_config_common_dir"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_51",
+      "target": "vic3analyser_config_config_common_dir"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_54",
+      "target": "vic3analyser_config_config_common_dir"
     },
     {
       "relation": "references",
@@ -4751,9 +5203,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L135",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_proton_documents",
-      "target": "src_vic3analyser_config_py_path",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_config_py_path"
     },
     {
       "relation": "references",
@@ -4773,9 +5225,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_steam_libraries",
-      "target": "src_vic3analyser_config_py_path",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_config_py_path"
     },
     {
       "relation": "references",
@@ -4784,9 +5236,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_steam_roots",
-      "target": "src_vic3analyser_config_py_path",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_config_py_path"
     },
     {
       "relation": "calls",
@@ -4817,9 +5269,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L75",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_steam_roots",
-      "target": "vic3analyser_config_home",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_home"
     },
     {
       "relation": "rationale_for",
@@ -4827,9 +5279,29 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_rationale_74",
-      "target": "vic3analyser_config_steam_roots",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_roots"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_79",
+      "target": "vic3analyser_config_steam_roots"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_82",
+      "target": "vic3analyser_config_steam_roots"
     },
     {
       "relation": "calls",
@@ -4838,9 +5310,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_steam_libraries",
-      "target": "vic3analyser_config_steam_roots",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_roots"
     },
     {
       "relation": "calls",
@@ -4849,9 +5321,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_candidate_installs",
-      "target": "vic3analyser_config_steam_libraries",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_libraries"
     },
     {
       "relation": "calls",
@@ -4860,9 +5332,19 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_proton_documents",
-      "target": "vic3analyser_config_steam_libraries",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_libraries"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_102",
+      "target": "vic3analyser_config_steam_libraries"
     },
     {
       "relation": "rationale_for",
@@ -4870,9 +5352,19 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_rationale_94",
-      "target": "vic3analyser_config_steam_libraries",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_steam_libraries"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_99",
+      "target": "vic3analyser_config_steam_libraries"
     },
     {
       "relation": "calls",
@@ -4892,9 +5384,9 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L161",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_candidate_save_dirs",
-      "target": "vic3analyser_config_proton_documents",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_proton_documents"
     },
     {
       "relation": "rationale_for",
@@ -4902,9 +5394,29 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L136",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_rationale_136",
-      "target": "vic3analyser_config_proton_documents",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_proton_documents"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_141",
+      "target": "vic3analyser_config_proton_documents"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L144",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_144",
+      "target": "vic3analyser_config_proton_documents"
     },
     {
       "relation": "calls",
@@ -5021,9 +5533,29 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L184",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vic3analyser_config_rationale_184",
-      "target": "vic3analyser_config_load_config",
-      "confidence_score": 1.0
+      "target": "vic3analyser_config_load_config"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_189",
+      "target": "vic3analyser_config_load_config"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/config.py",
+      "source_location": "L192",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vic3analyser_config_rationale_192",
+      "target": "vic3analyser_config_load_config"
     },
     {
       "relation": "rationale_for",
@@ -11112,6 +11644,17 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "api_server_appstate_analyse_latest",
+      "target": "runtimeerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L56",
       "weight": 1.0,
       "source": "api_server_appstate_ingest",
@@ -11479,6 +12022,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_api_server_py",
+      "target": "api_server_is_autosave"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L182",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11530,6 +12083,178 @@
       "target": "store_db_snapshotstore"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_list_saves",
+      "target": "api_server_is_autosave"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_is_autosave",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_is_autosave",
+      "target": "src_vic3analyser_api_server_py_path"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_28",
+      "target": "api_server_is_autosave"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_ingest",
+      "target": "src_vic3analyser_api_server_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_ingest_latest_existing",
+      "target": "src_vic3analyser_api_server_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_list_saves",
+      "target": "src_vic3analyser_api_server_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_start_watcher",
+      "target": "src_vic3analyser_api_server_py_path"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L79",
+      "weight": 0.8,
+      "confidence_score": 0.5,
+      "source": "src_vic3analyser_api_server_py_path",
+      "target": "api_watcher_savehandler"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_analyse_latest",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_latest_save_path",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_set_auto_watch",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_start_watcher",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_watching",
+      "target": "src_vic3analyser_api_server_py_bool"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L119",
+      "weight": 0.8,
+      "confidence_score": 0.5,
+      "source": "src_vic3analyser_api_server_py_bool",
+      "target": "api_watcher_savehandler"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_analyse_latest"
+    },
+    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
@@ -11573,6 +12298,26 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_latest_save_path"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_list_saves"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L41",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11603,11 +12348,51 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_set_auto_watch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_set_watch_mode"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L72",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "api_server_appstate",
       "target": "api_server_appstate_start_watcher"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_stop_watcher"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate",
+      "target": "api_server_appstate_watching"
     },
     {
       "relation": "uses",
@@ -11638,6 +12423,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "api_server_rationale_28",
+      "target": "api_server_appstate"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_33",
       "target": "api_server_appstate"
     },
     {
@@ -11695,15 +12490,15 @@
       "target": "api_server_appstate_load_defs"
     },
     {
-      "relation": "references",
-      "context": "parameter_type",
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L53",
+      "source_location": "L159",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "api_server_appstate_ingest",
-      "target": "src_vic3analyser_api_server_py_path"
+      "source": "api_server_appstate_analyse_latest",
+      "target": "api_server_appstate_ingest"
     },
     {
       "relation": "references",
@@ -11738,6 +12533,27 @@
       "target": "api_server_appstate_ingest"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_59",
+      "target": "api_server_appstate_ingest"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_analyse_latest",
+      "target": "src_vic3analyser_api_server_py_str"
+    },
+    {
       "relation": "references",
       "context": "generic_arg",
       "confidence": "EXTRACTED",
@@ -11746,6 +12562,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "api_server_appstate_analysis",
+      "target": "src_vic3analyser_api_server_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_latest_save_path",
+      "target": "src_vic3analyser_api_server_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_list_saves",
       "target": "src_vic3analyser_api_server_py_str"
     },
     {
@@ -11760,36 +12598,15 @@
       "target": "src_vic3analyser_api_server_py_str"
     },
     {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L79",
-      "weight": 0.8,
-      "confidence_score": 0.5,
-      "source": "src_vic3analyser_api_server_py_str",
-      "target": "api_watcher_savehandler"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
+      "relation": "references",
+      "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L98",
+      "source_location": "L153",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "api_server_appstate_ingest_latest_existing",
-      "target": "src_vic3analyser_api_server_py_path"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/vic3analyser/api/server.py",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_server_appstate_start_watcher",
-      "target": "src_vic3analyser_api_server_py_path"
+      "source": "api_server_appstate_set_watch_mode",
+      "target": "src_vic3analyser_api_server_py_str"
     },
     {
       "relation": "uses",
@@ -11798,7 +12615,7 @@
       "source_location": "L79",
       "weight": 0.8,
       "confidence_score": 0.5,
-      "source": "src_vic3analyser_api_server_py_path",
+      "source": "src_vic3analyser_api_server_py_str",
       "target": "api_watcher_savehandler"
     },
     {
@@ -11810,6 +12627,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "api_server_appstate_analysis",
+      "target": "src_vic3analyser_api_server_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_list_saves",
       "target": "src_vic3analyser_api_server_py_any"
     },
     {
@@ -11826,12 +12654,180 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_latest_save_path",
+      "target": "api_server_appstate_list_saves"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_73",
+      "target": "api_server_appstate_list_saves"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_78",
+      "target": "api_server_appstate_list_saves"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_analyse_latest",
+      "target": "api_server_appstate_latest_save_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L163",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_ingest_latest_existing",
+      "target": "api_server_appstate_latest_save_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L140",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_set_auto_watch",
+      "target": "api_server_appstate_start_watcher"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L161",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_set_watch_mode",
+      "target": "api_server_appstate_start_watcher"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L82",
       "weight": 1.0,
       "source": "api_server_appstate_start_watcher",
       "target": "api_watcher_savehandler"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_110",
+      "target": "api_server_appstate_start_watcher"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_117",
+      "target": "api_server_appstate_start_watcher"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_set_auto_watch",
+      "target": "api_server_appstate_stop_watcher"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_appstate_set_watch_mode",
+      "target": "api_server_appstate_stop_watcher"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "api_server_appstate_set_auto_watch",
+      "target": "api_server_appstate_ingest_latest_existing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_137",
+      "target": "api_server_appstate_set_auto_watch"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_145",
+      "target": "api_server_appstate_set_auto_watch"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_154",
+      "target": "api_server_appstate_set_watch_mode"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "api_server_rationale_159",
+      "target": "api_server_appstate_set_watch_mode",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -11843,6 +12839,66 @@
       "confidence_score": 1.0,
       "source": "api_server_appstate_ingest_latest_existing",
       "target": "api_server_appstate_on_new_save"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_152",
+      "target": "api_server_appstate_analyse_latest"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L171",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_171",
+      "target": "api_server_appstate_analyse_latest"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "api_server_rationale_176",
+      "target": "api_server_appstate_analyse_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L162",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_162",
+      "target": "api_server_appstate_ingest_latest_existing"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_server_rationale_185",
+      "target": "api_server_appstate_ingest_latest_existing"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/server.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "api_server_rationale_190",
+      "target": "api_server_appstate_ingest_latest_existing",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -11885,6 +12941,17 @@
       "source_location": "L83",
       "weight": 1.0,
       "source": "tests_test_api_test_full_api_flow",
+      "target": "api_server_create_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_api.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "tests_test_api_test_on_demand_analysis",
       "target": "api_server_create_app"
     },
     {
@@ -11979,6 +13046,17 @@
     },
     {
       "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_watcher_savehandler_init",
+      "target": "src_vic3analyser_api_watcher_py_bool"
+    },
+    {
+      "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/api/watcher.py",
@@ -11987,6 +13065,17 @@
       "confidence_score": 1.0,
       "source": "api_watcher_savehandler_init",
       "target": "src_vic3analyser_api_watcher_py_float"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_watcher_savehandler_init",
+      "target": "src_vic3analyser_api_watcher_py_path"
     },
     {
       "relation": "references",
@@ -12009,6 +13098,28 @@
       "confidence_score": 1.0,
       "source": "api_watcher_savehandler_settle_and_fire",
       "target": "src_vic3analyser_api_watcher_py_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_watcher_savehandler_maybe",
+      "target": "src_vic3analyser_api_watcher_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/api/watcher.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_watcher_savehandler_settle_and_fire",
+      "target": "src_vic3analyser_api_watcher_py_path"
     },
     {
       "relation": "calls",
@@ -14475,6 +15586,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L262",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_analysesave"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
       "source_location": "L91",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -14500,6 +15621,36 @@
       "confidence_score": 1.0,
       "source": "src_vic3analyser_web_app_js",
       "target": "web_app_fmt"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L232",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_loadsaves"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L221",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_loadsettings"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L281",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_postsettings"
     },
     {
       "relation": "contains",
@@ -14605,11 +15756,41 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L241",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_rendersaves"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
       "source_location": "L200",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_vic3analyser_web_app_js",
       "target": "web_app_rendertech"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L305",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_runanalyselatest"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L215",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_web_app_js",
+      "target": "web_app_setmsg"
     },
     {
       "relation": "contains",
@@ -14640,6 +15821,39 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "web_app_drawgdp",
+      "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L237",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsaves",
+      "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L224",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsettings",
+      "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L285",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_postsettings",
       "target": "web_app"
     },
     {
@@ -14746,11 +15960,44 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L242",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_rendersaves",
+      "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
       "source_location": "L201",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "web_app_rendertech",
       "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L216",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_setmsg",
+      "target": "web_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L237",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsaves",
+      "target": "web_app_el"
     },
     {
       "relation": "calls",
@@ -14911,6 +16158,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L243",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_rendersaves",
+      "target": "web_app_table"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
       "source_location": "L202",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -15037,6 +16295,105 @@
       "confidence_score": 1.0,
       "source": "web_app_refreshanalysis",
       "target": "web_app_rendertech"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L264",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_analysesave",
+      "target": "web_app_setmsg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L227",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsettings",
+      "target": "web_app_setmsg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L287",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_postsettings",
+      "target": "web_app_setmsg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L307",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_runanalyselatest",
+      "target": "web_app_setmsg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L229",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsettings",
+      "target": "web_app_loadsaves"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L235",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_loadsaves",
+      "target": "web_app_rendersaves"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L314",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_runanalyselatest",
+      "target": "web_app_loadsaves"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L270",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_analysesave",
+      "target": "web_app_refreshstatus"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/web/app.js",
+      "source_location": "L313",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_app_runanalyselatest",
+      "target": "web_app_refreshstatus"
     },
     {
       "relation": "calls",
@@ -16302,6 +17659,16 @@
       "target": "tests_test_api_test_full_api_flow"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_api.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_api_py",
+      "target": "tests_test_api_test_on_demand_analysis"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_api.py",
@@ -16365,6 +17732,27 @@
       "confidence_score": 1.0,
       "source": "tests_test_api_test_full_api_flow",
       "target": "tests_test_api_cfg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_api.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_api_test_on_demand_analysis",
+      "target": "tests_test_api_cfg"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_api.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_api_rationale_111",
+      "target": "tests_test_api_test_on_demand_analysis"
     },
     {
       "relation": "contains",
@@ -16560,6 +17948,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "analyser_readme_how_it_works",
+      "target": "analyser_readme_on_demand_analysis"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "analyser_readme_how_it_works",
+      "target": "analyser_readme_watch_mode"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
       "source_location": "L23",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -16568,5 +17976,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "54e0625481b583db40a49020b4127b8fd41b08e8"
+  "built_at_commit": "37ac64d5d3fd0adb92758b2db5ef73adb6815ff6"
 }

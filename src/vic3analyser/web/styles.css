@@ -98,3 +98,30 @@ tr:hover td { background: var(--panel-2); }
 .rec .rec-impact { color: var(--good); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rec .rec-detail { color: var(--muted); font-size: 13px; margin-top: 3px; }
 .rec .cat { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+
+/* settings */
+.toggle { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; margin: 6px 0; }
+.toggle input { margin-top: 2px; }
+.field { display: flex; align-items: center; gap: 8px; margin: 6px 0 6px 24px; }
+.field label { color: var(--muted); font-size: 13px; }
+.field select {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+.actions { display: flex; align-items: center; gap: 12px; margin: 6px 0; flex-wrap: wrap; }
+button.primary, button.mini {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button.primary { padding: 8px 14px; font-size: 13px; border-color: var(--accent); color: var(--accent); }
+button.mini { padding: 3px 10px; font-size: 12px; }
+button.primary:hover, button.mini:hover { background: var(--panel); }
+button:disabled { opacity: .5; cursor: default; }
+.hint.err { color: var(--bad); }

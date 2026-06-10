@@ -18,6 +18,29 @@ queue, researched techs). It does **not** read AI strategic plans or hidden stat
 
 "Live" means per game-month — the natural granularity of the Vic3 economy.
 
+### Watch mode
+
+While watching is on (`auto_watch = true`), `watch_mode` controls which saves
+trigger analysis:
+
+- `"any"` (default) — every new save, autosaves and manual saves alike.
+- `"autosave"` — only Vic3's `autosave*.v3` files, ignoring manual saves.
+
+Set it in `config.toml` or switch it live on the **Settings** tab.
+
+### On-demand analysis
+
+Prefer to analyse only when you choose to? Turn off continuous watching
+(`auto_watch = false` in `config.toml`, or toggle it on the dashboard's
+**Settings** tab) and analyse on demand instead:
+
+- **Analyse latest save** / **Analyse latest autosave** — one click reads the
+  most recent save (of any kind, or the most recent autosave). Use it once at
+  the start of a game to plan your opening before anything happens, or right
+  after a major event.
+- **Available saves** — pick any specific save (autosaves are flagged) and
+  analyse it directly.
+
 ## Setup
 
 ```bash

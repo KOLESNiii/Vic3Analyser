@@ -25,6 +25,7 @@ document.querySelectorAll("#tabs button").forEach((btn) => {
     document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
     btn.classList.add("active");
     $(`[data-panel="${btn.dataset.tab}"]`).classList.add("active");
+    if (btn.dataset.tab === "settings") loadSettings();
   });
 });
 
@@ -210,6 +211,117 @@ function renderTech(rows) {
   );
 }
 
+// --- settings ---------------------------------------------------------------
+function setMsg(text, isError = false) {
+  const m = $("#settings-msg");
+  m.textContent = text;
+  m.className = "hint" + (isError ? " err" : "");
+}
+
+async function loadSettings() {
+  try {
+    const s = await (await fetch("/api/settings")).json();
+    $("#auto-watch").checked = !!s.auto_watch;
+    $("#watch-mode").value = s.watch_mode || "any";
+    $("#watch-mode-field").style.opacity = s.auto_watch ? "1" : ".5";
+    $("#watch-mode").disabled = !s.auto_watch;
+    $("#saves-dir").textContent = s.save_dir ? "From: " + s.save_dir : "No save folder configured (set save_dir in config.toml).";
+  } catch (e) {
+    setMsg("Could not load settings.", true);
+  }
+  await loadSaves();
+}
+
+async function loadSaves() {
+  try {
+    const saves = await (await fetch("/api/saves")).json();
+    renderSaves(saves);
+  } catch (e) {
+    $("#saves-table").replaceChildren(el("p", { class: "hint err" }, "Could not list saves."));
+  }
+}
+
+function renderSaves(saves) {
+  $("#saves-table").replaceChildren(
+    table(
+      [
+        { label: "Save", render: (r) => `${r.name}${r.is_autosave ? ' <span class="tag">auto</span>' : ""}` },
+        { label: "Modified", render: (r) => new Date(r.mtime * 1000).toLocaleString() },
+        { label: "Size", num: true, render: (r) => fmt(r.size / 1e6, 1) + " MB" },
+        {
+          label: "",
+          render: (r) => {
+            const b = el("button", { class: "mini" }, "Analyse");
+            b.addEventListener("click", () => analyseSave(r.path, b));
+            return b;
+          },
+        },
+      ],
+      saves
+    )
+  );
+}
+
+async function analyseSave(path, btn) {
+  if (btn) btn.disabled = true;
+  setMsg("Analysing…");
+  try {
+    const res = await fetch("/api/ingest?path=" + encodeURIComponent(path), { method: "POST" });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.detail || "failed");
+    setMsg("Analysed save dated " + body.ingested + ".");
+    await refreshStatus();
+  } catch (e) {
+    setMsg("Analysis failed: " + e.message, true);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function postSettings(params, okMsg) {
+  try {
+    const res = await fetch("/api/settings?" + params, { method: "POST" });
+    const body = await res.json();
+    $("#watch-mode").disabled = !body.auto_watch;
+    $("#watch-mode-field").style.opacity = body.auto_watch ? "1" : ".5";
+    setMsg(typeof okMsg === "function" ? okMsg(body) : okMsg);
+  } catch (err) {
+    setMsg("Could not change setting.", true);
+  }
+}
+
+$("#auto-watch").addEventListener("change", (e) =>
+  postSettings("auto_watch=" + e.target.checked, (b) =>
+    b.watching ? "Watching the save folder." : "Continuous watching off — analyse on demand."
+  )
+);
+
+$("#watch-mode").addEventListener("change", (e) =>
+  postSettings("watch_mode=" + e.target.value, (b) =>
+    b.watch_mode === "autosave" ? "Watching autosaves only." : "Watching every new save."
+  )
+);
+
+async function runAnalyseLatest(btn, autosaveOnly) {
+  btn.disabled = true;
+  setMsg(autosaveOnly ? "Analysing latest autosave…" : "Analysing latest save…");
+  try {
+    const res = await fetch("/api/analyse-latest?autosave_only=" + !!autosaveOnly, { method: "POST" });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.detail || "failed");
+    setMsg("Analysed save dated " + body.ingested + ".");
+    await refreshStatus();
+    await loadSaves();
+  } catch (err) {
+    setMsg("Analysis failed: " + err.message, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$("#analyse-latest").addEventListener("click", (e) => runAnalyseLatest(e.target, false));
+$("#analyse-latest-auto").addEventListener("click", (e) => runAnalyseLatest(e.target, true));
+
 // --- polling ----------------------------------------------------------------
 async function refreshStatus() {
   try {
@@ -226,7 +338,9 @@ async function refreshStatus() {
       banner.textContent = "Game definitions not loaded: " + (s.defs_error || "set vic3_install in config.toml");
     } else if (!s.last_ingest) {
       banner.classList.remove("hidden");
-      banner.textContent = "Waiting for a save. The watcher ingests autosaves from " + (s.save_dir || "(no save_dir set)") + ".";
+      banner.textContent = s.auto_watch
+        ? "Waiting for a save. The watcher ingests new saves from " + (s.save_dir || "(no save_dir set)") + "."
+        : "On-demand mode: open Settings and click “Analyse latest save” to get started.";
     } else {
       banner.classList.add("hidden");
     }

@@ -22,6 +22,7 @@
     <button data-tab="states">States</button>
     <button data-tab="construction">Construction</button>
     <button data-tab="tech">Tech</button>
+    <button data-tab="settings">Settings</button>
   </nav>
 
   <main>
@@ -70,6 +71,36 @@
     <section data-panel="tech" class="panel">
       <h2>Research priorities</h2>
       <div id="tech-table"></div>
+    </section>
+
+    <section data-panel="settings" class="panel">
+      <h2>Settings</h2>
+
+      <h3>Analysis mode</h3>
+      <p class="hint">Choose between continuous watching and one-off, on-demand analysis.</p>
+      <label class="toggle">
+        <input type="checkbox" id="auto-watch" />
+        <span>Continuously watch the save folder and analyse new saves automatically</span>
+      </label>
+      <div class="field" id="watch-mode-field">
+        <label for="watch-mode">While watching, analyse:</label>
+        <select id="watch-mode">
+          <option value="any">Every new save (autosaves + manual)</option>
+          <option value="autosave">Autosaves only</option>
+        </select>
+      </div>
+      <p class="hint">When watching is off, nothing is analysed automatically — use the button below whenever you want a fresh read (e.g. at the start of a game, or after a major event).</p>
+
+      <h3>Analyse now</h3>
+      <div class="actions">
+        <button id="analyse-latest" class="primary">Analyse latest save</button>
+        <button id="analyse-latest-auto" class="primary">Analyse latest autosave</button>
+        <span id="settings-msg" class="hint"></span>
+      </div>
+
+      <h3>Available saves</h3>
+      <p class="hint" id="saves-dir"></p>
+      <div id="saves-table"></div>
     </section>
   </main>
 

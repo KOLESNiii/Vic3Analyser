@@ -38,6 +38,14 @@ class Config:
     player_tag: str | None
     host: str = "127.0.0.1"
     port: int = 8000
+    # When true, continuously watch ``save_dir`` and ingest new saves. When
+    # false, analysis is on-demand only: trigger it from the Settings page
+    # (e.g. once at game start, or after a major event). See ``[server]
+    # auto_watch`` in config.toml.
+    auto_watch: bool = True
+    # Which saves the watcher reacts to: "any" (every new .v3, autosaves and
+    # manual saves alike) or "autosave" (only Vic3's autosave*.v3 files).
+    watch_mode: str = "any"
     # Directory the config file lives in; relative paths resolve against it.
     root: Path = field(default_factory=Path.cwd)
 
@@ -223,5 +231,7 @@ def load_config(config_path: str | os.PathLike[str] | None = None) -> Config:
         player_tag=(game.get("player_tag") or None),
         host=server.get("host", "127.0.0.1"),
         port=int(server.get("port", 8000)),
+        auto_watch=bool(server.get("auto_watch", True)),
+        watch_mode=("autosave" if server.get("watch_mode") == "autosave" else "any"),
         root=root,
     )

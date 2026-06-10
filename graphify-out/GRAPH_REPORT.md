@@ -1,16 +1,16 @@
-# Graph Report - analyser  (2026-06-09)
+# Graph Report - analyser  (2026-06-10)
 
 ## Corpus Check
-- 41 files · ~14,004 words
+- 41 files · ~15,516 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 454 nodes · 1181 edges · 26 communities (23 shown, 3 thin omitted)
-- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 250 edges (avg confidence: 0.56)
+- 502 nodes · 1274 edges · 32 communities (29 shown, 3 thin omitted)
+- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 253 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `54e06254`
+- Built from commit: `37ac64d5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,6 +35,12 @@
 - [[_COMMUNITY_Community 17|Community 17]]
 - [[_COMMUNITY_Community 18|Community 18]]
 - [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Snapshot` - 39 edges
@@ -56,27 +62,27 @@
 - `Path` --uses--> `Paths`  [INFERRED]
   tests/test_melt.py → src/vic3analyser/config.py
 - `Config` --uses--> `Config`  [INFERRED]
-  tests/test_api.py → src/vic3analyser/config.py
+  tests/test_melt.py → src/vic3analyser/config.py
 - `Path` --uses--> `Config`  [INFERRED]
-  tests/test_api.py → src/vic3analyser/config.py
+  tests/test_melt.py → src/vic3analyser/config.py
 
-## Communities (26 total, 3 thin omitted)
+## Communities (32 total, 3 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.16
 Nodes (52): BaseModel, ConstructionState, CountryEconomy, ActivePM, Building, ConstructionItem, ConstructionState, CountryEconomy (+44 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.08
-Nodes (38): analyse_what_to_build(), _best_available_pm(), BuildCandidate, _mean_signal(), What to build: rank building types by projected value-added at current prices, w, analyse_where_to_build(), _free_arable(), _norm() (+30 more)
+Cohesion: 0.27
+Nodes (9): analyse_where_to_build(), _free_arable(), _norm(), Where to build: rank the player's states by capacity to host new economic buildi, StateCapacity, float, int, Snapshot (+1 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.11
-Nodes (15): AppState, Holds shared, mutable server state behind a lock., Process one save (thread-safe). Returns the snapshot date., On startup, ingest the newest save already in the folder., Watchdog handler that fires on new/updated ``.v3`` saves.  Saves are large and w, SaveHandler, FileSystemEvent, FileSystemEventHandler (+7 more)
+Cohesion: 0.06
+Nodes (39): AppState, create_app(), is_autosave(), main(), FastAPI server: serves the dashboard and analysis API, and watches the autosave, Begin watching ``save_dir`` for new saves. Returns whether it ran., Begin watching ``save_dir`` for new saves. Returns whether it ran., Toggle continuous watching at runtime. Returns the effective state. (+31 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.08
-Nodes (36): analyse_market(), GoodSignal, MarketReport, Market analysis: which goods are in shortage (expensive) or glut (cheap).  A sho, GoodsValue, market_map(), price_of(), Shared economic helpers for valuing goods flows at current market prices.  All f (+28 more)
+Cohesion: 0.15
+Nodes (22): analyse_what_to_build(), _best_available_pm(), BuildCandidate, _mean_signal(), What to build: rank building types by projected value-added at current prices, w, GoodsValue, market_map(), price_of() (+14 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.18
@@ -87,8 +93,8 @@ Cohesion: 0.09
 Nodes (32): coerce_key(), coerce_scalar(), _MultiList, parse(), parse_file(), _Parser, A parser for the Clausewitz/Jomini text format used by Paradox files.  Handles t, A list produced by collapsing duplicate keys (vs an array literal). (+24 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.15
-Nodes (24): _cfg(), _make_install(), Config, Path, End-to-end API test: synthetic install + crafted plaintext save through the full, test_full_api_flow(), _cfg(), _make_install() (+16 more)
+Cohesion: 0.11
+Nodes (35): SnapshotStore, Config, GameDefs, Path, Snapshot, str, _cfg(), _make_install() (+27 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.17
@@ -99,12 +105,12 @@ Cohesion: 0.17
 Nodes (23): _active_pm_in_group(), analyse_pm_switches(), _is_available(), optimise_building(), _pm_value(), PMOption, PMRecommendation, Production-method optimisation — the counterfactual core.  For each of the playe (+15 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.36
-Nodes (17): $(), drawGdp(), el(), fmt(), refreshAnalysis(), refreshStatus(), renderBuildWhat(), renderBuildWhere() (+9 more)
+Cohesion: 0.26
+Nodes (24): $(), analyseSave(), drawGdp(), el(), fmt(), loadSaves(), loadSettings(), postSettings() (+16 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.27
-Nodes (7): Connection, Path, Snapshot, str, Insert or replace a snapshot (idempotent on player_tag+date)., Return denormalised headline metrics over time for charting.          ``metrics`, SnapshotStore
+Cohesion: 0.22
+Nodes (8): Connection, Path, Snapshot, str, SQLite time-series store for extracted snapshots.  Each snapshot is stored whole, Insert or replace a snapshot (idempotent on player_tag+date)., Return denormalised headline metrics over time for charting.          ``metrics`, SnapshotStore
 
 ### Community 11 - "Community 11"
 Cohesion: 0.15
@@ -115,12 +121,12 @@ Cohesion: 0.29
 Nodes (12): _as_int(), _country_database(), _find_country_by_tag(), _is_int(), Enforce the player-visibility rule and resolve which country is the player.  The, Return ``(country_id, tag)`` for the player country.      Resolution order: conf, resolve_player(), _tag_of() (+4 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.09
-Nodes (40): create_app(), main(), FastAPI server: serves the dashboard and analysis API, and watches the autosave, FastAPI, PathLike, SnapshotStore, Path, str (+32 more)
+Cohesion: 0.10
+Nodes (30): PathLike, Path, str, _candidate_installs(), _candidate_save_dirs(), _first_existing(), _home(), load_config() (+22 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.33
-Nodes (5): code:bash (uv sync), How it works, Setup, Status, Vic3 Economic Analyser
+Cohesion: 0.25
+Nodes (7): code:bash (uv sync), How it works, On-demand analysis, Setup, Status, Vic3 Economic Analyser, Watch mode
 
 ### Community 15 - "Community 15"
 Cohesion: 0.60
@@ -130,20 +136,42 @@ Nodes (5): _snap(), test_get_specific_date(), test_idempotent_replace(), test_sa
 Cohesion: 0.83
 Nodes (3): _defs(), _snap(), test_recommendations_include_categories_and_rank()
 
+### Community 26 - "Community 26"
+Cohesion: 0.16
+Nodes (13): analyse_market(), GoodSignal, MarketReport, Market analysis: which goods are in shortage (expensive) or glut (cheap).  A sho, build_recommendations(), Synthesize all analyses into one prioritized, explained action list.  This is th, Recommendation, Snapshot (+5 more)
+
+### Community 27 - "Community 27"
+Cohesion: 0.27
+Nodes (9): analyse_profitability(), BuildingProfit, _estimate_value_added(), Per-building profitability ranking for the player's buildings.  Prefers the real, Sum value-added across the building's active PMs, scaled by level., Building, float, GameDefs (+1 more)
+
+### Community 28 - "Community 28"
+Cohesion: 0.31
+Nodes (8): analyse_tech_priorities(), _pm_value(), Research priorities: which technologies unlock the most economic value.  For the, TechPriority, float, GameDefs, Snapshot, str
+
+### Community 29 - "Community 29"
+Cohesion: 0.50
+Nodes (8): _defs(), _market(), _snap(), test_construction_payback_and_suggestions(), test_tech_priorities_uplift(), test_what_to_build_demand_weighting(), test_what_to_build_ranks_and_filters(), test_where_to_build_ranking()
+
+### Community 30 - "Community 30"
+Cohesion: 0.36
+Nodes (6): analyse_construction(), ConstructionReport, QueueItemAnalysis, Construction focus: payback ranking of the queue and suggested additions.  Const, GameDefs, Snapshot
+
+### Community 31 - "Community 31"
+Cohesion: 0.50
+Nodes (5): Any, analyse_all(), Recursively convert dataclasses/pydantic/containers to JSON-able data., Run every analysis and return one JSON-able payload., _ser()
+
 ## Knowledge Gaps
-- **49 isolated node(s):** `PathLike`, `bool`, `bool`, `int`, `bool` (+44 more)
+- **51 isolated node(s):** `PathLike`, `bool`, `bool`, `int`, `bool` (+46 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Snapshot` connect `Community 0` to `Community 8`, `Community 1`, `Community 3`, `Community 13`?**
-  _High betweenness centrality (0.074) - this node is a cross-community bridge._
-- **Why does `Config` connect `Community 13` to `Community 0`, `Community 4`, `Community 6`, `Community 7`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `parse()` connect `Community 5` to `Community 13`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+- **Why does `Config` connect `Community 6` to `Community 0`, `Community 2`, `Community 4`, `Community 7`, `Community 13`, `Community 26`, `Community 31`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `GameDefs` connect `Community 4` to `Community 0`, `Community 2`, `Community 3`, `Community 6`, `Community 8`, `Community 26`, `Community 27`, `Community 28`, `Community 30`?**
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **Are the 21 inferred relationships involving `Snapshot` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
   _`Snapshot` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 21 inferred relationships involving `MarketGood` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
@@ -152,3 +180,5 @@ _Questions this graph is uniquely positioned to answer:_
   _`ActivePM` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 18 inferred relationships involving `Building` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
   _`Building` has 18 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 21 inferred relationships involving `CountryEconomy` (e.g. with `ConstructionState` and `CountryEconomy`) actually correct?**
+  _`CountryEconomy` has 21 INFERRED edges - model-reasoned connections that need verification._

@@ -1,7 +1,7 @@
 {
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/config.py": {
-    "mtime": 1781007846.5718033,
-    "ast_hash": "23f5f7151b841b606adbe585f67d5421",
+    "mtime": 1781096963.2626743,
+    "ast_hash": "6386358504b02f87cba513fce9ccf54c",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/__init__.py": {
@@ -60,13 +60,13 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/server.py": {
-    "mtime": 1781002305.5662932,
-    "ast_hash": "c651d543345a49d1504d3342f29d72b8",
+    "mtime": 1781099995.1395423,
+    "ast_hash": "e4bf5a579c802a733ba03da8a1cc47df",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/watcher.py": {
-    "mtime": 1781002136.0842519,
-    "ast_hash": "ddbf44f96ef78fe091d00608465d7870",
+    "mtime": 1781096974.080841,
+    "ast_hash": "e58153e5930543d6d6273a8a91905331",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/market.py": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/app.js": {
-    "mtime": 1781002205.116266,
-    "ast_hash": "5eb845dde8dd06a139f454ed1aa1669b",
+    "mtime": 1781097052.402355,
+    "ast_hash": "8905e1383359343457859107621b941e",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_snapshot.py": {
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_api.py": {
-    "mtime": 1781002238.2942743,
-    "ast_hash": "210fb09b76abf3ad2cf789897b17e512",
+    "mtime": 1781097066.8681436,
+    "ast_hash": "a9ccd302956150af1e7bd59b5fdf266b",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/.claude/settings.json": {
@@ -200,13 +200,13 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/README.md": {
-    "mtime": 1781001241.6198208,
-    "ast_hash": "a32655ac9e0d7410d2c45216064f8b4b",
+    "mtime": 1781097080.2389486,
+    "ast_hash": "120f2644ba1cdf268b0f3185987446f8",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/index.html": {
-    "mtime": 1781002151.3852546,
-    "ast_hash": "004f974cbddc1c00ecc64ed20aa0aff6",
+    "mtime": 1781097034.0627794,
+    "ast_hash": "606605b2858c917d9cf2ab6ee9318529",
     "semantic_hash": ""
   }
 }

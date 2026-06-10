@@ -4,12 +4,12 @@
 [paths]
 # Root of the Victoria 3 game install (the folder containing `game/common/...`).
 # Leave blank to try common Steam locations.
-vic3_install = ""
+vic3_install = "/home/kolesniii/Games/Victoria3"
 
 # Folder containing your save games (.v3). Leave blank to auto-detect.
 # Auto-detection covers native Windows/macOS/Linux locations and the
 # Proton prefix on Linux (steamapps/compatdata/529340/.../save games).
-save_dir = ""
+save_dir = "/home/kolesniii/.steam/steam/steamapps/compatdata/2912822744/pfx/drive_c/users/steamuser/Documents/Paradox Interactive/Victoria 3/save games"
 
 # Optional: extra mod common/ roots to overlay on top of base game defs,
 # in load order (later overrides earlier). Usually leave empty.
@@ -31,3 +31,16 @@ player_tag = ""
 [server]
 host = "127.0.0.1"
 port = 8000
+
+# When true (default), continuously watch the save folder and analyse every
+# new save (autosaves and manual saves alike). Set to false to analyse only
+# on demand from the Settings page — e.g. once at the start of a game to plan
+# your opening, or right after a major event. The watch mode can also be
+# toggled at runtime from the dashboard's Settings tab.
+auto_watch = true
+
+# Which saves the watcher reacts to while auto_watch is on:
+#   "any"      — every new save (autosaves and manual saves alike)
+#   "autosave" — only Vic3's autosave*.v3 files
+# Also switchable at runtime from the Settings tab.
+watch_mode = "any"

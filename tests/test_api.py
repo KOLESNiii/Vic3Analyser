@@ -105,3 +105,47 @@ def test_full_api_flow(tmp_path):
 
         series = client.get("/api/series", params={"player_tag": "GBR"}).json()
         assert series and series[0]["gdp"] == 500.0
+
+
+def test_on_demand_analysis(tmp_path):
+    """Settings/saves endpoints: list saves and analyse the latest on demand."""
+    cfg = _cfg(tmp_path)
+    save_dir = tmp_path / "saves"
+    save_dir.mkdir()
+    cfg.paths.save_dir = save_dir
+    cfg.auto_watch = False  # on-demand only; watcher must not auto-ingest
+
+    (save_dir / "autosave.v3").write_text(GAMESTATE)
+    latest = save_dir / "manual.v3"
+    latest.write_text(GAMESTATE.replace("1836.2.1", "1840.5.1"))
+
+    app = create_app(cfg)
+    with TestClient(app) as client:
+        status = client.get("/api/status").json()
+        assert status["auto_watch"] is False
+        assert status["watching"] is False
+        assert status["last_ingest"] is None  # nothing ingested automatically
+
+        saves = client.get("/api/saves").json()
+        assert [s["name"] for s in saves] == ["manual.v3", "autosave.v3"]
+        assert saves[1]["is_autosave"] is True
+
+        # latest of any kind is the manual save ...
+        res = client.post("/api/analyse-latest")
+        assert res.status_code == 200, res.text
+        assert res.json()["ingested"] == "1840.5.1"
+
+        # ... but autosave_only picks the older autosave instead.
+        res = client.post("/api/analyse-latest", params={"autosave_only": True})
+        assert res.status_code == 200, res.text
+        assert res.json()["ingested"] == "1836.2.1"
+
+        # default watch mode is "any"; switch it to autosaves only
+        assert status["watch_mode"] == "any"
+        out = client.post("/api/settings", params={"watch_mode": "autosave"}).json()
+        assert out["watch_mode"] == "autosave"
+
+        # toggling auto_watch on starts the watcher (with the new mode)
+        out = client.post("/api/settings", params={"auto_watch": True}).json()
+        assert out["auto_watch"] is True and out["watching"] is True
+        assert out["watch_mode"] == "autosave"
