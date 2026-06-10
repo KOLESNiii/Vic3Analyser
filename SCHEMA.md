@@ -3,11 +3,10 @@
 This is the map the extraction layer (`extract/snapshot.py`) targets: which
 **player-visible** values we pull from a melted gamestate, and where they live.
 
-> **Status: needs confirmation against a real melted save.** The Vic3 gamestate
-> is large and version-specific. The node paths below are the community-known
-> structure (cross-referenced with tools like Garibaldi / pdx-tools) but exact
-> key names drift between patches. Phase 2 finalises this against a real save;
-> until then the extractor reads each field defensively with fallbacks.
+> **Status: confirmed against a real melted save — Vic3 1.13.8** (SAR /
+> Sardinia-Piedmont, 1836.1.1 autosave). The paths below are what the extractor
+> actually reads; it still uses defensive fallbacks where a patch might rename a
+> peripheral field.
 
 ## Conventions
 
@@ -18,21 +17,25 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
   market/price data. Never read `ai_strategy`, AI plans, or other countries'
   internal ledgers beyond what the in-game diplomacy/market UI exposes.
 
-## Top-level gamestate nodes (to confirm)
+## Top-level gamestate nodes (confirmed, Vic3 1.13.8)
 
-| Need | Likely node | Confidence | Notes |
-|------|-------------|-----------|-------|
-| In-game date | `date` / `game_date` | med | for time-series key |
-| Player country | `played_country` / `human` flag in `country_manager` | low | resolve to a country id |
-| Countries | `country_manager.database[]` | high | id-keyed; each has tag, market, budget |
-| Markets | `market_manager.database[]` | med | goods prices, supply/demand |
-| Goods in market | `<market>.goods_data[]` or `mg:*` | low | price vs base price |
-| States | `state_manager.database[]` | med | per-state infra, pops, buildings |
-| Buildings | `building_manager.database[]` | high | type, level, PMs, cash, profit |
-| Production methods active | `<building>.production_methods[]` | med | currently-selected PMs |
-| Pops | `pop_manager.database[]` | med | employment, wages, SoL |
-| Technology | `<country>.technology` / `technology_manager` | med | researched + researchable |
-| Construction queue | `<country>.government_queue` / `construction` | low | points, queued buildings |
+| Need | Node | Notes |
+|------|------|-------|
+| In-game date | `date` (also `meta_data.game_date`) | time-series key |
+| Game version | `meta_data.version` | e.g. `"1.13.8"` |
+| Player country | `player_manager.database[].country` | id of each played seat → resolve tag in `country_manager` |
+| Countries | `country_manager.database[]` | id-keyed; `definition` = tag, `budget`, `market`, GraphData trends |
+| Markets | `market_manager.database[]` | **only `{owner=<id>}`** — no per-market goods data persisted |
+| Goods prices | `market_manager.world_market.price_trend.channels[]` | channel id = good's numeric id (its index in `defs.goods` load order); latest channel value = world price. Non-tradable goods (services, transportation, electricity, gold) have no channel |
+| States | `state_manager.database[]` | `country` = owner; `region` = name; `infrastructure(_usage)`, `arable_land`, `pop_statistics` |
+| State population | `<state>.pop_statistics.population_{lower,middle,upper}_strata` | sum = total; `population_salaried_workforce` = workforce |
+| Buildings | `building_manager.database[]` | `building` = type, `levels`, `state`; **no owner id** — owned via `state` → `states[].country` |
+| Building economics | `goods_sales` (income), `salary_rate`+`goods_cost` (expense), `cash_reserves`, `profit_after_reserves` | no per-building pop headcount (`staffing` = staffed levels, not pops) |
+| Active PMs | `<building>.production_methods[]` | array of PM name strings |
+| Technology | top-level `technology.database[]` | each entry `{country=<id>, acquired_technologies={...}}`; researchable set is derived, not stored |
+| Country trends | `<country>.{gdp,literacy,avgsoltrend}` | GraphData blocks (`channels[].values`); latest value is current |
+| Budget | `<country>.budget` | `money` (treasury), `credit`, `weekly_income`/`weekly_expenses` (category arrays, summed), `balance_trend.current` |
+| Construction queue | _not found_ | empty at turn 0; no stored points/queue scalar located — still unmapped |
 
 ## Fields the analysis needs (per area)
 
@@ -75,4 +78,13 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
    and update this table + `extract/snapshot.py`.
 4. Record the game version this was confirmed against here:
 
-   **Confirmed against version:** _(none yet)_
+   **Confirmed against version:** 1.13.8 (SAR, 1836.1.1 autosave)
+
+## Known gaps
+
+* **Construction** (`points/week`, queue): not located in the save. The turn-0
+  autosave has an empty queue, so the structure couldn't be observed. Revisit
+  with a save that has buildings under construction.
+* **State unemployment** and **per-building employment headcount**: not stored
+  as scalars; would need to be derived from pops. Left `None`.
+* **Market supply/demand**: not persisted at world-market level (only price).

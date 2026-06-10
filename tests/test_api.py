@@ -10,30 +10,43 @@ from vic3analyser.api.server import create_app
 from vic3analyser.config import Config, Paths
 
 GAMESTATE = """
+meta_data = { version = "1.13.8" game_date = 1836.2.1 }
 date = 1836.2.1
-version = "1.7"
+player_manager = { database = { 0 = { country = 1 } } }
 country_manager = {
     database = {
-        1 = { definition = "GBR" gdp = 500.0 budget = { money = 10000.0 weekly_net = 25.0 } }
+        1 = { definition = "GBR"
+              gdp = { channels = { 0 = { values = { 500.0 } } } }
+              budget = { money = 10000.0
+                         weekly_income = { 60.0 40.0 }
+                         weekly_expenses = { 50.0 25.0 }
+                         balance_trend = { current = 25.0 } } }
     }
 }
 market_manager = {
-    database = {
-        10 = { goods_data = {
-            100 = { goods = steel price = 90.0 }
-            101 = { goods = iron price = 40.0 }
-        } }
-    }
+    world_market = { price_trend = { channels = {
+        0 = { values = { 40.0 } }
+        1 = { values = { 90.0 } }
+    } } }
+    database = { 19 = { owner = 1 } }
 }
 building_manager = {
     database = {
-        1000 = { building_type = building_steel_mills country = 1 state = 5 level = 4
-                 production_methods = { pm_basic_steel } }
+        1000 = { building = building_steel_mills state = 5 levels = 4
+                 production_methods = { pm_basic_steel }
+                 goods_sales = 50.0 salary_rate = 20.0 goods_cost = 10.0 }
     }
+}
+technology = {
+    database = { 0 = { country = 1 acquired_technologies = { enclosure } } }
 }
 state_manager = {
     database = {
-        5 = { country = 1 name = STATE_LONDON infrastructure = 100 infrastructure_usage = 40 }
+        5 = { country = 1 region = STATE_LONDON infrastructure = 100 infrastructure_usage = 40
+              pop_statistics = { population_lower_strata = 700000
+                                 population_middle_strata = 250000
+                                 population_upper_strata = 50000
+                                 population_salaried_workforce = 200000 } }
     }
 }
 """

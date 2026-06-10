@@ -32,9 +32,9 @@ DISALLOWED_NODES = frozenset(
 def resolve_player(gamestate: dict, configured_tag: str | None) -> tuple[int | None, str | None]:
     """Return ``(country_id, tag)`` for the player country.
 
-    Resolution order: configured tag → explicit played/human marker in the
-    save. Returns ``(None, configured_tag)`` if the id can't be resolved yet
-    (the country database key name is confirmed in Phase 2).
+    Resolution order: configured tag → ``player_manager`` (the authoritative
+    Vic3 marker: each played seat records its ``country`` id) → legacy markers.
+    Returns ``(None, configured_tag)`` if nothing resolves.
     """
     countries = _country_database(gamestate)
 
@@ -42,17 +42,35 @@ def resolve_player(gamestate: dict, configured_tag: str | None) -> tuple[int | N
         cid = _find_country_by_tag(countries, configured_tag)
         return cid, configured_tag
 
-    # Explicit markers seen across PDX saves; confirm exact key for Vic3.
+    # Vic3 records the human seats under player_manager.database.<n>.country.
+    cid = _player_from_manager(gamestate)
+    if cid is not None:
+        return cid, _tag_of(countries, cid)
+
+    # Legacy / cross-PDX fallbacks.
     for key in ("played_country", "human_countries", "human", "player"):
         marker = gamestate.get(key)
         if marker is None:
             continue
         ids = [int(x) for x in as_list(marker) if _is_int(x)]
         if ids:
-            cid = ids[0]
-            return cid, _tag_of(countries, cid)
+            return ids[0], _tag_of(countries, ids[0])
 
     return None, None
+
+
+def _player_from_manager(gamestate: dict) -> int | None:
+    """First played country id from ``player_manager.database.<n>.country``."""
+    mgr = gamestate.get("player_manager")
+    if not isinstance(mgr, dict):
+        return None
+    db = mgr.get("database")
+    if not isinstance(db, dict):
+        return None
+    for entry in db.values():
+        if isinstance(entry, dict) and _is_int(entry.get("country")):
+            return int(entry["country"])
+    return None
 
 
 def _country_database(gamestate: dict) -> dict:

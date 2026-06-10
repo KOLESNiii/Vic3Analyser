@@ -18,7 +18,7 @@
       "source_file": "src/vic3analyser/config.py",
       "source_location": "L27",
       "id": "vic3analyser_config_paths",
-      "community": 4,
+      "community": 6,
       "norm_label": "paths"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L46",
       "id": "vic3analyser_pipeline_ser",
-      "community": 6,
+      "community": 31,
       "norm_label": "_ser()"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L46",
       "id": "src_vic3analyser_pipeline_py_any",
-      "community": 6,
+      "community": 31,
       "norm_label": "any"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L59",
       "id": "vic3analyser_pipeline_analyse_all",
-      "community": 6,
+      "community": 31,
       "norm_label": "analyse_all()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L47",
       "id": "vic3analyser_pipeline_rationale_47",
-      "community": 6,
+      "community": 31,
       "norm_label": "recursively convert dataclasses/pydantic/containers to json-able data."
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "src/vic3analyser/pipeline.py",
       "source_location": "L60",
       "id": "vic3analyser_pipeline_rationale_60",
-      "community": 6,
+      "community": 31,
       "norm_label": "run every analysis and return one json-able payload."
     },
     {
@@ -391,10 +391,19 @@
       "norm_label": "int"
     },
     {
+      "label": "_player_from_manager()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L62",
+      "id": "extract_visibility_player_from_manager",
+      "community": 12,
+      "norm_label": "_player_from_manager()"
+    },
+    {
       "label": "_country_database()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L58",
+      "source_location": "L76",
       "id": "extract_visibility_country_database",
       "community": 12,
       "norm_label": "_country_database()"
@@ -403,7 +412,7 @@
       "label": "_find_country_by_tag()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L68",
+      "source_location": "L86",
       "id": "extract_visibility_find_country_by_tag",
       "community": 12,
       "norm_label": "_find_country_by_tag()"
@@ -412,7 +421,7 @@
       "label": "_tag_of()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L75",
+      "source_location": "L93",
       "id": "extract_visibility_tag_of",
       "community": 12,
       "norm_label": "_tag_of()"
@@ -421,7 +430,7 @@
       "label": "_is_int()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L84",
+      "source_location": "L102",
       "id": "extract_visibility_is_int",
       "community": 12,
       "norm_label": "_is_int()"
@@ -430,7 +439,7 @@
       "label": "Any",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L84",
+      "source_location": "L102",
       "id": "src_vic3analyser_extract_visibility_py_any",
       "community": 12,
       "norm_label": "any"
@@ -439,7 +448,7 @@
       "label": "bool",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L84",
+      "source_location": "L102",
       "id": "src_vic3analyser_extract_visibility_py_bool",
       "community": 12,
       "norm_label": "bool"
@@ -448,7 +457,7 @@
       "label": "_as_int()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/visibility.py",
-      "source_location": "L92",
+      "source_location": "L110",
       "id": "extract_visibility_as_int",
       "community": 12,
       "norm_label": "_as_int()"
@@ -470,6 +479,15 @@
       "id": "extract_visibility_rationale_33",
       "community": 12,
       "norm_label": "return ``(country_id, tag)`` for the player country.      resolution order: conf"
+    },
+    {
+      "label": "First played country id from ``player_manager.database.<n>.country``.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L63",
+      "id": "extract_visibility_rationale_63",
+      "community": 12,
+      "norm_label": "first played country id from ``player_manager.database.<n>.country``."
     },
     {
       "label": "__init__.py",
@@ -583,7 +601,7 @@
       "label": "_country_record()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L95",
+      "source_location": "L97",
       "id": "extract_snapshot_country_record",
       "community": 0,
       "norm_label": "_country_record()"
@@ -592,16 +610,52 @@
       "label": "int",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L95",
+      "source_location": "L97",
       "id": "src_vic3analyser_extract_snapshot_py_int",
       "community": 0,
       "norm_label": "int"
     },
     {
+      "label": "_sum_array()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L104",
+      "id": "extract_snapshot_sum_array",
+      "community": 0,
+      "norm_label": "_sum_array()"
+    },
+    {
+      "label": "_trend_current()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L110",
+      "id": "extract_snapshot_trend_current",
+      "community": 0,
+      "norm_label": "_trend_current()"
+    },
+    {
+      "label": "_graph_latest()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L117",
+      "id": "extract_snapshot_graph_latest",
+      "community": 0,
+      "norm_label": "_graph_latest()"
+    },
+    {
+      "label": "_channel_latest()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L133",
+      "id": "extract_snapshot_channel_latest",
+      "community": 0,
+      "norm_label": "_channel_latest()"
+    },
+    {
       "label": "_extract_country()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L102",
+      "source_location": "L140",
       "id": "extract_snapshot_extract_country",
       "community": 0,
       "norm_label": "_extract_country()"
@@ -610,7 +664,7 @@
       "label": "CountryEconomy",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L102",
+      "source_location": "L140",
       "id": "countryeconomy",
       "community": 0,
       "norm_label": "countryeconomy"
@@ -619,7 +673,7 @@
       "label": "_extract_market()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L118",
+      "source_location": "L161",
       "id": "extract_snapshot_extract_market",
       "community": 0,
       "norm_label": "_extract_market()"
@@ -628,16 +682,25 @@
       "label": "MarketGood",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L118",
+      "source_location": "L161",
       "id": "src_vic3analyser_extract_snapshot_py_marketgood",
       "community": 0,
       "norm_label": "marketgood"
     },
     {
+      "label": "_player_state_ids()",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L196",
+      "id": "extract_snapshot_player_state_ids",
+      "community": 0,
+      "norm_label": "_player_state_ids()"
+    },
+    {
       "label": "_extract_buildings()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L146",
+      "source_location": "L210",
       "id": "extract_snapshot_extract_buildings",
       "community": 0,
       "norm_label": "_extract_buildings()"
@@ -646,7 +709,7 @@
       "label": "Building",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L146",
+      "source_location": "L210",
       "id": "src_vic3analyser_extract_snapshot_py_building",
       "community": 0,
       "norm_label": "building"
@@ -655,7 +718,7 @@
       "label": "_extract_states()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L178",
+      "source_location": "L256",
       "id": "extract_snapshot_extract_states",
       "community": 0,
       "norm_label": "_extract_states()"
@@ -664,7 +727,7 @@
       "label": "StateInfo",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L178",
+      "source_location": "L256",
       "id": "src_vic3analyser_extract_snapshot_py_stateinfo",
       "community": 0,
       "norm_label": "stateinfo"
@@ -673,7 +736,7 @@
       "label": "_extract_tech()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L203",
+      "source_location": "L291",
       "id": "extract_snapshot_extract_tech",
       "community": 0,
       "norm_label": "_extract_tech()"
@@ -682,7 +745,7 @@
       "label": "TechState",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L203",
+      "source_location": "L291",
       "id": "techstate",
       "community": 0,
       "norm_label": "techstate"
@@ -691,7 +754,7 @@
       "label": "_extract_construction()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L211",
+      "source_location": "L305",
       "id": "extract_snapshot_extract_construction",
       "community": 0,
       "norm_label": "_extract_construction()"
@@ -700,7 +763,7 @@
       "label": "ConstructionState",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L211",
+      "source_location": "L305",
       "id": "constructionstate",
       "community": 0,
       "norm_label": "constructionstate"
@@ -709,7 +772,7 @@
       "label": "int_or()",
       "file_type": "code",
       "source_file": "src/vic3analyser/extract/snapshot.py",
-      "source_location": "L233",
+      "source_location": "L327",
       "id": "extract_snapshot_int_or",
       "community": 0,
       "norm_label": "int_or()"
@@ -731,6 +794,60 @@
       "id": "extract_snapshot_rationale_54",
       "community": 0,
       "norm_label": "unwrap a ``{database: {...}}`` manager node, or pass a dict through."
+    },
+    {
+      "label": "Sum a Vic3 category array (e.g. ``weekly_income={ 0 2599 7576 ... }``).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L105",
+      "id": "extract_snapshot_rationale_105",
+      "community": 0,
+      "norm_label": "sum a vic3 category array (e.g. ``weekly_income={ 0 2599 7576 ... }``)."
+    },
+    {
+      "label": "Read ``.current`` from a Vic3 ``*_trend={ current=N }`` block.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L111",
+      "id": "extract_snapshot_rationale_111",
+      "community": 0,
+      "norm_label": "read ``.current`` from a vic3 ``*_trend={ current=n }`` block."
+    },
+    {
+      "label": "Latest value of a Vic3 \"GraphData\" block.      Shape: ``{ sample_rate, count, ch",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L118",
+      "id": "extract_snapshot_rationale_118",
+      "community": 0,
+      "norm_label": "latest value of a vic3 \"graphdata\" block.      shape: ``{ sample_rate, count, ch"
+    },
+    {
+      "label": "Last value in a GraphData channel's ``values={ ... }`` block.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L134",
+      "id": "extract_snapshot_rationale_134",
+      "community": 0,
+      "norm_label": "last value in a graphdata channel's ``values={ ... }`` block."
+    },
+    {
+      "label": "Current goods prices from the world market.      Per-market goods data isn't per",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L162",
+      "id": "extract_snapshot_rationale_162",
+      "community": 0,
+      "norm_label": "current goods prices from the world market.      per-market goods data isn't per"
+    },
+    {
+      "label": "State ids owned by ``player_id`` (``states.<id>.country``).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L197",
+      "id": "extract_snapshot_rationale_197",
+      "community": 0,
+      "norm_label": "state ids owned by ``player_id`` (``states.<id>.country``)."
     },
     {
       "label": "models.py",
@@ -963,7 +1080,7 @@
       "source_file": "src/vic3analyser/ingest/defs.py",
       "source_location": "L47",
       "id": "ingest_defs_gamedefs",
-      "community": 3,
+      "community": 4,
       "norm_label": "gamedefs"
     },
     {
@@ -1170,7 +1287,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L1",
       "id": "src_vic3analyser_ingest_parser_py",
-      "community": 4,
+      "community": 5,
       "norm_label": "parser.py"
     },
     {
@@ -1305,7 +1422,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L183",
       "id": "ingest_parser_multilist",
-      "community": 4,
+      "community": 5,
       "norm_label": "_multilist"
     },
     {
@@ -1314,7 +1431,7 @@
       "source_file": "",
       "source_location": "",
       "id": "list",
-      "community": 4,
+      "community": 5,
       "norm_label": "list"
     },
     {
@@ -1341,7 +1458,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L200",
       "id": "ingest_parser_parse_file",
-      "community": 4,
+      "community": 5,
       "norm_label": "parse_file()"
     },
     {
@@ -1350,7 +1467,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L200",
       "id": "src_vic3analyser_ingest_parser_py_path",
-      "community": 4,
+      "community": 5,
       "norm_label": "path"
     },
     {
@@ -1368,7 +1485,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L1",
       "id": "ingest_parser_rationale_1",
-      "community": 4,
+      "community": 5,
       "norm_label": "a parser for the clausewitz/jomini text format used by paradox files.  handles t"
     },
     {
@@ -1395,7 +1512,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L184",
       "id": "ingest_parser_rationale_184",
-      "community": 4,
+      "community": 5,
       "norm_label": "a list produced by collapsing duplicate keys (vs an array literal)."
     },
     {
@@ -1413,7 +1530,7 @@
       "source_file": "src/vic3analyser/ingest/parser.py",
       "source_location": "L201",
       "id": "ingest_parser_rationale_201",
-      "community": 4,
+      "community": 5,
       "norm_label": "parse a clausewitz text file. falls back to latin-1 on decode errors."
     },
     {
@@ -2232,7 +2349,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_pricing_py",
-      "community": 3,
+      "community": 26,
       "norm_label": "pricing.py"
     },
     {
@@ -2241,7 +2358,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L18",
       "id": "analysis_pricing_goodsvalue",
-      "community": 3,
+      "community": 26,
       "norm_label": "goodsvalue"
     },
     {
@@ -2250,7 +2367,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L24",
       "id": "analysis_pricing_goodsvalue_value_added",
-      "community": 3,
+      "community": 26,
       "norm_label": ".value_added()"
     },
     {
@@ -2259,7 +2376,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L24",
       "id": "src_vic3analyser_analysis_pricing_py_float",
-      "community": 3,
+      "community": 26,
       "norm_label": "float"
     },
     {
@@ -2268,7 +2385,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L28",
       "id": "analysis_pricing_price_of",
-      "community": 3,
+      "community": 26,
       "norm_label": "price_of()"
     },
     {
@@ -2277,7 +2394,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L28",
       "id": "src_vic3analyser_analysis_pricing_py_str",
-      "community": 3,
+      "community": 26,
       "norm_label": "str"
     },
     {
@@ -2286,7 +2403,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L28",
       "id": "src_vic3analyser_analysis_pricing_py_marketgood",
-      "community": 3,
+      "community": 26,
       "norm_label": "marketgood"
     },
     {
@@ -2295,7 +2412,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L36",
       "id": "analysis_pricing_value_goods",
-      "community": 3,
+      "community": 26,
       "norm_label": "value_goods()"
     },
     {
@@ -2304,7 +2421,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L65",
       "id": "analysis_pricing_shortage_score",
-      "community": 3,
+      "community": 26,
       "norm_label": "shortage_score()"
     },
     {
@@ -2313,7 +2430,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L76",
       "id": "analysis_pricing_market_map",
-      "community": 3,
+      "community": 26,
       "norm_label": "market_map()"
     },
     {
@@ -2322,7 +2439,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L76",
       "id": "src_vic3analyser_analysis_pricing_py_snapshot",
-      "community": 3,
+      "community": 26,
       "norm_label": "snapshot"
     },
     {
@@ -2331,7 +2448,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L1",
       "id": "analysis_pricing_rationale_1",
-      "community": 3,
+      "community": 26,
       "norm_label": "shared economic helpers for valuing goods flows at current market prices.  all f"
     },
     {
@@ -2340,7 +2457,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L29",
       "id": "analysis_pricing_rationale_29",
-      "community": 3,
+      "community": 26,
       "norm_label": "current market price for a good, falling back to its base price."
     },
     {
@@ -2349,7 +2466,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L42",
       "id": "analysis_pricing_rationale_42",
-      "community": 3,
+      "community": 26,
       "norm_label": "value a set of input/output goods flows at current market prices.      ``base_pr"
     },
     {
@@ -2358,7 +2475,7 @@
       "source_file": "src/vic3analyser/analysis/pricing.py",
       "source_location": "L66",
       "id": "analysis_pricing_rationale_66",
-      "community": 3,
+      "community": 26,
       "norm_label": "a signed signal: >0 means scarce/expensive (worth producing), <0 glut.      uses"
     },
     {
@@ -2367,7 +2484,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_profitability_py",
-      "community": 8,
+      "community": 27,
       "norm_label": "profitability.py"
     },
     {
@@ -2376,7 +2493,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L20",
       "id": "analysis_profitability_buildingprofit",
-      "community": 8,
+      "community": 27,
       "norm_label": "buildingprofit"
     },
     {
@@ -2385,7 +2502,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "analysis_profitability_estimate_value_added",
-      "community": 8,
+      "community": 27,
       "norm_label": "_estimate_value_added()"
     },
     {
@@ -2394,7 +2511,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_building",
-      "community": 8,
+      "community": 27,
       "norm_label": "building"
     },
     {
@@ -2403,7 +2520,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_gamedefs",
-      "community": 8,
+      "community": 27,
       "norm_label": "gamedefs"
     },
     {
@@ -2412,7 +2529,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L31",
       "id": "src_vic3analyser_analysis_profitability_py_float",
-      "community": 8,
+      "community": 27,
       "norm_label": "float"
     },
     {
@@ -2421,7 +2538,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L48",
       "id": "analysis_profitability_analyse_profitability",
-      "community": 8,
+      "community": 27,
       "norm_label": "analyse_profitability()"
     },
     {
@@ -2430,7 +2547,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L48",
       "id": "src_vic3analyser_analysis_profitability_py_snapshot",
-      "community": 8,
+      "community": 27,
       "norm_label": "snapshot"
     },
     {
@@ -2439,7 +2556,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L1",
       "id": "analysis_profitability_rationale_1",
-      "community": 8,
+      "community": 27,
       "norm_label": "per-building profitability ranking for the player's buildings.  prefers the real"
     },
     {
@@ -2448,7 +2565,7 @@
       "source_file": "src/vic3analyser/analysis/profitability.py",
       "source_location": "L32",
       "id": "analysis_profitability_rationale_32",
-      "community": 8,
+      "community": 27,
       "norm_label": "sum value-added across the building's active pms, scaled by level."
     },
     {
@@ -2457,7 +2574,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_build_what_py",
-      "community": 3,
+      "community": 26,
       "norm_label": "build_what.py"
     },
     {
@@ -2466,7 +2583,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L21",
       "id": "analysis_build_what_buildcandidate",
-      "community": 3,
+      "community": 26,
       "norm_label": "buildcandidate"
     },
     {
@@ -2475,7 +2592,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "analysis_build_what_best_available_pm",
-      "community": 3,
+      "community": 26,
       "norm_label": "_best_available_pm()"
     },
     {
@@ -2484,7 +2601,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_build_what_py_str",
-      "community": 3,
+      "community": 26,
       "norm_label": "str"
     },
     {
@@ -2493,7 +2610,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_build_what_py_gamedefs",
-      "community": 3,
+      "community": 26,
       "norm_label": "gamedefs"
     },
     {
@@ -2502,7 +2619,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L45",
       "id": "analysis_build_what_analyse_what_to_build",
-      "community": 3,
+      "community": 26,
       "norm_label": "analyse_what_to_build()"
     },
     {
@@ -2511,7 +2628,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L45",
       "id": "src_vic3analyser_analysis_build_what_py_snapshot",
-      "community": 3,
+      "community": 26,
       "norm_label": "snapshot"
     },
     {
@@ -2520,7 +2637,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L104",
       "id": "analysis_build_what_mean_signal",
-      "community": 3,
+      "community": 26,
       "norm_label": "_mean_signal()"
     },
     {
@@ -2529,7 +2646,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L104",
       "id": "src_vic3analyser_analysis_build_what_py_float",
-      "community": 3,
+      "community": 26,
       "norm_label": "float"
     },
     {
@@ -2538,7 +2655,7 @@
       "source_file": "src/vic3analyser/analysis/build_what.py",
       "source_location": "L1",
       "id": "analysis_build_what_rationale_1",
-      "community": 3,
+      "community": 26,
       "norm_label": "what to build: rank building types by projected value-added at current prices, w"
     },
     {
@@ -2556,7 +2673,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_build_where_py",
-      "community": 3,
+      "community": 1,
       "norm_label": "build_where.py"
     },
     {
@@ -2565,7 +2682,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L24",
       "id": "analysis_build_where_statecapacity",
-      "community": 3,
+      "community": 1,
       "norm_label": "statecapacity"
     },
     {
@@ -2574,7 +2691,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L34",
       "id": "analysis_build_where_norm",
-      "community": 3,
+      "community": 1,
       "norm_label": "_norm()"
     },
     {
@@ -2583,7 +2700,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L34",
       "id": "src_vic3analyser_analysis_build_where_py_float",
-      "community": 3,
+      "community": 1,
       "norm_label": "float"
     },
     {
@@ -2592,7 +2709,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L40",
       "id": "analysis_build_where_analyse_where_to_build",
-      "community": 3,
+      "community": 1,
       "norm_label": "analyse_where_to_build()"
     },
     {
@@ -2601,7 +2718,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L40",
       "id": "src_vic3analyser_analysis_build_where_py_snapshot",
-      "community": 3,
+      "community": 1,
       "norm_label": "snapshot"
     },
     {
@@ -2610,7 +2727,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L92",
       "id": "analysis_build_where_free_arable",
-      "community": 3,
+      "community": 1,
       "norm_label": "_free_arable()"
     },
     {
@@ -2619,7 +2736,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L92",
       "id": "src_vic3analyser_analysis_build_where_py_stateinfo",
-      "community": 3,
+      "community": 1,
       "norm_label": "stateinfo"
     },
     {
@@ -2628,7 +2745,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L92",
       "id": "src_vic3analyser_analysis_build_where_py_int",
-      "community": 3,
+      "community": 1,
       "norm_label": "int"
     },
     {
@@ -2637,7 +2754,7 @@
       "source_file": "src/vic3analyser/analysis/build_where.py",
       "source_location": "L1",
       "id": "analysis_build_where_rationale_1",
-      "community": 3,
+      "community": 1,
       "norm_label": "where to build: rank the player's states by capacity to host new economic buildi"
     },
     {
@@ -2790,7 +2907,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_construction_py",
-      "community": 3,
+      "community": 30,
       "norm_label": "construction.py"
     },
     {
@@ -2799,7 +2916,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L18",
       "id": "analysis_construction_queueitemanalysis",
-      "community": 3,
+      "community": 30,
       "norm_label": "queueitemanalysis"
     },
     {
@@ -2808,7 +2925,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L28",
       "id": "analysis_construction_constructionreport",
-      "community": 3,
+      "community": 30,
       "norm_label": "constructionreport"
     },
     {
@@ -2817,7 +2934,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L34",
       "id": "analysis_construction_constructionreport_queue_by_payback",
-      "community": 3,
+      "community": 30,
       "norm_label": ".queue_by_payback()"
     },
     {
@@ -2826,7 +2943,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "analysis_construction_analyse_construction",
-      "community": 3,
+      "community": 30,
       "norm_label": "analyse_construction()"
     },
     {
@@ -2835,7 +2952,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "src_vic3analyser_analysis_construction_py_snapshot",
-      "community": 3,
+      "community": 30,
       "norm_label": "snapshot"
     },
     {
@@ -2844,7 +2961,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L41",
       "id": "src_vic3analyser_analysis_construction_py_gamedefs",
-      "community": 3,
+      "community": 30,
       "norm_label": "gamedefs"
     },
     {
@@ -2853,7 +2970,7 @@
       "source_file": "src/vic3analyser/analysis/construction.py",
       "source_location": "L1",
       "id": "analysis_construction_rationale_1",
-      "community": 3,
+      "community": 30,
       "norm_label": "construction focus: payback ranking of the queue and suggested additions.  const"
     },
     {
@@ -2862,7 +2979,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L1",
       "id": "src_vic3analyser_analysis_tech_py",
-      "community": 3,
+      "community": 28,
       "norm_label": "tech.py"
     },
     {
@@ -2871,7 +2988,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L21",
       "id": "analysis_tech_techpriority",
-      "community": 3,
+      "community": 28,
       "norm_label": "techpriority"
     },
     {
@@ -2880,7 +2997,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "analysis_tech_pm_value",
-      "community": 3,
+      "community": 28,
       "norm_label": "_pm_value()"
     },
     {
@@ -2889,7 +3006,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_str",
-      "community": 3,
+      "community": 28,
       "norm_label": "str"
     },
     {
@@ -2898,7 +3015,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_gamedefs",
-      "community": 3,
+      "community": 28,
       "norm_label": "gamedefs"
     },
     {
@@ -2907,7 +3024,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L27",
       "id": "src_vic3analyser_analysis_tech_py_float",
-      "community": 3,
+      "community": 28,
       "norm_label": "float"
     },
     {
@@ -2916,7 +3033,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L32",
       "id": "analysis_tech_analyse_tech_priorities",
-      "community": 3,
+      "community": 28,
       "norm_label": "analyse_tech_priorities()"
     },
     {
@@ -2925,7 +3042,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L32",
       "id": "src_vic3analyser_analysis_tech_py_snapshot",
-      "community": 3,
+      "community": 28,
       "norm_label": "snapshot"
     },
     {
@@ -2934,7 +3051,7 @@
       "source_file": "src/vic3analyser/analysis/tech.py",
       "source_location": "L1",
       "id": "analysis_tech_rationale_1",
-      "community": 3,
+      "community": 28,
       "norm_label": "research priorities: which technologies unlock the most economic value.  for the"
     },
     {
@@ -3337,7 +3454,7 @@
       "label": "_defs()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "id": "tests_test_snapshot_defs",
       "community": 6,
       "norm_label": "_defs()"
@@ -3346,7 +3463,7 @@
       "label": "GameDefs",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "id": "tests_test_snapshot_py_gamedefs",
       "community": 6,
       "norm_label": "gamedefs"
@@ -3355,7 +3472,7 @@
       "label": "_cfg()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "id": "tests_test_snapshot_cfg",
       "community": 6,
       "norm_label": "_cfg()"
@@ -3364,7 +3481,7 @@
       "label": "str",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "id": "tests_test_snapshot_py_str",
       "community": 6,
       "norm_label": "str"
@@ -3373,16 +3490,34 @@
       "label": "Config",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "id": "tests_test_snapshot_py_config",
       "community": 6,
       "norm_label": "config"
     },
     {
+      "label": "_graph()",
+      "file_type": "code",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L27",
+      "id": "tests_test_snapshot_graph",
+      "community": 6,
+      "norm_label": "_graph()"
+    },
+    {
+      "label": "float",
+      "file_type": "code",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L27",
+      "id": "tests_test_snapshot_py_float",
+      "community": 6,
+      "norm_label": "float"
+    },
+    {
       "label": "_gamestate()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L25",
+      "source_location": "L32",
       "id": "tests_test_snapshot_gamestate",
       "community": 6,
       "norm_label": "_gamestate()"
@@ -3391,37 +3526,64 @@
       "label": "test_build_snapshot_basic()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L64",
+      "source_location": "L87",
       "id": "tests_test_snapshot_test_build_snapshot_basic",
       "community": 6,
       "norm_label": "test_build_snapshot_basic()"
     },
     {
-      "label": "test_market_joins_base_price()",
+      "label": "test_player_resolved_from_player_manager()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L74",
-      "id": "tests_test_snapshot_test_market_joins_base_price",
+      "source_location": "L102",
+      "id": "tests_test_snapshot_test_player_resolved_from_player_manager",
       "community": 6,
-      "norm_label": "test_market_joins_base_price()"
+      "norm_label": "test_player_resolved_from_player_manager()"
+    },
+    {
+      "label": "test_market_prices_from_world_market_by_good_order()",
+      "file_type": "code",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L109",
+      "id": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "community": 6,
+      "norm_label": "test_market_prices_from_world_market_by_good_order()"
     },
     {
       "label": "test_only_player_owned_buildings_and_states()",
       "file_type": "code",
       "source_file": "tests/test_snapshot.py",
-      "source_location": "L83",
+      "source_location": "L119",
       "id": "tests_test_snapshot_test_only_player_owned_buildings_and_states",
       "community": 6,
       "norm_label": "test_only_player_owned_buildings_and_states()"
     },
     {
-      "label": "Adapter tests using a synthetic gamestate shaped per SCHEMA.md assumptions.  The",
+      "label": "test_tech_from_top_level_manager()",
+      "file_type": "code",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L134",
+      "id": "tests_test_snapshot_test_tech_from_top_level_manager",
+      "community": 6,
+      "norm_label": "test_tech_from_top_level_manager()"
+    },
+    {
+      "label": "Adapter tests using a synthetic gamestate shaped like a real melted save.  These",
       "file_type": "rationale",
       "source_file": "tests/test_snapshot.py",
       "source_location": "L1",
       "id": "tests_test_snapshot_rationale_1",
       "community": 6,
-      "norm_label": "adapter tests using a synthetic gamestate shaped per schema.md assumptions.  the"
+      "norm_label": "adapter tests using a synthetic gamestate shaped like a real melted save.  these"
+    },
+    {
+      "label": "A minimal Vic3 GraphData block whose latest reading is ``value``.",
+      "file_type": "rationale",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L28",
+      "id": "tests_test_snapshot_rationale_28",
+      "community": 6,
+      "norm_label": "a minimal vic3 graphdata block whose latest reading is ``value``."
     },
     {
       "label": "test_melt.py",
@@ -3510,7 +3672,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L1",
       "id": "tests_test_analysis_extra_py",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_analysis_extra.py"
     },
     {
@@ -3519,7 +3681,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L19",
       "id": "tests_test_analysis_extra_defs",
-      "community": 1,
+      "community": 29,
       "norm_label": "_defs()"
     },
     {
@@ -3537,7 +3699,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L59",
       "id": "tests_test_analysis_extra_market",
-      "community": 1,
+      "community": 29,
       "norm_label": "_market()"
     },
     {
@@ -3546,7 +3708,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L67",
       "id": "tests_test_analysis_extra_snap",
-      "community": 1,
+      "community": 29,
       "norm_label": "_snap()"
     },
     {
@@ -3555,7 +3717,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L80",
       "id": "tests_test_analysis_extra_test_what_to_build_ranks_and_filters",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_what_to_build_ranks_and_filters()"
     },
     {
@@ -3564,7 +3726,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L91",
       "id": "tests_test_analysis_extra_test_what_to_build_demand_weighting",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_what_to_build_demand_weighting()"
     },
     {
@@ -3573,7 +3735,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L100",
       "id": "tests_test_analysis_extra_test_where_to_build_ranking",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_where_to_build_ranking()"
     },
     {
@@ -3582,7 +3744,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L110",
       "id": "tests_test_analysis_extra_test_construction_payback_and_suggestions",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_construction_payback_and_suggestions()"
     },
     {
@@ -3591,7 +3753,7 @@
       "source_file": "tests/test_analysis_extra.py",
       "source_location": "L123",
       "id": "tests_test_analysis_extra_test_tech_priorities_uplift",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_tech_priorities_uplift()"
     },
     {
@@ -3960,7 +4122,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L1",
       "id": "tests_test_defs_py",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_defs.py"
     },
     {
@@ -3969,7 +4131,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L7",
       "id": "tests_test_defs_make_install",
-      "community": 4,
+      "community": 6,
       "norm_label": "_make_install()"
     },
     {
@@ -3978,7 +4140,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L7",
       "id": "tests_test_defs_py_path",
-      "community": 4,
+      "community": 6,
       "norm_label": "path"
     },
     {
@@ -3987,7 +4149,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L63",
       "id": "tests_test_defs_cfg",
-      "community": 4,
+      "community": 6,
       "norm_label": "_cfg()"
     },
     {
@@ -3996,7 +4158,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L63",
       "id": "tests_test_defs_py_config",
-      "community": 4,
+      "community": 6,
       "norm_label": "config"
     },
     {
@@ -4005,7 +4167,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L76",
       "id": "tests_test_defs_test_load_defs_and_helpers",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_load_defs_and_helpers()"
     },
     {
@@ -4014,7 +4176,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L98",
       "id": "tests_test_defs_test_defs_cache_roundtrip",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_defs_cache_roundtrip()"
     },
     {
@@ -4023,7 +4185,7 @@
       "source_file": "tests/test_defs.py",
       "source_location": "L109",
       "id": "tests_test_defs_test_mod_overlay_overrides",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_mod_overlay_overrides()"
     },
     {
@@ -4032,61 +4194,61 @@
       "source_file": "tests/test_api.py",
       "source_location": "L1",
       "id": "tests_test_api_py",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_api.py"
     },
     {
       "label": "_make_install()",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L42",
+      "source_location": "L55",
       "id": "tests_test_api_make_install",
-      "community": 4,
+      "community": 6,
       "norm_label": "_make_install()"
     },
     {
       "label": "Path",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L42",
+      "source_location": "L55",
       "id": "tests_test_api_py_path",
-      "community": 4,
+      "community": 6,
       "norm_label": "path"
     },
     {
       "label": "_cfg()",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L67",
+      "source_location": "L80",
       "id": "tests_test_api_cfg",
-      "community": 4,
+      "community": 6,
       "norm_label": "_cfg()"
     },
     {
       "label": "Config",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L67",
+      "source_location": "L80",
       "id": "tests_test_api_py_config",
-      "community": 4,
+      "community": 6,
       "norm_label": "config"
     },
     {
       "label": "test_full_api_flow()",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L80",
+      "source_location": "L93",
       "id": "tests_test_api_test_full_api_flow",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_full_api_flow()"
     },
     {
       "label": "test_on_demand_analysis()",
       "file_type": "code",
       "source_file": "tests/test_api.py",
-      "source_location": "L110",
+      "source_location": "L123",
       "id": "tests_test_api_test_on_demand_analysis",
-      "community": 4,
+      "community": 6,
       "norm_label": "test_on_demand_analysis()"
     },
     {
@@ -4095,16 +4257,16 @@
       "source_file": "tests/test_api.py",
       "source_location": "L1",
       "id": "tests_test_api_rationale_1",
-      "community": 4,
+      "community": 6,
       "norm_label": "end-to-end api test: synthetic install + crafted plaintext save through the full"
     },
     {
       "label": "Settings/saves endpoints: list saves and analyse the latest on demand.",
       "file_type": "rationale",
       "source_file": "tests/test_api.py",
-      "source_location": "L111",
-      "id": "tests_test_api_rationale_111",
-      "community": 4,
+      "source_location": "L124",
+      "id": "tests_test_api_rationale_124",
+      "community": 6,
       "norm_label": "settings/saves endpoints: list saves and analyse the latest on demand."
     },
     {
@@ -4156,25 +4318,25 @@
       "label": "Conventions",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L12",
+      "source_location": "L11",
       "id": "analyser_schema_conventions",
       "community": 11,
       "norm_label": "conventions"
     },
     {
-      "label": "Top-level gamestate nodes (to confirm)",
+      "label": "Top-level gamestate nodes (confirmed, Vic3 1.13.8)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L21",
-      "id": "analyser_schema_top_level_gamestate_nodes_to_confirm",
+      "source_location": "L20",
+      "id": "analyser_schema_top_level_gamestate_nodes_confirmed_vic3_1_13_8",
       "community": 11,
-      "norm_label": "top-level gamestate nodes (to confirm)"
+      "norm_label": "top-level gamestate nodes (confirmed, vic3 1.13.8)"
     },
     {
       "label": "Fields the analysis needs (per area)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L37",
+      "source_location": "L40",
       "id": "analyser_schema_fields_the_analysis_needs_per_area",
       "community": 11,
       "norm_label": "fields the analysis needs (per area)"
@@ -4183,7 +4345,7 @@
       "label": "Market (`analysis/market.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L39",
+      "source_location": "L42",
       "id": "analyser_schema_market_analysis_market_py",
       "community": 11,
       "norm_label": "market (`analysis/market.py`)"
@@ -4192,7 +4354,7 @@
       "label": "Building profitability (`analysis/profitability.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L43",
+      "source_location": "L46",
       "id": "analyser_schema_building_profitability_analysis_profitability_py",
       "community": 11,
       "norm_label": "building profitability (`analysis/profitability.py`)"
@@ -4201,7 +4363,7 @@
       "label": "PM optimisation (`analysis/pm_optimizer.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L47",
+      "source_location": "L50",
       "id": "analyser_schema_pm_optimisation_analysis_pm_optimizer_py",
       "community": 11,
       "norm_label": "pm optimisation (`analysis/pm_optimizer.py`)"
@@ -4210,7 +4372,7 @@
       "label": "What to build (`analysis/build_what.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L52",
+      "source_location": "L55",
       "id": "analyser_schema_what_to_build_analysis_build_what_py",
       "community": 11,
       "norm_label": "what to build (`analysis/build_what.py`)"
@@ -4219,7 +4381,7 @@
       "label": "Where to build (`analysis/build_where.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L57",
+      "source_location": "L60",
       "id": "analyser_schema_where_to_build_analysis_build_where_py",
       "community": 11,
       "norm_label": "where to build (`analysis/build_where.py`)"
@@ -4228,7 +4390,7 @@
       "label": "Construction (`analysis/construction.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L61",
+      "source_location": "L64",
       "id": "analyser_schema_construction_analysis_construction_py",
       "community": 11,
       "norm_label": "construction (`analysis/construction.py`)"
@@ -4237,7 +4399,7 @@
       "label": "Tech (`analysis/tech.py`)",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L64",
+      "source_location": "L67",
       "id": "analyser_schema_tech_analysis_tech_py",
       "community": 11,
       "norm_label": "tech (`analysis/tech.py`)"
@@ -4246,10 +4408,19 @@
       "label": "How to (re)confirm this map",
       "file_type": "document",
       "source_file": "SCHEMA.md",
-      "source_location": "L68",
+      "source_location": "L71",
       "id": "analyser_schema_how_to_re_confirm_this_map",
       "community": 11,
       "norm_label": "how to (re)confirm this map"
+    },
+    {
+      "label": "Known gaps",
+      "file_type": "document",
+      "source_file": "SCHEMA.md",
+      "source_location": "L83",
+      "id": "analyser_schema_known_gaps",
+      "community": 11,
+      "norm_label": "known gaps"
     },
     {
       "label": "CLAUDE.md",
@@ -4360,6 +4531,78 @@
       "norm_label": "status"
     },
     {
+      "label": "Sum a Vic3 category array (e.g. ``weekly_income={ 0 2599 7576 ... }``).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L103",
+      "community": 0,
+      "norm_label": "sum a vic3 category array (e.g. ``weekly_income={ 0 2599 7576 ... }``).",
+      "id": "extract_snapshot_rationale_103"
+    },
+    {
+      "label": "Read ``.current`` from a Vic3 ``*_trend={ current=N }`` block.",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L109",
+      "community": 0,
+      "norm_label": "read ``.current`` from a vic3 ``*_trend={ current=n }`` block.",
+      "id": "extract_snapshot_rationale_109"
+    },
+    {
+      "label": "State ids owned by ``player_id`` (``states.<id>.country``).",
+      "file_type": "rationale",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L165",
+      "community": 0,
+      "norm_label": "state ids owned by ``player_id`` (``states.<id>.country``).",
+      "id": "extract_snapshot_rationale_165"
+    },
+    {
+      "label": "test_market_joins_base_price()",
+      "file_type": "code",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L86",
+      "community": 6,
+      "norm_label": "test_market_joins_base_price()",
+      "id": "tests_test_snapshot_test_market_joins_base_price"
+    },
+    {
+      "label": "Settings/saves endpoints: list saves and analyse the latest on demand.",
+      "file_type": "rationale",
+      "source_file": "tests/test_api.py",
+      "source_location": "L111",
+      "community": 6,
+      "norm_label": "settings/saves endpoints: list saves and analyse the latest on demand.",
+      "id": "tests_test_api_rationale_111"
+    },
+    {
+      "label": "Top-level gamestate nodes (to confirm)",
+      "file_type": "document",
+      "source_file": "SCHEMA.md",
+      "source_location": "L21",
+      "community": 11,
+      "norm_label": "top-level gamestate nodes (to confirm)",
+      "id": "analyser_schema_top_level_gamestate_nodes_to_confirm"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L56",
+      "community": 7,
+      "norm_label": "bool",
+      "id": "bool"
+    },
+    {
+      "label": "Config",
+      "file_type": "code",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L99",
+      "community": 7,
+      "norm_label": "config",
+      "id": "config"
+    },
+    {
       "label": "Any",
       "file_type": "code",
       "source_file": "src/vic3analyser/api/server.py",
@@ -4376,33 +4619,6 @@
       "community": 2,
       "norm_label": "float",
       "id": "float"
-    },
-    {
-      "label": "Raised when a save cannot be converted to plaintext.",
-      "file_type": "rationale",
-      "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L37",
-      "community": 7,
-      "norm_label": "raised when a save cannot be converted to plaintext.",
-      "id": "ingest_melt_rationale_37"
-    },
-    {
-      "label": "Heuristic: does this byte sample look like plaintext PDX script?",
-      "file_type": "rationale",
-      "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L48",
-      "community": 7,
-      "norm_label": "heuristic: does this byte sample look like plaintext pdx script?",
-      "id": "ingest_melt_rationale_48"
-    },
-    {
-      "label": "Return plaintext gamestate (and meta if present) for a ``.v3`` save.",
-      "file_type": "rationale",
-      "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L98",
-      "community": 7,
-      "norm_label": "return plaintext gamestate (and meta if present) for a ``.v3`` save.",
-      "id": "ingest_melt_rationale_98"
     }
   ],
   "links": [
@@ -4710,6 +4926,16 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_test_snapshot_py_float",
+      "target": "vic3analyser_config_paths",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L9",
       "weight": 0.8,
       "confidence_score": 0.5,
@@ -4931,6 +5157,16 @@
       "confidence_score": 0.5,
       "source": "tests_test_snapshot_py_config",
       "target": "vic3analyser_config_config"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_test_snapshot_py_float",
+      "target": "vic3analyser_config_config",
+      "confidence_score": 0.5
     },
     {
       "relation": "uses",
@@ -6081,6 +6317,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_extract_visibility_py",
+      "target": "extract_visibility_player_from_manager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/visibility.py",
       "source_location": "L32",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6172,6 +6418,17 @@
       "confidence_score": 1.0,
       "source": "extract_visibility_resolve_player",
       "target": "extract_visibility_is_int"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_visibility_resolve_player",
+      "target": "extract_visibility_player_from_manager"
     },
     {
       "relation": "calls",
@@ -6274,6 +6531,17 @@
     },
     {
       "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_visibility_player_from_manager",
+      "target": "src_vic3analyser_extract_visibility_py_int"
+    },
+    {
+      "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/visibility.py",
@@ -6282,6 +6550,27 @@
       "confidence_score": 1.0,
       "source": "extract_visibility_tag_of",
       "target": "src_vic3analyser_extract_visibility_py_int"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_visibility_player_from_manager",
+      "target": "extract_visibility_is_int"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/visibility.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_visibility_rationale_63",
+      "target": "extract_visibility_player_from_manager"
     },
     {
       "relation": "calls",
@@ -6450,6 +6739,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "src_vic3analyser_extract_snapshot_py",
+      "target": "extract_snapshot_channel_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
       "source_location": "L95",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6540,6 +6839,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "src_vic3analyser_extract_snapshot_py",
+      "target": "extract_snapshot_graph_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
       "source_location": "L233",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6555,6 +6864,36 @@
       "confidence_score": 1.0,
       "source": "src_vic3analyser_extract_snapshot_py",
       "target": "extract_snapshot_num"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_extract_snapshot_py",
+      "target": "extract_snapshot_player_state_ids"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_extract_snapshot_py",
+      "target": "extract_snapshot_sum_array"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_vic3analyser_extract_snapshot_py",
+      "target": "extract_snapshot_trend_current"
     },
     {
       "relation": "imports",
@@ -6722,6 +7061,17 @@
       "target": "src_vic3analyser_extract_snapshot_py_str"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L168",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_player_state_ids",
+      "target": "extract_snapshot_first"
+    },
+    {
       "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
@@ -6838,11 +7188,33 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "extract_snapshot_channel_latest",
+      "target": "src_vic3analyser_extract_snapshot_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
       "source_location": "L53",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "extract_snapshot_db",
       "target": "src_vic3analyser_extract_snapshot_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "extract_snapshot_graph_latest",
+      "target": "src_vic3analyser_extract_snapshot_py_any",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -6864,6 +7236,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "extract_snapshot_num",
+      "target": "src_vic3analyser_extract_snapshot_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_sum_array",
+      "target": "src_vic3analyser_extract_snapshot_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_trend_current",
       "target": "src_vic3analyser_extract_snapshot_py_any"
     },
     {
@@ -6961,6 +7355,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "extract_snapshot_channel_latest",
+      "target": "extract_snapshot_num",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
       "source_location": "L167",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -7020,6 +7425,72 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "extract_snapshot_num",
+      "target": "src_vic3analyser_extract_snapshot_py_float"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_sum_array",
+      "target": "extract_snapshot_num"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_trend_current",
+      "target": "extract_snapshot_num"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "extract_snapshot_channel_latest",
+      "target": "src_vic3analyser_extract_snapshot_py_float",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "extract_snapshot_graph_latest",
+      "target": "src_vic3analyser_extract_snapshot_py_float",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_sum_array",
+      "target": "src_vic3analyser_extract_snapshot_py_float"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_trend_current",
       "target": "src_vic3analyser_extract_snapshot_py_float"
     },
     {
@@ -7154,6 +7625,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "extract_snapshot_extract_states",
+      "target": "extract_snapshot_db"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L294",
+      "weight": 1.0,
+      "source": "extract_snapshot_extract_tech",
+      "target": "extract_snapshot_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L168",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_player_state_ids",
       "target": "extract_snapshot_db"
     },
     {
@@ -7304,9 +7797,42 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "target": "extract_snapshot_build_snapshot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L84",
       "weight": 1.0,
       "source": "tests_test_snapshot_test_only_player_owned_buildings_and_states",
+      "target": "extract_snapshot_build_snapshot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_player_resolved_from_player_manager",
+      "target": "extract_snapshot_build_snapshot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_tech_from_top_level_manager",
       "target": "extract_snapshot_build_snapshot"
     },
     {
@@ -7701,6 +8227,17 @@
       "target": "src_vic3analyser_extract_snapshot_py_int"
     },
     {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_player_state_ids",
+      "target": "src_vic3analyser_extract_snapshot_py_int"
+    },
+    {
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
@@ -7789,6 +8326,165 @@
       "confidence_score": 0.5,
       "source": "src_vic3analyser_extract_snapshot_py_int",
       "target": "extract_models_techstate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_extract_country",
+      "target": "extract_snapshot_sum_array"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "extract_snapshot_extract_states",
+      "target": "extract_snapshot_sum_array",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L103",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_rationale_103",
+      "target": "extract_snapshot_sum_array"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_105",
+      "target": "extract_snapshot_sum_array",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_sum_array",
+      "target": "ingest_parser_as_list"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_extract_country",
+      "target": "extract_snapshot_trend_current"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_rationale_109",
+      "target": "extract_snapshot_trend_current"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_111",
+      "target": "extract_snapshot_trend_current",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "extract_snapshot_extract_country",
+      "target": "extract_snapshot_graph_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "extract_snapshot_graph_latest",
+      "target": "extract_snapshot_channel_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "extract_snapshot_graph_latest",
+      "target": "extract_snapshot_int_or",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_118",
+      "target": "extract_snapshot_graph_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "extract_snapshot_channel_latest",
+      "target": "ingest_parser_as_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "source": "extract_snapshot_extract_market",
+      "target": "extract_snapshot_channel_latest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_134",
+      "target": "extract_snapshot_channel_latest",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -7925,6 +8621,16 @@
       "target": "src_vic3analyser_extract_snapshot_py_marketgood"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_162",
+      "target": "extract_snapshot_extract_market",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/vic3analyser/extract/snapshot.py",
@@ -8013,6 +8719,48 @@
       "confidence_score": 0.5,
       "source": "src_vic3analyser_extract_snapshot_py_marketgood",
       "target": "extract_models_techstate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L181",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_extract_buildings",
+      "target": "extract_snapshot_player_state_ids"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L171",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_player_state_ids",
+      "target": "extract_snapshot_int_or"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L165",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "extract_snapshot_rationale_165",
+      "target": "extract_snapshot_player_state_ids"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "extract_snapshot_rationale_197",
+      "target": "extract_snapshot_player_state_ids",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -8292,6 +9040,17 @@
       "confidence_score": 1.0,
       "source": "extract_snapshot_extract_tech",
       "target": "extract_models_techstate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/extract/snapshot.py",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "extract_snapshot_extract_tech",
+      "target": "extract_snapshot_int_or",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -10060,6 +10819,16 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_test_snapshot_py_float",
+      "target": "ingest_defs_gamedefs",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L11",
       "weight": 0.8,
       "confidence_score": 0.5,
@@ -11285,9 +12054,9 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_vic3analyser_ingest_melt_py",
-      "target": "ingest_melt_melt_cmd",
-      "confidence_score": 1.0
+      "target": "ingest_melt_melt_cmd"
     },
     {
       "relation": "contains",
@@ -11374,21 +12143,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L37",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ingest_melt_rationale_37",
-      "target": "ingest_melt_melterror"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_rationale_46",
-      "target": "ingest_melt_melterror",
-      "confidence_score": 1.0
+      "target": "ingest_melt_melterror"
     },
     {
       "relation": "calls",
@@ -11467,6 +12226,17 @@
     },
     {
       "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ingest_melt_looks_like_text",
+      "target": "bool"
+    },
+    {
+      "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
@@ -11481,7 +12251,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L47",
+      "source_location": "L56",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "ingest_melt_looks_like_text",
@@ -11513,21 +12283,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L48",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ingest_melt_rationale_48",
-      "target": "ingest_melt_looks_like_text"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_rationale_57",
-      "target": "ingest_melt_looks_like_text",
-      "confidence_score": 1.0
+      "target": "ingest_melt_looks_like_text"
     },
     {
       "relation": "references",
@@ -11591,9 +12351,9 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_melt_cmd",
-      "target": "src_vic3analyser_ingest_melt_py_str",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_ingest_melt_py_str"
     },
     {
       "relation": "references",
@@ -11635,9 +12395,9 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_melt_cmd",
-      "target": "src_vic3analyser_ingest_melt_py_path",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_ingest_melt_py_path"
     },
     {
       "relation": "rationale_for",
@@ -11645,9 +12405,9 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_rationale_78",
-      "target": "ingest_melt_melt_cmd",
-      "confidence_score": 1.0
+      "target": "ingest_melt_melt_cmd"
     },
     {
       "relation": "calls",
@@ -11656,9 +12416,9 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "ingest_melt_run_rakaly",
-      "target": "ingest_melt_melt_cmd",
-      "confidence_score": 1.0
+      "target": "ingest_melt_melt_cmd"
     },
     {
       "relation": "references",
@@ -11720,7 +12480,18 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L68",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ingest_melt_run_rakaly",
+      "target": "config"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L99",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "ingest_melt_run_rakaly",
@@ -11731,7 +12502,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L97",
+      "source_location": "L120",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "ingest_melt_melt_save",
@@ -11742,11 +12513,22 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L119",
+      "source_location": "L142",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "ingest_melt_melt_zip",
       "target": "src_vic3analyser_ingest_melt_py_config"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ingest_melt_melt_save",
+      "target": "config"
     },
     {
       "relation": "calls",
@@ -11765,18 +12547,8 @@
       "source_file": "src/vic3analyser/ingest/melt.py",
       "source_location": "L121",
       "weight": 1.0,
-      "source": "ingest_melt_rationale_121",
-      "target": "ingest_melt_melt_save",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/vic3analyser/ingest/melt.py",
-      "source_location": "L98",
-      "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "ingest_melt_rationale_98",
+      "source": "ingest_melt_rationale_121",
       "target": "ingest_melt_melt_save"
     },
     {
@@ -11822,6 +12594,17 @@
       "weight": 1.0,
       "source": "tests_test_melt_test_zip_text_save",
       "target": "ingest_melt_melt_save"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vic3analyser/ingest/melt.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ingest_melt_melt_zip",
+      "target": "config"
     },
     {
       "relation": "calls",
@@ -12472,9 +13255,9 @@
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_server_appstate_analysis",
-      "target": "src_vic3analyser_api_server_py_any",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_api_server_py_any"
     },
     {
       "relation": "references",
@@ -12483,9 +13266,9 @@
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_server_appstate_list_saves",
-      "target": "src_vic3analyser_api_server_py_any",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_api_server_py_any"
     },
     {
       "relation": "uses",
@@ -12493,9 +13276,9 @@
       "source_file": "src/vic3analyser/api/server.py",
       "source_location": "L126",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "src_vic3analyser_api_server_py_any",
-      "target": "api_watcher_savehandler",
-      "confidence_score": 0.5
+      "target": "api_watcher_savehandler"
     },
     {
       "relation": "calls",
@@ -12851,9 +13634,9 @@
       "source_file": "src/vic3analyser/api/watcher.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_watcher_savehandler_init",
-      "target": "src_vic3analyser_api_watcher_py_float",
-      "confidence_score": 1.0
+      "target": "src_vic3analyser_api_watcher_py_float"
     },
     {
       "relation": "references",
@@ -16229,6 +17012,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_py",
+      "target": "tests_test_snapshot_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L64",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -16249,11 +17042,41 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_py",
+      "target": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L83",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_snapshot_py",
       "target": "tests_test_snapshot_test_only_player_owned_buildings_and_states"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_snapshot_py",
+      "target": "tests_test_snapshot_test_player_resolved_from_player_manager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_py",
+      "target": "tests_test_snapshot_test_tech_from_top_level_manager",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -16303,11 +17126,44 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "target": "tests_test_snapshot_defs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L84",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_snapshot_test_only_player_owned_buildings_and_states",
       "target": "tests_test_snapshot_defs"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_snapshot_test_player_resolved_from_player_manager",
+      "target": "tests_test_snapshot_defs"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_tech_from_top_level_manager",
+      "target": "tests_test_snapshot_defs",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -16358,11 +17214,76 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "target": "tests_test_snapshot_cfg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L84",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_snapshot_test_only_player_owned_buildings_and_states",
       "target": "tests_test_snapshot_cfg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_snapshot_test_player_resolved_from_player_manager",
+      "target": "tests_test_snapshot_cfg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_tech_from_top_level_manager",
+      "target": "tests_test_snapshot_cfg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_gamestate",
+      "target": "tests_test_snapshot_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_graph",
+      "target": "tests_test_snapshot_py_float",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_rationale_28",
+      "target": "tests_test_snapshot_graph",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -16391,11 +17312,44 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_snapshot.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_market_prices_from_world_market_by_good_order",
+      "target": "tests_test_snapshot_gamestate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
       "source_location": "L84",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_snapshot_test_only_player_owned_buildings_and_states",
       "target": "tests_test_snapshot_gamestate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_snapshot_test_player_resolved_from_player_manager",
+      "target": "tests_test_snapshot_gamestate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_snapshot.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "tests_test_snapshot_test_tech_from_top_level_manager",
+      "target": "tests_test_snapshot_gamestate",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17544,6 +18498,16 @@
       "target": "tests_test_api_test_on_demand_analysis"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_api.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "tests_test_api_rationale_124",
+      "target": "tests_test_api_test_on_demand_analysis",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
@@ -17602,6 +18566,26 @@
       "confidence_score": 1.0,
       "source": "analyser_schema_victoria_3_save_schema_extraction_map",
       "target": "analyser_schema_how_to_re_confirm_this_map"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SCHEMA.md",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "analyser_schema_victoria_3_save_schema_extraction_map",
+      "target": "analyser_schema_known_gaps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SCHEMA.md",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "analyser_schema_victoria_3_save_schema_extraction_map",
+      "target": "analyser_schema_top_level_gamestate_nodes_confirmed_vic3_1_13_8",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17769,9 +18753,9 @@
       "source_file": "README.md",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "analyser_readme_setup",
-      "target": "analyser_readme_melting_binary_ironman_saves",
-      "confidence_score": 1.0
+      "target": "analyser_readme_melting_binary_ironman_saves"
     },
     {
       "relation": "contains",
@@ -17779,11 +18763,11 @@
       "source_file": "README.md",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "analyser_readme_melting_binary_ironman_saves",
-      "target": "analyser_readme_codeblock_2",
-      "confidence_score": 1.0
+      "target": "analyser_readme_codeblock_2"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a9fa1299c95ad4b1c84a7ff09a78f4673bc25908"
+  "built_at_commit": "ab7e77acfb3760fc28016ea3321decafa68eae83"
 }
