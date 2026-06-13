@@ -213,6 +213,11 @@ def _greedy(
     # (Phase 3's labour budget makes this a hard, principled cap.)
     _cur_cs = aggregate_holdings(snap).get(CONSTRUCTION_BUILDING, 0.0)
     cs_expansion_cap = max(_cur_cs * 2.0, len(snap.states) * 5.0, 15.0)
+    # Pace construction-sector expansion over several months so it grows
+    # alongside its input producers (you can't operate 20 new sectors before the
+    # logging camps that feed them exist, or wood spikes). Spreads the cap across
+    # ~6 months; the cascade fills the gaps with the goods those sectors consume.
+    cs_month_cap = max(2.0, cs_expansion_cap / 6.0)
 
     def tp(h: dict[str, float]) -> dict[str, float]:
         return throughput_bonus_by_type(h, researched, active_laws, defs, cfg)
@@ -297,9 +302,16 @@ def _greedy(
 
     def cap_room(opt: BuildOption) -> float:
         cap = cap_budget.cap_for(opt.building_type)
-        if cap is None and opt.resource_gated and cap_budget.has_known_caps:
+        if cap is not None:
+            return max(0.0, cap - added[opt.building_type])
+        # Arable buildings are gated separately by the shared free-land pool.
+        if cap_budget.is_arable(opt.building_type):
+            return float("inf")
+        # A resource/land-gated building with no known slot in the player's
+        # states can't be placed there (e.g. rye where only wheat/rice grow).
+        if opt.resource_gated and cap_budget.has_known_caps:
             return 0.0
-        return float("inf") if cap is None else max(0.0, cap - added[opt.building_type])
+        return float("inf")
 
     gdp_prev = gdp0
     for month in range(1, horizon_months + 1):
@@ -328,6 +340,7 @@ def _greedy(
         # the investment pool funds the rest. Attribute spend proportionally.
         treasury_frac = gov_points / (gov_points + private_points) if (gov_points + private_points) > 0 else 1.0
         spent_month = 0.0
+        cs_this_month = 0.0  # construction-sector levels added this month (paced)
 
         def solvent_after(extra_cost: float) -> bool:
             if cfg.solvency_policy != "hard_buffer":
@@ -420,15 +433,16 @@ def _greedy(
 
             # Construction sector: invest in capacity if the production it unlocks
             # over the remaining horizon beats building production directly now.
+            cs_room = min(cs_expansion_cap - added[CONSTRUCTION_BUILDING], cs_month_cap - cs_this_month)
             if (
                 has_cs
                 and cs_opt is not None
                 and treasury + credit > 0
                 and cs_opt.cost_per_level <= budget
-                and added[CONSTRUCTION_BUILDING] < cs_expansion_cap
+                and cs_room >= 1.0
             ):
                 batch_cs = max(1.0, round(slice_pts / cs_opt.cost_per_level))
-                batch_cs = min(batch_cs, cs_expansion_cap - added[CONSTRUCTION_BUILDING])
+                batch_cs = min(batch_cs, cs_room)
                 cost_cs = batch_cs * cs_opt.cost_per_level
                 if cost_cs <= budget and solvent_after(cost_cs):
                     future_points = per_sector * batch_cs * weeks_left
@@ -449,6 +463,7 @@ def _greedy(
                 arable_used += batch
             if is_cs:
                 capacity += per_sector * batch
+                cs_this_month += batch
             for g, v in add_fp.items():
                 run_fp[g] = run_fp.get(g, 0.0) + v
             budget -= cost
@@ -511,6 +526,27 @@ def _merge_program(program: list[BuildStep]) -> list[BuildStep]:
         else:
             merged.append(BuildStep(step.building_type, step.levels))
     return merged
+
+
+def _interleaved_program(trace: list[StepTrace], totals: dict[str, int]) -> list[BuildStep]:
+    """Replay the greedy's time-ordered build sequence, capped at the (possibly
+    refined) per-type totals, so the reported order keeps the cascade interleaving
+    instead of grouping every type into one block.
+
+    Any type the refinement grew beyond what greedy built is appended at the end;
+    consecutive same-type steps are then merged for readability.
+    """
+    remaining = dict(totals)
+    steps: list[BuildStep] = []
+    for st in trace:
+        take = min(st.levels, remaining.get(st.building_type, 0))
+        if take > 0:
+            steps.append(BuildStep(st.building_type, take))
+            remaining[st.building_type] -= take
+    for btype, lv in remaining.items():
+        if lv > 0:
+            steps.append(BuildStep(btype, lv))
+    return _merge_program(steps)
 
 
 # --- fast end-state objective for refinement --------------------------------
@@ -672,11 +708,12 @@ def _refine(
 
     def has_room(o: BuildOption) -> bool:
         cap = cap_budget.cap_for(o.building_type)
-        if cap is None and o.resource_gated and cap_budget.has_known_caps:
-            return False
-        if cap is not None and cap <= 0:
-            return False
-        return not cap_budget.is_arable(o.building_type) or cap_budget.free_arable > 0
+        if cap is not None:
+            return cap > 0
+        if cap_budget.is_arable(o.building_type):
+            return cap_budget.free_arable > 0
+        # Land/resource-gated but no known slot in the player's states.
+        return not (o.resource_gated and cap_budget.has_known_caps)
 
     buildable = [
         o
@@ -797,10 +834,15 @@ def _assemble(
     model: PriceModel,
     cfg: OptimizeConfig,
 ) -> OptimizeResult:
-    """Build an ordered plan from a greedy result + refined production levels."""
-    order_index = {st.building_type: i for i, st in enumerate(greedy.trace)}
-    items = sorted(refined_added.items(), key=lambda kv: order_index.get(kv[0], 10_000))
-    program = _merge_program([BuildStep(t, int(lv)) for t, lv in items if lv >= 1])
+    """Build an ordered plan from a greedy result + refined production levels.
+
+    The build order preserves the greedy's *interleaved* construction sequence
+    (input producers come online alongside their consumers — e.g. logging camps
+    right after the construction sectors that burn wood — so a good's price
+    doesn't spike while you build out), reconciled to the refined per-type totals.
+    """
+    totals = {t: int(lv) for t, lv in refined_added.items() if lv >= 1}
+    program = _interleaved_program(greedy.trace, totals)
 
     holdings = dict(aggregate_holdings(snap))
     for t, lv in refined_added.items():

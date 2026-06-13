@@ -143,6 +143,11 @@ def economic_build_options(
             continue
         group = bt.get("building_group") if isinstance(bt, dict) else None
         group = str(group) if group is not None else None
+        # Land/resource gating follows the group *ancestry*: the concrete farm
+        # buildings live in child groups (e.g. ``bg_staple_crops`` under
+        # ``bg_agriculture``), so a direct-group check would miss them and treat
+        # them as unlimited urban industry.
+        resource_gated = any(g in RESOURCE_GROUPS for g in defs.building_group_chain(btype))
         options.append(
             BuildOption(
                 building_type=btype,
@@ -150,7 +155,7 @@ def economic_build_options(
                 pm_groups=groups,
                 unlocking_techs=defs.building_unlocking_techs(btype),
                 building_group=group,
-                resource_gated=group in RESOURCE_GROUPS,
+                resource_gated=resource_gated,
                 max_added_levels=max_added_levels,
             )
         )
