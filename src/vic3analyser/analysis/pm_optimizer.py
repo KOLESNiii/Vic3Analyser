@@ -22,7 +22,7 @@ from dataclasses import dataclass
 
 from ..extract.models import Building, Snapshot
 from ..ingest.defs import GameDefs
-from .pricing import market_map, value_goods
+from .pricing import market_map, reduces_capacity, value_goods
 
 
 @dataclass
@@ -97,8 +97,16 @@ def optimise_building(b: Building, snap: Snapshot, defs: GameDefs) -> list[PMRec
         current_value = next(
             (o.value_added for o in options if o.pm == current), None
         )
-        # Best switchable option is among currently-available PMs.
-        available_opts = [o for o in options if o.available]
+        # Best switchable option is among currently-available PMs — but never one
+        # that sacrifices a non-goods capacity (bureaucracy, tax capacity, …) the
+        # current PM provides. Those have no market price, so the goods-only score
+        # would otherwise "improve" a government_administration by dropping to a
+        # paper-free PM, collapsing administration and the tax revenue it backs.
+        available_opts = [
+            o
+            for o in options
+            if o.available and not reduces_capacity(o.pm, current, defs)
+        ]
         if not available_opts:
             continue
         best = max(available_opts, key=lambda o: o.value_added)

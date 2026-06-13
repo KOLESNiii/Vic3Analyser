@@ -62,6 +62,37 @@ def value_goods(
     return GoodsValue(revenue=revenue, input_cost=cost, missing_prices=missing)
 
 
+# Non-goods outputs the optimiser must not let a goods-only score trade away.
+# These are *capacities* — the entire point of the buildings that make them — and
+# have no market price, so a PM that trims a goods input while slashing one of
+# them looks like a pure win to the goods scorer but wrecks the run (e.g.
+# government_administration dropping bureaucracy / tax capacity to save paper,
+# which collapses administration and the tax revenue that rides on it). Matched
+# as substrings so mod-renamed variants (``*_tax_capacity_*``) are still caught.
+GUARDED_CAPACITY_TOKENS = ("bureaucracy", "tax_capacity", "influence", "infrastructure")
+
+
+def guarded_capacity(pm: str, defs) -> dict[str, float]:
+    """The PM's capacity outputs that should never be sacrificed for goods value."""
+    return {
+        k: v
+        for k, v in defs.pm_capacity_outputs(pm).items()
+        if any(tok in k for tok in GUARDED_CAPACITY_TOKENS)
+    }
+
+
+def reduces_capacity(candidate_pm: str, baseline_pm: str | None, defs) -> bool:
+    """True if switching to ``candidate_pm`` would drop a guarded capacity below
+    what ``baseline_pm`` provides (so the switch is unsafe to recommend)."""
+    if baseline_pm is None:
+        return False
+    base = guarded_capacity(baseline_pm, defs)
+    if not base:
+        return False
+    cand = guarded_capacity(candidate_pm, defs)
+    return any(cand.get(k, 0.0) < v for k, v in base.items())
+
+
 def shortage_score(mg: MarketGood) -> float:
     """A signed signal: >0 means scarce/expensive (worth producing), <0 glut.
 

@@ -108,6 +108,61 @@ def test_pm_switch_not_recommended_when_current_is_best():
     assert recs == []
 
 
+def _gov_defs() -> GameDefs:
+    """A government_administration whose PMs trade paper for bureaucracy/tax
+    capacity (the non-goods outputs the goods scorer is blind to)."""
+    return GameDefs(
+        goods={"paper": {"cost": 30}},
+        production_methods={
+            "pm_simple_organization": {
+                "country_modifiers": {"workforce_scaled": {"country_bureaucracy_add": 10}},
+                "state_modifiers": {"workforce_scaled": {"state_tax_capacity_add": 2}},
+            },
+            "pm_horizontal_drawer_cabinets": {
+                "unlocking_technologies": ["centralization"],
+                "country_modifiers": {"workforce_scaled": {"country_bureaucracy_add": 50}},
+                "state_modifiers": {"workforce_scaled": {"state_tax_capacity_add": 10}},
+                "building_modifiers": {"workforce_scaled": {"goods_input_paper_add": 10}},
+            },
+        },
+        production_method_groups={
+            "pmg_admin": {
+                "production_methods": ["pm_simple_organization", "pm_horizontal_drawer_cabinets"]
+            }
+        },
+        building_types={
+            "building_government_administration": {"production_method_groups": ["pmg_admin"]}
+        },
+    )
+
+
+def _gov_snap() -> Snapshot:
+    return Snapshot(
+        date="1836.2.1",
+        player_tag="GBR",
+        country=CountryEconomy(tag="GBR"),
+        market=[MarketGood(good="paper", price=30.0, base_price=30.0)],
+        buildings=[
+            Building(
+                id=1069,
+                building_type="building_government_administration",
+                state_id=5,
+                level=3,
+                active_pms=[ActivePM(group="pmg_admin", pm="pm_horizontal_drawer_cabinets")],
+            )
+        ],
+        tech=TechState(researched=["centralization"]),
+    )
+
+
+def test_pm_switch_does_not_downgrade_capacity_building():
+    # The goods scorer sees only paper cost, so it would "improve" admin by
+    # dropping to pm_simple_organization (zero paper) — collapsing bureaucracy
+    # (50->10) and tax capacity (10->2). The capacity guard must veto that.
+    recs = analyse_pm_switches(_gov_snap(), _gov_defs())
+    assert recs == []
+
+
 def test_profitability_uses_real_figures_when_present():
     snap = _snap(["pig_iron"])
     snap.buildings[0].weekly_income = 100.0
