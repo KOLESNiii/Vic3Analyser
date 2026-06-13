@@ -76,6 +76,11 @@ class StateInfo(BaseModel):
     arable_total: float | None = None
     arable_buildings: list[str] = Field(default_factory=list)
     capped_resources: dict[str, float] = Field(default_factory=dict)
+    # Bureaucracy the state's pops consume (``base_pop_bureaucracy_cost``) and
+    # whether it's incorporated — both feed the country's bureaucracy balance,
+    # the constraint that makes administration-building a real growth cost.
+    bureaucracy_cost: float | None = None
+    incorporated: bool | None = None
 
     @property
     def infrastructure_free(self) -> float | None:
@@ -120,6 +125,18 @@ class CountryEconomy(BaseModel):
     # Standard of living / literacy as headline indicators, if available.
     avg_sol: float | None = None
     literacy: float | None = None
+    # Country-wide labour pool (salaried workforce) and how much of it is idle —
+    # the supply the optimiser draws on when it staffs new buildings.
+    population: int | None = None
+    workforce: int | None = None
+    unemployed_workforce: int | None = None
+    # Private investment pool weekly inflow (money/week capitalists & the like
+    # add to the pool that funds autonomous private construction). Drives the
+    # second, treasury-free construction stream.
+    investment_pool_weekly: float | None = None
+    # Currently-enacted laws (names). The economic-system law in particular drives
+    # investment-pool efficiency, private-construction allocation and tax capacity.
+    active_laws: list[str] = Field(default_factory=list)
 
 
 class Snapshot(BaseModel):

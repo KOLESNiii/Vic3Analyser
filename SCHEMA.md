@@ -36,7 +36,13 @@ This is the map the extraction layer (`extract/snapshot.py`) targets: which
 | Country trends | `<country>.{gdp,literacy,avgsoltrend}` | GraphData blocks (`channels[].values`); latest value is current |
 | Budget | `<country>.budget` | `money` (treasury), `credit`, `weekly_income`/`weekly_expenses` (category arrays, summed), `balance_trend.current` |
 | Construction queue | `<country>.government_queue.construction_elements[]` | queued type/state/cost; `construction_speed` on elements gives current country construction points/week when a queue exists |
+| Active laws | top-level `laws.database[]` | each `{law, country, active=yes, activation_date}`; player's enacted laws = `country==player_id and active`. Economic-system law (group `lawgroup_economic_system`) drives investment pool / tax capacity / private construction |
+| Investment pool inflow | `<country>.budget.weekly_investment_pool_change_from_investment` | money/week capitalists add to the private investment pool (funds autonomous private construction) |
+| Country labour | `<country>.pop_statistics.{population_salaried_workforce, population_unemployed_workforce}` + `trend_population` (GraphData) | total workforce, idle workforce, total population |
+| State labour | `<state>.pop_statistics.{population_salaried_workforce, population_unemployed_workforce}` | per-state workforce + idle pops for the labour budget |
+| State bureaucracy demand | `<state>.base_pop_bureaucracy_cost`, `<state>.incorporation` | bureaucracy the state's pops consume; whether incorporated. Σ over states = country bureaucracy demand (production side = government_administration PMs' `country_bureaucracy_add`) |
 | Static state regions | `map_data/state_regions/*.txt` | `arable_land`, `arable_resources`, `capped_resources` define visible land/deposit limits for state placement |
+| Static laws / defines | `common/laws/*.txt`, `common/defines/*.txt`, `common/building_groups/*.txt` | law `modifier` blocks (investment pool efficiency, `state_tax_capacity_mult`, `country_private_construction_allocation_mult`, throughput); `ECONOMY_OF_SCALE_*`; building-group `economy_of_scale`/`is_subsistence` flags |
 
 ## Fields the analysis needs (per area)
 
@@ -123,8 +129,14 @@ queue exposes `construction_speed`.
 
 ## Known gaps
 
-* **State unemployment** and **per-building employment headcount**: not stored
-  as scalars; would need to be derived from pops. Left `None`.
+* **Per-building employment headcount**: not stored as a scalar (`staffing` is
+  staffed levels, not pops); derived from PM employment modifiers instead.
+  State/country **unemployed workforce** *is* now extracted
+  (`pop_statistics.population_unemployed_workforce`).
+* **Investment pool balance**: only the *weekly inflow*
+  (`weekly_investment_pool_change_from_investment`) is read; the standing pool
+  balance isn't reliably exposed as a scalar, so private-construction modelling
+  is anchored on the inflow rate.
 * **Market supply/demand**: not persisted at world-market level (only price).
 * **Urban building slots**: no hard per-state slot limit is currently extracted,
   so urban industry placement remains a soft ranking by infrastructure and

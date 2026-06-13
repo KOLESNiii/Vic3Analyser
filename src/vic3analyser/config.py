@@ -38,9 +38,9 @@ class OptimizeConfig:
 
     # Planning horizon in game-months for the forecast trajectory.
     horizon_months: int = 60
-    # Objective the optimizer maximizes: "composite" (GDP + SoL + solvency),
-    # "gdp" (end-state GDP), "growth" (compounding GDP rate), "cash" (treasury).
-    objective: str = "composite"
+    # Objective the optimizer maximizes: "growth" (compounding GDP rate),
+    # "gdp" (end-state GDP), "cash" (treasury), or legacy "composite".
+    objective: str = "growth"
     # Construction points/week. None → read from the save, else estimate.
     construction_capacity: float | None = None
     # Assumed fraction of each good's market the player's own production
@@ -53,6 +53,45 @@ class OptimizeConfig:
     weight_gdp: float = 1.0
     weight_sol: float = 0.4
     weight_solvency: float = 1.0
+    # Solvency guard for the optimizer / forecaster.
+    solvency_policy: str = "hard_buffer"
+    solvency_buffer_weeks: float = 12.0
+
+    # --- model-fidelity feature flags (see analysis/*; all player-derivable) ---
+    # Each gates one extra real mechanic in the GDP/finance model. Defaults on
+    # for high-confidence mechanics; estimate-heavy ones still degrade to no-ops
+    # when the underlying save data is absent.
+    model_throughput: bool = True            # tech/law/PM throughput multipliers
+    model_economy_of_scale: bool = True      # per-level concentration bonus
+    model_construction_pm: bool = True       # upgrade construction-sector frames
+    model_endogenous_demand: bool = True     # growth raises domestic demand
+    model_labour: bool = True                # workforce supply constraint + growth
+    model_bureaucracy: bool = True           # bureaucracy/tax-capacity constraint
+    model_investment_pool: bool = True       # private (pool-funded) construction
+    model_laws: bool = True                  # economic-system law modifiers
+
+    # Tuning knobs for the above.
+    # How strongly consumer-goods demand (and price) rises per unit of fractional
+    # GDP growth — the "your growth creates customers" feedback strength.
+    demand_elasticity: float = 0.5
+    # Baseline annual workforce growth (scaled up by standard of living); models
+    # pops/migration relaxing the labour cap over the horizon.
+    labour_growth_annual: float = 0.015
+    # Scenario override: pretend this economic-system law is active (e.g.
+    # ``"law_laissez_faire"``) to see how the plan changes. None → use the save's.
+    assumed_economic_law: str | None = None
+    # Fallback fraction of government construction the private pool adds when the
+    # save's investment-pool inflow can't be read. None → derive from the save.
+    private_construction_share: float | None = None
+
+    # --- search ---
+    # "greedy" = water-filling + random hill-climb (legacy); "anneal" adds a
+    # simulated-annealing refinement over a larger neighbourhood.
+    search_algo: str = "anneal"
+    # Let the search schedule a tech whose unlock improves the trajectory.
+    tech_lookahead: bool = True
+    # Emit a growth/solvency/SoL Pareto set alongside the chosen plan.
+    multi_objective: bool = False
 
 
 @dataclass
@@ -268,6 +307,12 @@ def _optimize_config(opt: dict) -> OptimizeConfig:
     """Build an :class:`OptimizeConfig`, falling back to defaults per field."""
     d = OptimizeConfig()
     cap = opt.get("construction_capacity")
+
+    def flag(key: str, default: bool) -> bool:
+        return bool(opt.get(key, default))
+
+    law = opt.get("assumed_economic_law")
+    pcs = opt.get("private_construction_share")
     return OptimizeConfig(
         horizon_months=int(opt.get("horizon_months", d.horizon_months)),
         objective=str(opt.get("objective", d.objective)),
@@ -277,4 +322,21 @@ def _optimize_config(opt: dict) -> OptimizeConfig:
         weight_gdp=float(opt.get("weight_gdp", d.weight_gdp)),
         weight_sol=float(opt.get("weight_sol", d.weight_sol)),
         weight_solvency=float(opt.get("weight_solvency", d.weight_solvency)),
+        solvency_policy=str(opt.get("solvency_policy", d.solvency_policy)),
+        solvency_buffer_weeks=float(opt.get("solvency_buffer_weeks", d.solvency_buffer_weeks)),
+        model_throughput=flag("model_throughput", d.model_throughput),
+        model_economy_of_scale=flag("model_economy_of_scale", d.model_economy_of_scale),
+        model_construction_pm=flag("model_construction_pm", d.model_construction_pm),
+        model_endogenous_demand=flag("model_endogenous_demand", d.model_endogenous_demand),
+        model_labour=flag("model_labour", d.model_labour),
+        model_bureaucracy=flag("model_bureaucracy", d.model_bureaucracy),
+        model_investment_pool=flag("model_investment_pool", d.model_investment_pool),
+        model_laws=flag("model_laws", d.model_laws),
+        demand_elasticity=float(opt.get("demand_elasticity", d.demand_elasticity)),
+        labour_growth_annual=float(opt.get("labour_growth_annual", d.labour_growth_annual)),
+        assumed_economic_law=(str(law) if law not in (None, "") else None),
+        private_construction_share=(float(pcs) if pcs not in (None, "") else None),
+        search_algo=str(opt.get("search_algo", d.search_algo)),
+        tech_lookahead=flag("tech_lookahead", d.tech_lookahead),
+        multi_objective=flag("multi_objective", d.multi_objective),
     )

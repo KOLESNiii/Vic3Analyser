@@ -137,6 +137,28 @@ def _channel_latest(channel: Any) -> float | None:
     return nums[-1] if nums else None
 
 
+def _active_laws(gamestate: dict, player_id: int | None) -> list[str]:
+    """Names of laws currently enacted for the player country.
+
+    ``laws.database[]`` holds every law slot for every country; the player's
+    enacted ones are those with ``country == player_id`` and ``active == yes``.
+    """
+    if player_id is None:
+        return []
+    ldb = _db(_first(gamestate, "laws", "law_manager", default={}))
+    out: list[str] = []
+    for entry in ldb.values():
+        if not isinstance(entry, dict):
+            continue
+        if int_or(_first(entry, "country")) != player_id:
+            continue
+        if _first(entry, "active") in (True, "yes"):
+            name = _first(entry, "law")
+            if name is not None:
+                out.append(str(name))
+    return out
+
+
 def _extract_country(gamestate: dict, player_id: int | None, tag: str) -> CountryEconomy:
     c = _country_record(gamestate, player_id)
     budget = _first(c, "budget", "finances", default={}) or {}
@@ -145,6 +167,7 @@ def _extract_country(gamestate: dict, player_id: int | None, tag: str) -> Countr
     balance = _trend_current(budget.get("balance_trend"))
     if balance is None and income is not None and expense is not None:
         balance = income - expense
+    stats = _first(c, "pop_statistics", default={}) or {}
     return CountryEconomy(
         tag=tag,
         gdp=_graph_latest(c.get("gdp")),
@@ -155,6 +178,13 @@ def _extract_country(gamestate: dict, player_id: int | None, tag: str) -> Countr
         credit_limit=_num(_first(budget, "credit", "credit_limit")),
         avg_sol=_graph_latest(c.get("avgsoltrend")),
         literacy=_graph_latest(c.get("literacy")),
+        population=int_or(_graph_latest(stats.get("trend_population"))),
+        workforce=int_or(_first(stats, "population_salaried_workforce")),
+        unemployed_workforce=int_or(_first(stats, "population_unemployed_workforce")),
+        investment_pool_weekly=_num(
+            _first(budget, "weekly_investment_pool_change_from_investment")
+        ),
+        active_laws=_active_laws(gamestate, player_id),
     )
 
 
@@ -273,14 +303,19 @@ def _extract_states(gamestate: dict, player_id: int | None, defs: GameDefs) -> l
             ]
         )
         region = _first(s, "region", "name")
+        incorporation = _first(s, "incorporation")
         out.append(
             StateInfo(
                 id=int_or(sid),
                 name=region,
                 population=int_or(pop),
                 workforce=int_or(_first(stats, "population_salaried_workforce")),
-                # State-level unemployment isn't stored as a scalar in the save.
-                unemployment=int_or(_first(s, "unemployment")),
+                # Unemployed salaried pops — the state's idle labour the optimiser
+                # can staff new buildings with before it must wait for pop growth.
+                unemployment=int_or(
+                    _first(stats, "population_unemployed_workforce")
+                    or _first(s, "unemployment")
+                ),
                 infrastructure=_num(_first(s, "infrastructure")),
                 infrastructure_used=_num(_first(s, "infrastructure_usage", "infrastructure_used")),
                 # The save's ``arable_land`` is land already in use; the total
@@ -290,6 +325,10 @@ def _extract_states(gamestate: dict, player_id: int | None, defs: GameDefs) -> l
                 arable_total=defs.region_arable(region),
                 arable_buildings=defs.region_arable_buildings(region),
                 capped_resources=defs.region_capped_resources(region),
+                bureaucracy_cost=_num(_first(s, "base_pop_bureaucracy_cost")),
+                incorporated=(int_or(incorporation) not in (None, 0))
+                if incorporation is not None
+                else None,
             )
         )
     return out

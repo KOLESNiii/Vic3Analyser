@@ -38,14 +38,17 @@ _CATEGORY_DIRS = {
     "production_methods": "production_methods",
     "production_method_groups": "production_method_groups",
     "building_types": "buildings",
+    "building_groups": "building_groups",
     "technologies": "technology/technologies",
     "script_values": "script_values",
+    "laws": "laws",
+    "defines": "defines",
 }
 
 # Categories whose entries are scalars (named constants) rather than blocks.
 _SCALAR_CATEGORIES = frozenset({"script_values"})
 
-_CACHE_VERSION = 4
+_CACHE_VERSION = 5
 
 
 @dataclass
@@ -54,7 +57,15 @@ class GameDefs:
     production_methods: dict[str, dict] = field(default_factory=dict)
     production_method_groups: dict[str, dict] = field(default_factory=dict)
     building_types: dict[str, dict] = field(default_factory=dict)
+    building_groups: dict[str, dict] = field(default_factory=dict)
     technologies: dict[str, dict] = field(default_factory=dict)
+    # Law definitions (common/laws): each carries a ``group`` and a ``modifier``
+    # block of country/state effects (investment pool, tax capacity, throughput,
+    # private-construction allocation, …). Source of economic-system effects.
+    laws: dict[str, dict] = field(default_factory=dict)
+    # Engine constants (common/defines), keyed by their N-group then name
+    # (e.g. ``defines["NEconomy"]["ECONOMY_OF_SCALE_START_LEVEL"]``).
+    defines: dict[str, dict] = field(default_factory=dict)
     # Named numeric constants from common/script_values (e.g. building costs are
     # given as aliases like ``construction_cost_very_high = 800``).
     script_values: dict[str, float] = field(default_factory=dict)
@@ -180,6 +191,38 @@ class GameDefs:
                     outputs[good] = outputs.get(good, 0.0) + float(value)
         return {"input": inputs, "output": outputs}
 
+    def pm_capacity_outputs(self, pm_name: str) -> dict[str, float]:
+        """Non-goods *capacity* outputs a PM provides, keyed by modifier name.
+
+        Some buildings exist to produce a capacity, not a sellable good:
+        ``government_administration`` makes bureaucracy and tax capacity, voiced
+        as ``country_bureaucracy_add`` / ``state_tax_capacity_add`` under
+        ``country_modifiers`` / ``state_modifiers`` — never as ``goods_output_*``.
+        These have no market price, so :meth:`pm_goods` (and any optimiser that
+        ranks PMs by goods value alone) is blind to them and will happily trade
+        them away to shave a goods *input*. Capturing them lets the optimiser
+        refuse a switch that collapses a capacity it cannot price.
+
+        Values are the per-level amounts (``workforce_scaled`` / ``level_scaled``
+        / ``unscaled`` summed), a sound *relative* signal between PMs in a slot.
+        """
+        pm = self.production_methods.get(pm_name, {})
+        out: dict[str, float] = {}
+        for block_key in ("country_modifiers", "state_modifiers"):
+            block = pm.get(block_key)
+            if not isinstance(block, dict):
+                continue
+            for scope_key in ("workforce_scaled", "level_scaled", "unscaled"):
+                scope = block.get(scope_key)
+                if not isinstance(scope, dict):
+                    continue
+                for mod_key, value in scope.items():
+                    if isinstance(value, bool) or not isinstance(value, (int, float)):
+                        continue
+                    if mod_key.endswith("_add"):
+                        out[mod_key] = out.get(mod_key, 0.0) + float(value)
+        return out
+
     def pm_unlocking_techs(self, pm_name: str) -> list[str]:
         """Technologies that unlock a PM (``unlocking_technologies``)."""
         pm = self.production_methods.get(pm_name, {})
@@ -197,6 +240,133 @@ class GameDefs:
     def group_pms(self, group: str) -> list[str]:
         grp = self.production_method_groups.get(group, {})
         return [str(p) for p in as_list(grp.get("production_methods"))]
+
+    # --- throughput / economy-of-scale / building groups -----------------
+
+    def pm_building_mults(self, pm_name: str) -> dict[str, float]:
+        """A PM's building-wide multipliers from its ``building_modifiers``.
+
+        ``throughput`` scales *all* of a PM's goods flows; ``input_mult`` /
+        ``output_mult`` scale only the input or output side. Vic3 stacks these
+        additively before applying, so we sum the ``_add`` / ``_mult`` modifiers.
+        These are distinct from the per-good ``goods_*_add`` flows in
+        :meth:`pm_goods` (which are the *base* quantities throughput multiplies).
+        """
+        pm = self.production_methods.get(pm_name, {})
+        mods = pm.get("building_modifiers", {})
+        out = {"throughput": 0.0, "input_mult": 0.0, "output_mult": 0.0}
+        if not isinstance(mods, dict):
+            return out
+        for scope_key in ("workforce_scaled", "level_scaled", "unscaled"):
+            scope = mods.get(scope_key)
+            if not isinstance(scope, dict):
+                continue
+            for key, dest in (
+                ("building_throughput_add", "throughput"),
+                ("building_goods_input_mult", "input_mult"),
+                ("building_goods_output_mult", "output_mult"),
+            ):
+                v = scope.get(key)
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    out[dest] += float(v)
+        return out
+
+    def building_group_of(self, building: str) -> str | None:
+        bt = self.building_types.get(building, {})
+        g = bt.get("building_group") if isinstance(bt, dict) else None
+        return str(g) if g is not None else None
+
+    def building_group_chain(self, building: str) -> list[str]:
+        """A building's group and all ancestor groups (nearest first).
+
+        Used to resolve group-scoped modifiers (``building_group_<g>_*``) that
+        techs/laws grant, which apply to a group and everything beneath it.
+        """
+        chain: list[str] = []
+        seen: set[str] = set()
+        g = self.building_group_of(building)
+        while g and g not in seen:
+            seen.add(g)
+            chain.append(g)
+            bg = self.building_groups.get(g)
+            nxt = bg.get("parent_group") if isinstance(bg, dict) else None
+            g = str(nxt) if nxt is not None else None
+        return chain
+
+    def group_has_economy_of_scale(self, group: str | None) -> bool:
+        """Whether a building group (or an ancestor) enables economy of scale.
+
+        Building groups inherit ``economy_of_scale`` from their ``parent_group``
+        unless they set it themselves. Subsistence groups are excluded even
+        though they inherit the flag (the game applies scale only to
+        non-subsistence buildings).
+        """
+        def _truthy(v) -> bool:
+            return v is True or v in ("yes", "true", 1, "1")
+
+        seen: set[str] = set()
+        g = group
+        eos: bool | None = None
+        while g and g not in seen:
+            seen.add(g)
+            bg = self.building_groups.get(g)
+            if not isinstance(bg, dict):
+                break
+            if _truthy(bg.get("is_subsistence")):
+                return False
+            if eos is None and "economy_of_scale" in bg:
+                eos = _truthy(bg["economy_of_scale"])
+            g = bg.get("parent_group")
+            g = str(g) if g is not None else None
+        return bool(eos)
+
+    def building_has_economy_of_scale(self, building: str) -> bool:
+        return self.group_has_economy_of_scale(self.building_group_of(building))
+
+    def define(self, group: str, key: str, default: float | None = None) -> float | None:
+        """A numeric engine constant from ``common/defines`` (e.g. group
+        ``NEconomy``, key ``ECONOMY_OF_SCALE_START_LEVEL``)."""
+        grp = self.defines.get(group)
+        # A define group can appear more than once (parser collapses dups to a
+        # list); search each occurrence for the key.
+        for block in (grp if isinstance(grp, list) else [grp]):
+            if isinstance(block, dict) and key in block:
+                v = block[key]
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    return float(v)
+        return default
+
+    # --- modifier blocks (techs, laws) -----------------------------------
+
+    def _numeric_modifier_block(self, node: dict | None) -> dict[str, float]:
+        out: dict[str, float] = {}
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    out[str(k)] = float(v)
+        return out
+
+    def tech_modifiers(self, tech: str) -> dict[str, float]:
+        """Numeric country/building modifiers a technology grants (its
+        ``modifier`` block) — e.g. ``building_group_bg_*_throughput_add``."""
+        td = self.technologies.get(tech, {})
+        return self._numeric_modifier_block(td.get("modifier") if isinstance(td, dict) else None)
+
+    def law_modifiers(self, law: str) -> dict[str, float]:
+        """Numeric modifiers an active law applies (its ``modifier`` block):
+        investment-pool efficiency, tax-capacity mult, private-construction
+        allocation, dividends reinvestment, throughput, …"""
+        ld = self.laws.get(law, {})
+        return self._numeric_modifier_block(ld.get("modifier") if isinstance(ld, dict) else None)
+
+    def law_group(self, law: str) -> str | None:
+        ld = self.laws.get(law, {})
+        g = ld.get("group") if isinstance(ld, dict) else None
+        return str(g) if g is not None else None
+
+    def laws_in_group(self, group: str) -> list[str]:
+        return [name for name, ld in self.laws.items()
+                if isinstance(ld, dict) and ld.get("group") == group]
 
     # --- state-region capacity (from map_data/state_regions) -------------
 
@@ -358,7 +528,10 @@ def load_defs(cfg: Config, use_cache: bool = True) -> GameDefs:
             _category_files(roots, "production_method_groups")
         ),
         building_types=_load_category(_category_files(roots, "building_types")),
+        building_groups=_load_category(_category_files(roots, "building_groups")),
         technologies=_load_category(_category_files(roots, "technologies")),
+        laws=_load_category(_category_files(roots, "laws")),
+        defines=_load_category(_category_files(roots, "defines")),
         script_values=_load_scalars(_category_files(roots, "script_values")),
         state_regions=_load_category(region_files),
     )
@@ -378,7 +551,10 @@ def _write_cache(cache_path: Path, manifest: dict[str, float], defs: GameDefs) -
             "production_methods": defs.production_methods,
             "production_method_groups": defs.production_method_groups,
             "building_types": defs.building_types,
+            "building_groups": defs.building_groups,
             "technologies": defs.technologies,
+            "laws": defs.laws,
+            "defines": defs.defines,
             "script_values": defs.script_values,
             "state_regions": defs.state_regions,
         },

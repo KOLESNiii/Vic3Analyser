@@ -54,11 +54,11 @@ watch_mode = "any"
 horizon_months = 60
 
 # What to maximize:
-#   "composite" — GDP + standard of living + staying solvent (default)
+#   "growth"    — sustained compounding GDP growth rate, constrained by solvency (default)
+#   "composite" — GDP + standard of living + staying solvent
 #   "gdp"       — projected GDP at the horizon
-#   "growth"    — sustained compounding GDP growth rate
 #   "cash"      — treasury / construction ROI
-objective = "composite"
+objective = "growth"
 
 # Construction points/week available to the plan. Leave blank to read it from
 # the save (often missing) and otherwise estimate it from your economy.
@@ -77,3 +77,42 @@ search_effort = 200
 weight_gdp = 1.0
 weight_sol = 0.4
 weight_solvency = 1.0
+
+# Solvency policy for the optimizer. With "hard_buffer", plans are only
+# considered feasible if treasury + credit stays above the reserve for the full
+# forecast horizon. The default reserve is 12 weeks of current weekly expenses.
+solvency_policy = "hard_buffer"
+solvency_buffer_weeks = 12
+
+# --- model fidelity -------------------------------------------------------
+# Each flag turns on one extra real economic mechanic in the GDP/finance model.
+# All are player-derivable; estimate-heavy ones become no-ops if the save lacks
+# the data. Turn any off to simplify (and speed up) the model.
+model_throughput = true          # tech/law/PM throughput multipliers
+model_economy_of_scale = true    # per-level building concentration bonus
+model_construction_pm = true     # upgrade construction-sector frames (2→5→10→15 pts/lvl)
+model_endogenous_demand = true   # your own growth raises domestic demand & prices
+model_labour = true              # workforce-supply limit + pop/migration growth
+model_bureaucracy = true         # bureaucracy & tax-capacity constraint on growth
+model_investment_pool = true     # private, pool-funded construction stream
+model_laws = true                # economic-system law modifiers
+
+# Strength of the "growth creates customers" feedback (consumer price rise per
+# unit of fractional GDP growth).
+demand_elasticity = 0.5
+# Baseline annual workforce growth (scaled up by standard of living).
+labour_growth_annual = 0.015
+# Scenario: pretend this economic-system law is active (e.g. "law_laissez_faire")
+# to see how it changes the plan. Blank = use the law in your save.
+assumed_economic_law = ""
+# Fallback private-construction share if the save's investment-pool inflow can't
+# be read. Blank = derive it from the save.
+private_construction_share = ""
+
+# Search: "anneal" (simulated annealing over a larger neighbourhood) or "greedy"
+# (legacy water-filling + random hill-climb).
+search_algo = "anneal"
+# Let the search schedule a tech whose unlock improves the trajectory.
+tech_lookahead = true
+# Emit a growth/solvency/SoL Pareto set alongside the chosen plan.
+multi_objective = false
