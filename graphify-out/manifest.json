@@ -1,7 +1,7 @@
 {
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/config.py": {
-    "mtime": 1781109526.4346097,
-    "ast_hash": "2293ca8d6ce29962314636fe6468ca37",
+    "mtime": 1781305478.0346086,
+    "ast_hash": "4be7b8f7d78159c335bccae2e87d24cc",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/__init__.py": {
@@ -25,18 +25,18 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/snapshot.py": {
-    "mtime": 1781113264.959285,
-    "ast_hash": "2866839b3b8594f2bbfee2770ebac2fd",
+    "mtime": 1781305372.105616,
+    "ast_hash": "02e881dedf21dcbd68a07312e136e4be",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/extract/models.py": {
-    "mtime": 1781113218.649865,
-    "ast_hash": "0acb1865b0f17b91c7dfdc834a0e351a",
+    "mtime": 1781305344.4589105,
+    "ast_hash": "f808799b8caa0ed643bb59f49100f6e5",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/defs.py": {
-    "mtime": 1781113193.1861835,
-    "ast_hash": "6ed6af8f4a936cc7510460d05d82f575",
+    "mtime": 1781305582.7848086,
+    "ast_hash": "631c3340d374c433e5481d6097e3a49a",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/ingest/__init__.py": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/server.py": {
-    "mtime": 1781110831.8444831,
-    "ast_hash": "9b7ede01ab404ab877153a3bf35b13dc",
+    "mtime": 1781117064.4120622,
+    "ast_hash": "59b796260903a4df4791ebd356324783",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/api/watcher.py": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/pricing.py": {
-    "mtime": 1781001796.44126,
-    "ast_hash": "d218273095db410dbfcbca0110360a64",
+    "mtime": 1781302117.275996,
+    "ast_hash": "66c94ddd38c7c69435297d5fcea3d4e9",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/profitability.py": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/pm_optimizer.py": {
-    "mtime": 1781001837.3432505,
-    "ast_hash": "217eb1fcc83927c48e2a04736ec4f36b",
+    "mtime": 1781302130.9273753,
+    "ast_hash": "c28d1554e97f4a34cf58af3c046cd4b1",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/construction.py": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/app.js": {
-    "mtime": 1781115640.9989128,
-    "ast_hash": "62edf0ec9b457219444c6361325ae16e",
+    "mtime": 1781337074.48632,
+    "ast_hash": "6455a8c516e340265be3bd9acacba6a7",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_snapshot.py": {
@@ -165,8 +165,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_analysis_core.py": {
-    "mtime": 1781001879.6532435,
-    "ast_hash": "9f43f18db748582d8a147bfd710c0e87",
+    "mtime": 1781302168.2871964,
+    "ast_hash": "8f6819f64c65507c06a5d0a09326e1b2",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_store.py": {
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_api.py": {
-    "mtime": 1781115774.789439,
-    "ast_hash": "65d4390e6efb351267323eb1d914c46b",
+    "mtime": 1781117208.3945007,
+    "ast_hash": "9235386a4e531d7168f70dd0d8fcb608",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/.claude/settings.json": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/SCHEMA.md": {
-    "mtime": 1781115705.3189075,
-    "ast_hash": "d20b872c5cf6186b0e98af08eea1864c",
+    "mtime": 1781305424.458269,
+    "ast_hash": "97966282e70aa7c4e06d8d7248c18236",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/CLAUDE.md": {
@@ -200,13 +200,13 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/README.md": {
-    "mtime": 1781115689.4099514,
-    "ast_hash": "8c0a814cf7a90dbc4a606347acba61e4",
+    "mtime": 1781117218.5312455,
+    "ast_hash": "4b85104d785957f2371cc6303b83e2cc",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/web/index.html": {
-    "mtime": 1781110874.7087212,
-    "ast_hash": "a349540ff91b095a5c0063edb7d0e8a0",
+    "mtime": 1781117079.72569,
+    "ast_hash": "25940107b32cd87f708c6a36ebd50864",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_build_gating.py": {
@@ -215,13 +215,13 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/simulate.py": {
-    "mtime": 1781115726.48881,
-    "ast_hash": "f53652ab84ae346f25bbe9d7d1121f31",
+    "mtime": 1781336504.6291676,
+    "ast_hash": "2ec5076e5ad3e7b29fcf5b94d201a838",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/econ_model.py": {
-    "mtime": 1781111163.4319148,
-    "ast_hash": "8c6770703d20bdcf1d42c34b7b35d822",
+    "mtime": 1781305852.6107845,
+    "ast_hash": "7781b7287006909d9614a1193af092b9",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/actions.py": {
@@ -230,23 +230,68 @@
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/strategy.py": {
-    "mtime": 1781115633.3068805,
-    "ast_hash": "f07972c6d130e67ed64ce9a3b1b19b77",
+    "mtime": 1781336968.9846332,
+    "ast_hash": "01d19b213a9cd7d7e75f2c8802ee1d4c",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/optimize.py": {
-    "mtime": 1781116085.6869018,
-    "ast_hash": "6b47d6dba0baa1d9c750c61ec25f5da3",
+    "mtime": 1781336957.1252215,
+    "ast_hash": "3fc7d20565b7937321236c40dae9c289",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/tests/test_strategy.py": {
-    "mtime": 1781116043.5248625,
-    "ast_hash": "15f3505ebc6e7271fa97ef996bcd9a9a",
+    "mtime": 1781337035.6907623,
+    "ast_hash": "9444dcac5201a6f7afa7533112618e9a",
     "semantic_hash": ""
   },
   "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/capacity.py": {
-    "mtime": 1781116068.621296,
-    "ast_hash": "597dc52c843d4a6d12f48c0d42868057",
+    "mtime": 1781305940.8481784,
+    "ast_hash": "1e6ccc0a5f589a5403a58ec7be195452",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/production.py": {
+    "mtime": 1781305958.0747693,
+    "ast_hash": "f0c055514ce3444834ef1d430e2e09d2",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_production.py": {
+    "mtime": 1781306468.8764594,
+    "ast_hash": "8ac238fa08357d6f755b689effc41a08",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/.claude/settings.local.json": {
+    "mtime": 1781304917.2480264,
+    "ast_hash": "f5b99adccd6403e7b26dda503f0930f4",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/fiscal.py": {
+    "mtime": 1781306573.1104908,
+    "ast_hash": "a6f22fec8c28f56e650af73bec5832ed",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_fiscal.py": {
+    "mtime": 1781335626.6370614,
+    "ast_hash": "b81589e067c4703e34e72b01fc10879c",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/labour.py": {
+    "mtime": 1781335905.4268935,
+    "ast_hash": "169ae749e7447d0145b3fd44f2007b5a",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_labour.py": {
+    "mtime": 1781336392.766154,
+    "ast_hash": "2a4c1def76f37dd12763a07b7408227a",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/src/vic3analyser/analysis/private_construction.py": {
+    "mtime": 1781336469.7511635,
+    "ast_hash": "2e3cd7540efaf8984c4f7fc5ad9b21dc",
+    "semantic_hash": ""
+  },
+  "/home/kolesniii/Vic3Mods/analyser/tests/test_laws.py": {
+    "mtime": 1781336672.2371876,
+    "ast_hash": "58da68af0bc4ce347ccf0bfdd52857ec",
     "semantic_hash": ""
   }
 }
