@@ -6,14 +6,18 @@ Run with ``uv run vic3analyser`` (see ``[project.scripts]``).
 
 from __future__ import annotations
 
+import asyncio
+import json
+import queue
 import threading
 import traceback
+from collections.abc import Callable
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from dataclasses import replace
@@ -25,6 +29,11 @@ from ..pipeline import _ser, analyse_all, process_save
 from ..store.db import SnapshotStore
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
+
+
+def _sse(event: str, data: Any) -> str:
+    """Format one Server-Sent Event frame."""
+    return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 
 def is_autosave(path: Path) -> bool:
@@ -84,9 +93,11 @@ class AppState:
         effort: int | None = None,
         solvency_policy: str | None = None,
         solvency_buffer_weeks: float | None = None,
+        progress: "Callable[[float, str], None] | None" = None,
     ) -> dict[str, Any] | None:
         """Run the advanced optimizer/forecaster on demand (it's not cheap, so
-        it's separate from the per-refresh ``analyse_all``)."""
+        it's separate from the per-refresh ``analyse_all``). ``progress`` streams
+        ``(fraction, label)`` updates for a live UI bar."""
         snap = self.store.latest(player_tag)
         if snap is None or self.defs is None:
             return None
@@ -104,7 +115,7 @@ class AppState:
             opt = replace(opt, solvency_buffer_weeks=max(0.0, solvency_buffer_weeks))
         with self._lock:
             report = build_strategy(
-                snap, self.defs, opt, history=history, capacity=capacity
+                snap, self.defs, opt, history=history, capacity=capacity, progress=progress
             )
         return _ser(report)
 
@@ -314,6 +325,59 @@ def create_app(cfg: Config | None = None) -> FastAPI:
                 detail=state.defs_error or "No snapshot yet. Ingest a save first.",
             )
         return JSONResponse(data)
+
+    @app.get("/api/strategy/stream")
+    async def strategy_stream(
+        player_tag: str | None = Query(default=None),
+        horizon: int | None = Query(default=None),
+        capacity: float | None = Query(default=None),
+        objective: str | None = Query(default=None),
+        effort: int | None = Query(default=None),
+        solvency_policy: str | None = Query(default=None),
+        solvency_buffer_weeks: float | None = Query(default=None),
+    ) -> Any:
+        """Same plan as ``/api/strategy`` but streamed as Server-Sent Events:
+        ``progress`` events ({fraction, label}) while it computes, then a single
+        ``result`` event with the report (or a ``failed`` event on error). Lets
+        the dashboard show a live progress bar for long horizons."""
+        events: "queue.Queue[tuple]" = queue.Queue()
+
+        def worker() -> None:
+            try:
+                data = state.strategy(
+                    player_tag, horizon, capacity, objective, effort,
+                    solvency_policy, solvency_buffer_weeks,
+                    progress=lambda f, label: events.put(("progress", f, label)),
+                )
+                if data is None:
+                    events.put(("failed", state.defs_error or "No snapshot yet. Ingest a save first."))
+                else:
+                    events.put(("result", data))
+            except Exception as exc:  # noqa: BLE001 - surface to the UI
+                events.put(("failed", str(exc)))
+            finally:
+                events.put(("__end__",))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+        async def stream():
+            while True:
+                try:
+                    item = events.get_nowait()
+                except queue.Empty:
+                    await asyncio.sleep(0.1)
+                    continue
+                kind = item[0]
+                if kind == "__end__":
+                    break
+                if kind == "progress":
+                    yield _sse("progress", {"fraction": item[1], "label": item[2]})
+                elif kind == "result":
+                    yield _sse("result", item[1])
+                elif kind == "failed":
+                    yield _sse("failed", {"detail": item[1]})
+
+        return StreamingResponse(stream(), media_type="text/event-stream")
 
     @app.get("/api/snapshot")
     def snapshot(player_tag: str | None = Query(default=None)) -> Any:

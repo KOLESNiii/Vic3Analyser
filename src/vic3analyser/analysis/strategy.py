@@ -13,6 +13,7 @@ calibrated).
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..config import OptimizeConfig
@@ -231,6 +232,25 @@ def _cascade_narrative(snap: Snapshot, model: PriceModel, res: OptimizeResult) -
     return lines
 
 
+class _Progress:
+    """Aggregates fine-grained ``tick`` calls from the optimiser/forecaster into a
+    monotonic 0..1 fraction + label for a UI progress bar. ``total`` is an estimate
+    of the work units (simulated months + refinement steps); the fraction is
+    clamped below 1.0 until :meth:`done` snaps it to 100%."""
+
+    def __init__(self, total: int, sink: "Callable[[float, str], None]") -> None:
+        self.total = max(1, total)
+        self.n = 0
+        self.sink = sink
+
+    def tick(self, label: str) -> None:
+        self.n += 1
+        self.sink(min(0.99, self.n / self.total), label)
+
+    def done(self) -> None:
+        self.sink(1.0, "Done")
+
+
 def build_strategy(
     snap: Snapshot,
     defs: GameDefs,
@@ -238,13 +258,29 @@ def build_strategy(
     history: list[Snapshot] | None = None,
     capacity: float | None = None,
     horizon_months: int | None = None,
+    progress: "Callable[[float, str], None] | None" = None,
 ) -> StrategyReport:
-    """Run the full advanced analysis and package it for the dashboard/API."""
+    """Run the full advanced analysis and package it for the dashboard/API.
+
+    ``progress`` (if given) is called with ``(fraction, label)`` as the optimiser
+    and forecaster make progress, for a live UI bar.
+    """
     cfg = cfg or OptimizeConfig()
     horizon = horizon_months or cfg.horizon_months
     cap = capacity if capacity is not None else (
         cfg.construction_capacity if cfg.construction_capacity else estimate_capacity(snap, defs)
     )
+
+    # ``tick`` fires roughly once per 6 simulated months / 20 refinement steps; the
+    # estimate just sets the bar's scale (it's clamped, then snapped to 100%).
+    tick = None
+    prog: _Progress | None = None
+    if progress is not None:
+        months_per_tick = 6
+        ticks = (2 * (horizon / months_per_tick) + 2 * (cfg.search_effort / 20)
+                 + 3 * (horizon / months_per_tick) + horizon / months_per_tick)
+        prog = _Progress(int(ticks) + 1, progress)
+        tick = prog.tick
 
     base_throughput = throughput_bonus_by_type(
         aggregate_holdings(snap),
@@ -265,12 +301,15 @@ def build_strategy(
     )
     cap_opt = cap * frame_mult
 
-    res = optimize_growth(snap, defs, model, cfg, cap_opt, horizon)
+    res = optimize_growth(snap, defs, model, cfg, cap_opt, horizon, tick=tick)
 
     opt_fc = simulate_plan(
-        snap, defs, model, res.plan, cap_opt, horizon, label="optimized", cfg=cfg, pace=True
+        snap, defs, model, res.plan, cap_opt, horizon, label="optimized", cfg=cfg, pace=True,
+        tick=tick, tick_label="Forecasting plan",
     )
     base_fc = forecast_baseline(snap, defs, model, cap, horizon, cfg=cfg)
+    if prog is not None:
+        prog.done()
     score, breakdown = evaluate_objective(opt_fc, cfg, snap.country.credit_limit or 0.0)
 
     econ_law = next(

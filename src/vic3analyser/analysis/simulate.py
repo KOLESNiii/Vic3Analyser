@@ -29,6 +29,7 @@ All of it is an estimate and flagged as such upstream.
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..config import OptimizeConfig
@@ -243,6 +244,8 @@ def simulate_plan(
     label: str = "optimized",
     cfg: OptimizeConfig | None = None,
     pace: bool = False,
+    tick: "Callable[[str], None] | None" = None,
+    tick_label: str = "Forecasting",
 ) -> Forecast:
     """Run a plan forward and return its forecast trajectory.
 
@@ -321,6 +324,8 @@ def simulate_plan(
     prev_cost_per_point = cost_per_point_base
 
     for month in range(1, horizon_months + 1):
+        if tick is not None and (month % 6 == 0 or month == horizon_months):
+            tick(f"{tick_label} ({month}/{horizon_months} mo)")
         # --- research: advance the head of the tech queue ------------------
         if tech_queue:
             tname = tech_queue[0]

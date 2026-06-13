@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import random
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..config import OptimizeConfig
@@ -195,6 +196,8 @@ def _greedy(
     horizon_months: int,
     allow_cs: bool = True,
     rounds_per_month: int = 12,
+    tick: "Callable[[str], None] | None" = None,
+    tick_label: str = "Optimising",
 ) -> OptimizeResult:
     """Time-aware water-filling: walk month by month, capacity compounds as
     construction sectors complete, land/resource caps and solvency are honoured,
@@ -315,6 +318,8 @@ def _greedy(
 
     gdp_prev = gdp0
     for month in range(1, horizon_months + 1):
+        if tick is not None and (month % 6 == 0 or month == horizon_months):
+            tick(f"{tick_label} ({month}/{horizon_months} mo)")
         demand_shift = (
             demand_shift_for(gdp_prev / gdp0 - 1.0 if gdp0 else 0.0, model, defs, cfg.demand_elasticity)
             if cfg.model_endogenous_demand
@@ -663,6 +668,7 @@ def _refine(
     cfg: OptimizeConfig,
     cap_budget: CapacityBudget,
     seed: int = 12345,
+    tick: "Callable[[str], None] | None" = None,
 ) -> dict[str, float]:
     """Hill-climb the *production* allocation (construction sectors are kept
     fixed), honouring land/resource caps, keeping quick-objective improvements."""
@@ -725,7 +731,10 @@ def _refine(
     if not buildable:
         return start
 
+    refine_step = max(1, effort // 20)
     for i in range(effort):
+        if tick is not None and i % refine_step == 0:
+            tick(f"Refining plan ({i}/{effort})")
         cand = dict(cur)
         move = rng.random()
         donors = [t for t, lv in cand.items() if lv > 0]
@@ -913,6 +922,7 @@ def optimize_growth(
     cfg: OptimizeConfig,
     capacity: float,
     horizon_months: int | None = None,
+    tick: "Callable[[str], None] | None" = None,
 ) -> OptimizeResult:
     """Growth-maximizing plan: time-aware water-filling (capacity compounds via
     construction-sector investment) + production refinement. Tries expanding
@@ -927,15 +937,22 @@ def optimize_growth(
     frontier: list[tuple[OptimizeResult, object]] = []
 
     def _forecast(res: OptimizeResult):
-        return simulate_plan(snap, defs, model, res.plan, capacity, horizon, cfg=cfg, pace=True)
+        return simulate_plan(
+            snap, defs, model, res.plan, capacity, horizon, cfg=cfg, pace=True,
+            tick=tick, tick_label="Scoring plan",
+        )
 
     for allow_cs in (True, False):
-        greedy = _greedy(snap, defs, model, options, cfg, capacity, horizon, allow_cs=allow_cs)
+        label = f"Optimising ({'with' if allow_cs else 'without'} new construction)"
+        greedy = _greedy(
+            snap, defs, model, options, cfg, capacity, horizon,
+            allow_cs=allow_cs, tick=tick, tick_label=label,
+        )
         # Refinement optimises a fast *proxy* objective, which can diverge from
         # the full forecast; score the unrefined greedy plan too and keep
         # whichever actually wins, so refinement can only help.
         candidates = [_assemble(greedy, greedy.added, snap, defs, model, cfg)]
-        refined = _refine(snap, defs, model, options, greedy.added, cfg, cap_budget)
+        refined = _refine(snap, defs, model, options, greedy.added, cfg, cap_budget, tick=tick)
         if refined != greedy.added:
             candidates.append(_assemble(greedy, refined, snap, defs, model, cfg))
         for res in candidates:

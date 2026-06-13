@@ -157,6 +157,17 @@ def test_full_api_flow(tmp_path):
         assert "build_order" in payload
         assert "series" in payload and len(payload["series"]["months"]) == 6
 
+        # Streaming variant emits progress events then a single result event.
+        with client.stream(
+            "GET", "/api/strategy/stream", params={"horizon": 6, "effort": 0}
+        ) as stream:
+            assert stream.status_code == 200
+            assert "text/event-stream" in stream.headers["content-type"]
+            body = "".join(stream.iter_text())
+        assert "event: progress" in body
+        assert "event: result" in body
+        assert '"fraction"' in body and '"summary"' in body
+
 
 def test_on_demand_analysis(tmp_path):
     """Settings/saves endpoints: list saves and analyse the latest on demand."""

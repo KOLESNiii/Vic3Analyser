@@ -216,11 +216,25 @@ function renderTech(rows) {
 }
 
 // --- strategy & forecast ----------------------------------------------------
-async function runStrategy() {
+let stratStream = null;
+
+function setStratProgress(fraction, label) {
+  const box = $("#strat-progress");
+  box.classList.remove("hidden");
+  $("#strat-progress-bar").style.width = Math.round((fraction || 0) * 100) + "%";
+  $("#strat-progress-label").textContent =
+    (label || "Working…") + " · " + Math.round((fraction || 0) * 100) + "%";
+}
+
+function runStrategy() {
   const btn = $("#strat-run");
   const msg = $("#strat-msg");
+  if (stratStream) stratStream.close();
   btn.disabled = true;
-  msg.textContent = "Optimizing… (this can take a few seconds)";
+  msg.textContent = "";
+  msg.className = "hint";
+  setStratProgress(0, "Starting…");
+
   const params = new URLSearchParams();
   if (currentTag) params.set("player_tag", currentTag);
   params.set("objective", $("#strat-objective").value);
@@ -230,18 +244,36 @@ async function runStrategy() {
   params.set("solvency_buffer_weeks", $("#strat-buffer-weeks").value || "12");
   const cap = $("#strat-capacity").value;
   if (cap) params.set("capacity", cap);
-  try {
-    const res = await fetch("/api/strategy?" + params.toString());
-    const body = await res.json();
-    if (!res.ok) throw new Error(body.detail || "failed");
-    renderStrategy(body);
-    msg.textContent = "";
-  } catch (e) {
-    msg.textContent = "Could not build a strategy: " + e.message;
-    msg.className = "hint err";
-  } finally {
+
+  const finish = () => {
+    if (stratStream) { stratStream.close(); stratStream = null; }
+    $("#strat-progress").classList.add("hidden");
     btn.disabled = false;
-  }
+  };
+
+  const es = new EventSource("/api/strategy/stream?" + params.toString());
+  stratStream = es;
+  es.addEventListener("progress", (e) => {
+    const d = JSON.parse(e.data);
+    setStratProgress(d.fraction, d.label);
+  });
+  es.addEventListener("result", (e) => {
+    renderStrategy(JSON.parse(e.data));
+    finish();
+  });
+  es.addEventListener("failed", (e) => {
+    msg.textContent = "Could not build a strategy: " + (JSON.parse(e.data).detail || "failed");
+    msg.className = "hint err";
+    finish();
+  });
+  es.onerror = () => {
+    // Network/transport error (not an app-level "failed" event).
+    if (stratStream) {
+      msg.textContent = "Lost connection while planning. Try again.";
+      msg.className = "hint err";
+      finish();
+    }
+  };
 }
 
 function renderStrategy(d) {
