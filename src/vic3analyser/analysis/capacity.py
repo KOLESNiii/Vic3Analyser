@@ -20,6 +20,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 
+from ..config import OptimizeConfig
 from ..extract.models import Snapshot
 from ..ingest.defs import GameDefs
 from .build_where import analyse_where_to_build
@@ -158,15 +159,93 @@ def points_per_sector_level(snap: Snapshot) -> float:
     return p if p and p > 0 else _DEFAULT_POINTS_PER_SECTOR
 
 
+def _construction_add(pm: str, defs: GameDefs) -> float:
+    """Construction points/level a construction-sector PM grants
+    (``country_construction_add``)."""
+    return defs.pm_capacity_outputs(pm).get("country_construction_add", 0.0)
+
+
+def construction_pms(defs: GameDefs) -> list[str]:
+    groups = defs.building_pm_groups(CONSTRUCTION_BUILDING)
+    return defs.group_pms(groups[0]) if groups else []
+
+
+def current_construction_pm(snap: Snapshot, defs: GameDefs) -> str | None:
+    """The construction-sector PM the player is currently running, if any."""
+    group_pms = set(construction_pms(defs))
+    for b in snap.buildings:
+        if b.building_type == CONSTRUCTION_BUILDING:
+            for apm in b.active_pms:
+                if apm.pm in group_pms:
+                    return apm.pm
+    return None
+
+
+def best_construction_pm(researched: set[str], defs: GameDefs) -> str | None:
+    """Researched construction-sector PM with the most points/level (the frame
+    tier a growth-minded player upgrades to: wooden→iron→steel→arc)."""
+    best: str | None = None
+    best_add = -1.0
+    for pm in construction_pms(defs):
+        if any(t not in researched for t in defs.pm_unlocking_techs(pm)):
+            continue
+        add = _construction_add(pm, defs)
+        if add > best_add:
+            best, best_add = pm, add
+    return best
+
+
+def construction_pm_upgrade(
+    snap: Snapshot, defs: GameDefs, researched: set[str], cfg: OptimizeConfig | None = None
+) -> tuple[str | None, str | None, float]:
+    """``(current_pm, best_pm, points_multiplier)`` for the construction frame.
+
+    The multiplier is how much more points/level the best researched frame gives
+    over the current one — the construction-throughput lever. ``1.0`` when there's
+    no upgrade or the feature is disabled.
+    """
+    if cfg is not None and not cfg.model_construction_pm:
+        return None, None, 1.0
+    cur = current_construction_pm(snap, defs)
+    best = best_construction_pm(researched, defs)
+    cur_add = _construction_add(cur, defs) if cur else 0.0
+    best_add = _construction_add(best, defs) if best else 0.0
+    if best is None or cur is None or cur_add <= 0 or best_add <= cur_add:
+        return cur, best, 1.0
+    return cur, best, best_add / cur_add
+
+
+def construction_points_per_level(
+    snap: Snapshot, defs: GameDefs, researched: set[str], cfg: OptimizeConfig | None = None
+) -> float:
+    """Points/week a *new* construction-sector level adds.
+
+    Anchored on the save's observed points/level (which already bakes in the
+    player's real bonuses), scaled by the frame-tier upgrade ratio when the
+    plan adopts a better researched frame. Falls back to the observed value.
+    """
+    observed = points_per_sector_level(snap)
+    _cur, _best, mult = construction_pm_upgrade(snap, defs, researched, cfg)
+    return observed * mult
+
+
 def construction_cost_per_point(
-    prices: dict[str, float], defs: GameDefs, researched: set[str], per_level_points: float
+    prices: dict[str, float],
+    defs: GameDefs,
+    researched: set[str],
+    per_level_points: float,
+    pm: str | None = None,
 ) -> float:
     """Money cost of one construction point, from the construction sector's goods
-    basket valued at the given prices."""
-    groups = defs.building_pm_groups(CONSTRUCTION_BUILDING)
-    if not groups or per_level_points <= 0:
+    basket valued at the given prices. Uses the frame ``pm`` actually being run
+    (best researched tier) so a richer-but-faster frame is priced correctly."""
+    if per_level_points <= 0:
         return 0.0
-    pm = best_pm_in_group(groups[0], researched, prices, defs)
+    if pm is None:
+        pm = best_construction_pm(researched, defs)
+    if pm is None:
+        groups = defs.building_pm_groups(CONSTRUCTION_BUILDING)
+        pm = best_pm_in_group(groups[0], researched, prices, defs) if groups else None
     if pm is None:
         return 0.0
     inputs = defs.pm_goods(pm)["input"]

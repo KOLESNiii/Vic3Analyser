@@ -36,14 +36,22 @@ supply/demand volumes are not in the save, so depth is modeled, not measured.
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from statistics import median
 
 from ..extract.models import Snapshot
 from ..ingest.defs import GameDefs
+from .pricing import guarded_capacity
 
 # Vic3 clamps a good's price to ±75% of its base price.
 MAX_DEVIATION = 0.75
+# Tradeable goods deviate less than this ceiling, because the world market
+# absorbs some of the player's supply/demand swing (imports cap price rises,
+# exports cap falls). Non-tradeable goods get the full clamp.
+_TRADEABLE_DEVIATION = 0.55
+# Tradeable goods also have deeper effective markets (world depth on top of the
+# player's own), so a given footprint change moves their price less.
+_TRADEABLE_DEPTH_MULT = 1.5
 # Depth (in goods units) assumed for a good with no observable scale at all.
 _FALLBACK_DEPTH = 1000.0
 
@@ -75,20 +83,67 @@ def value_flows(
     return rev - cost
 
 
-def pm_value_at(pm: str, prices: dict[str, float], defs: GameDefs) -> float:
+def _pm_factors(pm: str, defs: GameDefs, bonus: float) -> tuple[float, float]:
+    """Output- and input-side scale factors for a PM under an external
+    throughput ``bonus`` (economy of scale + tech/law), stacking the PM's own
+    ``building_throughput_add`` / one-sided goods mults additively (Vic3 order)."""
+    m = defs.pm_building_mults(pm)
+    thr = bonus + m["throughput"]
+    out_factor = max(0.0, 1.0 + thr + m["output_mult"])
+    in_factor = max(0.0, 1.0 + thr + m["input_mult"])
+    return out_factor, in_factor
+
+
+def pm_value_at(pm: str, prices: dict[str, float], defs: GameDefs, bonus: float = 0.0) -> float:
+    """Per-level value-added of a PM, scaled by a throughput ``bonus`` fraction.
+
+    ``bonus`` is the external throughput (economy of scale + researched-tech +
+    active-law) for the building running this PM; 0 reproduces the raw goods
+    value. Throughput scales both sides, so value-added scales with it.
+    """
     flows = defs.pm_goods(pm)
-    return value_flows(flows["input"], flows["output"], prices, defs)
+    out_factor, in_factor = _pm_factors(pm, defs, bonus)
+    rev = sum(price_of(g, prices, defs) * q for g, q in flows["output"].items()) * out_factor
+    cost = sum(price_of(g, prices, defs) * q for g, q in flows["input"].items()) * in_factor
+    return rev - cost
+
+
+def _capacity_dominated(pm: str, others: list[str], defs: GameDefs) -> bool:
+    """True if another unlocked PM matches/beats ``pm`` on every guarded capacity
+    and strictly beats it on one. Such a PM is never the right pick for a
+    capacity building (e.g. an admin slot): choosing it only to save a goods
+    input throws away bureaucracy / tax capacity the goods score can't see."""
+    cap = guarded_capacity(pm, defs)
+    if not cap:
+        return False  # goods-only PMs are never capacity-dominated
+    for other in others:
+        if other == pm:
+            continue
+        ocap = guarded_capacity(other, defs)
+        if all(ocap.get(k, 0.0) >= v for k, v in cap.items()) and any(
+            ocap.get(k, 0.0) > v for k, v in cap.items()
+        ):
+            return True
+    return False
 
 
 def best_pm_in_group(
     group: str, researched: set[str], prices: dict[str, float], defs: GameDefs
 ) -> str | None:
-    """Highest value-added PM in a group that the player's tech unlocks."""
+    """Highest value-added PM in a group that the player's tech unlocks.
+
+    Capacity-dominated PMs are dropped first, so a capacity building keeps the
+    best researched tier rather than collapsing to the cheapest-input PM (whose
+    bureaucracy / tax capacity the goods value cannot account for)."""
+    unlocked = [
+        pm
+        for pm in defs.group_pms(group)
+        if not any(t not in researched for t in defs.pm_unlocking_techs(pm))
+    ]
+    candidates = [pm for pm in unlocked if not _capacity_dominated(pm, unlocked, defs)]
     best: str | None = None
     best_val = None
-    for pm in defs.group_pms(group):
-        if any(t not in researched for t in defs.pm_unlocking_techs(pm)):
-            continue
+    for pm in candidates:
         val = pm_value_at(pm, prices, defs)
         if best_val is None or val > best_val:
             best, best_val = pm, val
@@ -97,24 +152,32 @@ def best_pm_in_group(
 
 # --- footprints -------------------------------------------------------------
 
-def add_flows(into: dict[str, float], pm: str, levels: float, defs: GameDefs) -> None:
-    """Accumulate a PM's net supply (output − input) × levels into ``into``."""
+def add_flows(into: dict[str, float], pm: str, levels: float, defs: GameDefs, bonus: float = 0.0) -> None:
+    """Accumulate a PM's net supply (output − input) × levels into ``into``.
+
+    ``bonus`` is the building's external throughput fraction; it scales the
+    flows the same way it scales value, so price feedback sees the real volumes.
+    """
     flows = defs.pm_goods(pm)
+    out_factor, in_factor = _pm_factors(pm, defs, bonus)
     for g, q in flows["output"].items():
-        into[g] = into.get(g, 0.0) + q * levels
+        into[g] = into.get(g, 0.0) + q * levels * out_factor
     for g, q in flows["input"].items():
-        into[g] = into.get(g, 0.0) - q * levels
+        into[g] = into.get(g, 0.0) - q * levels * in_factor
 
 
-def snapshot_footprint(snap: Snapshot, defs: GameDefs) -> dict[str, float]:
+def snapshot_footprint(
+    snap: Snapshot, defs: GameDefs, throughput: dict[str, float] | None = None
+) -> dict[str, float]:
     """Net supply per good from the player's buildings' *currently active* PMs."""
     fp: dict[str, float] = {}
     for b in snap.buildings:
         levels = max(b.level, 0)
         if not levels:
             continue
+        bonus = throughput.get(b.building_type, 0.0) if throughput else 0.0
         for apm in b.active_pms:
-            add_flows(fp, apm.pm, levels, defs)
+            add_flows(fp, apm.pm, levels, defs, bonus)
     return fp
 
 
@@ -123,6 +186,7 @@ def holdings_footprint(
     researched: set[str],
     prices: dict[str, float],
     defs: GameDefs,
+    throughput: dict[str, float] | None = None,
 ) -> tuple[dict[str, float], dict[str, list[str]]]:
     """Footprint of a building multiset, each running its best available PM.
 
@@ -134,18 +198,21 @@ def holdings_footprint(
     for btype, levels in holdings.items():
         if levels <= 0:
             continue
+        bonus = throughput.get(btype, 0.0) if throughput else 0.0
         pms: list[str] = []
         for group in defs.building_pm_groups(btype):
             pm = best_pm_in_group(group, researched, prices, defs)
             if pm is None:
                 continue
             pms.append(pm)
-            add_flows(fp, pm, levels, defs)
+            add_flows(fp, pm, levels, defs, bonus)
         chosen[btype] = pms
     return fp, chosen
 
 
-def player_gross(snap: Snapshot, defs: GameDefs) -> dict[str, dict[str, float]]:
+def player_gross(
+    snap: Snapshot, defs: GameDefs, throughput: dict[str, float] | None = None
+) -> dict[str, dict[str, float]]:
     """Gross production and consumption per good across the player's buildings.
 
     Used to size market depth on the player's own observed scale. Returns
@@ -156,12 +223,14 @@ def player_gross(snap: Snapshot, defs: GameDefs) -> dict[str, dict[str, float]]:
         levels = max(b.level, 0)
         if not levels:
             continue
+        bonus = throughput.get(b.building_type, 0.0) if throughput else 0.0
         for apm in b.active_pms:
             flows = defs.pm_goods(apm.pm)
+            out_factor, in_factor = _pm_factors(apm.pm, defs, bonus)
             for g, q in flows["output"].items():
-                out[g]["prod"] += q * levels
+                out[g]["prod"] += q * levels * out_factor
             for g, q in flows["input"].items():
-                out[g]["cons"] += q * levels
+                out[g]["cons"] += q * levels * in_factor
     return out
 
 
@@ -185,19 +254,36 @@ class PriceModel:
     share: float
     calibrated: bool = False
     max_dev: float = MAX_DEVIATION
+    # Per-good price-deviation ceiling. Tradeable goods deviate less (world trade
+    # absorbs the imbalance); non-tradeable (services/transportation/electricity/
+    # gold) get the full clamp. Falls back to ``max_dev`` for unknown goods.
+    max_dev_by_good: dict[str, float] = field(default_factory=dict)
 
-    def price(self, good: str, footprint: dict[str, float]) -> float:
+    def _dev(self, good: str) -> float:
+        return self.max_dev_by_good.get(good, self.max_dev)
+
+    def price(
+        self,
+        good: str,
+        footprint: dict[str, float],
+        demand_shift: dict[str, float] | None = None,
+    ) -> float:
         base = self.base_price.get(good)
         if base is None:
             return 0.0
         depth = self.depth.get(good) or _FALLBACK_DEPTH
         df = footprint.get(good, 0.0) - self.base_footprint.get(good, 0.0)
-        gap = self.base_gap.get(good, 0.0) - df  # more own supply ⇒ smaller gap
+        # More own supply ⇒ smaller gap; extra domestic demand ⇒ larger gap.
+        gap = self.base_gap.get(good, 0.0) - df
+        if demand_shift:
+            gap += demand_shift.get(good, 0.0)
         imb = clamp(gap / depth, -1.0, 1.0)
-        return base * (1.0 + self.max_dev * imb)
+        return base * (1.0 + self._dev(good) * imb)
 
-    def prices(self, footprint: dict[str, float]) -> dict[str, float]:
-        return {g: self.price(g, footprint) for g in self.base_price}
+    def prices(
+        self, footprint: dict[str, float], demand_shift: dict[str, float] | None = None
+    ) -> dict[str, float]:
+        return {g: self.price(g, footprint, demand_shift) for g in self.base_price}
 
     def imbalance(self, good: str, footprint: dict[str, float]) -> float:
         """Signed supply/demand imbalance under a footprint (>0 shortage)."""
@@ -237,6 +323,10 @@ def _depth_map(
         else:
             tq = defs.good_traded_quantity(g)
             depth[g] = (tq * depth_per_tq) if (tq and tq > 0) else _FALLBACK_DEPTH
+        # Tradeable goods have extra world-market depth on top of the player's
+        # own, so the same footprint change moves their price less.
+        if defs.good_tradeable(g):
+            depth[g] *= _TRADEABLE_DEPTH_MULT
     return depth
 
 
@@ -245,12 +335,15 @@ def build_price_model(
     defs: GameDefs,
     share: float = 0.25,
     history: list[Snapshot] | None = None,
+    throughput: dict[str, float] | None = None,
 ) -> PriceModel:
     """Construct a :class:`PriceModel` calibrated to a snapshot.
 
     When ``history`` holds enough snapshots, the effective ``share`` is
     calibrated from how the player's own prices moved as their own production
-    changed; otherwise the supplied ``share`` is used.
+    changed; otherwise the supplied ``share`` is used. ``throughput`` (per-type
+    bonus) makes the base footprint reflect the economy's real output volumes,
+    keeping it consistent with the throughput-scaled counterfactual solves.
     """
     calibrated = False
     if history:
@@ -258,21 +351,25 @@ def build_price_model(
         if est is not None:
             share, calibrated = est, True
 
-    gross = player_gross(snap, defs)
+    gross = player_gross(snap, defs, throughput)
     depth = _depth_map(gross, defs, share)
-    base_footprint = snapshot_footprint(snap, defs)
+    base_footprint = snapshot_footprint(snap, defs, throughput)
 
     base_price: dict[str, float] = {}
     base_gap: dict[str, float] = {}
+    max_dev_by_good: dict[str, float] = {}
     market = snap.market_index()
     for g in defs.goods:
         base = defs.good_base_price(g)
         if base is None or base <= 0:
             continue
         base_price[g] = base
+        dev = _TRADEABLE_DEVIATION if defs.good_tradeable(g) else MAX_DEVIATION
+        max_dev_by_good[g] = dev
         mg = market.get(g)
         if mg is not None and mg.price_ratio is not None:
-            imb = clamp((mg.price_ratio - 1.0) / MAX_DEVIATION, -1.0, 1.0)
+            # Invert the *observed* deviation through this good's own ceiling.
+            imb = clamp((mg.price_ratio - 1.0) / dev, -1.0, 1.0)
         else:
             imb = 0.0
         base_gap[g] = imb * (depth.get(g) or _FALLBACK_DEPTH)
@@ -284,7 +381,38 @@ def build_price_model(
         base_footprint=base_footprint,
         share=share,
         calibrated=calibrated,
+        max_dev_by_good=max_dev_by_good,
     )
+
+
+def demand_shift_for(
+    growth_fraction: float,
+    model: PriceModel,
+    defs: GameDefs,
+    elasticity: float,
+    categories: frozenset[str] | None = None,
+) -> dict[str, float]:
+    """Extra demand (in goods units) on consumer goods as the economy grows.
+
+    Richer, more populous countries buy more staples/luxuries, bidding their
+    prices up — so producing them gets *more* valuable as the plan succeeds, a
+    feedback the supply-only model otherwise misses. The shift is sized as
+    ``elasticity × growth_fraction × depth`` so it's comparable to the supply
+    gap the price model already works in.
+    """
+    if not growth_fraction or elasticity <= 0:
+        return {}
+    cats = categories or _CONSUMER_CATEGORIES
+    out: dict[str, float] = {}
+    for g in model.base_price:
+        if defs.good_category(g) in cats:
+            depth = model.depth.get(g) or _FALLBACK_DEPTH
+            out[g] = elasticity * growth_fraction * depth
+    return out
+
+
+# Consumer-goods categories whose demand grows with the economy.
+_CONSUMER_CATEGORIES = frozenset({"staple", "luxury"})
 
 
 def solve_equilibrium(
@@ -295,18 +423,22 @@ def solve_equilibrium(
     iters: int = 16,
     damping: float = 0.5,
     tol: float = 1e-3,
+    throughput: dict[str, float] | None = None,
+    demand_shift: dict[str, float] | None = None,
 ) -> tuple[dict[str, float], dict[str, float], dict[str, list[str]]]:
     """Fixed-point solve for prices given a building multiset.
 
     Re-picks the best PM per slot at the evolving prices each iteration, so the
-    second-order cascades settle. Returns ``(prices, footprint, chosen_pms)``.
+    second-order cascades settle. ``throughput`` scales each type's flows;
+    ``demand_shift`` adds endogenous domestic demand. Returns
+    ``(prices, footprint, chosen_pms)``.
     """
-    prices = model.prices(model.base_footprint)
+    prices = model.prices(model.base_footprint, demand_shift)
     fp: dict[str, float] = {}
     chosen: dict[str, list[str]] = {}
     for _ in range(max(1, iters)):
-        fp, chosen = holdings_footprint(holdings, researched, prices, defs)
-        target = model.prices(fp)
+        fp, chosen = holdings_footprint(holdings, researched, prices, defs, throughput)
+        target = model.prices(fp, demand_shift)
         max_diff = 0.0
         blended: dict[str, float] = {}
         for g, base in model.base_price.items():
