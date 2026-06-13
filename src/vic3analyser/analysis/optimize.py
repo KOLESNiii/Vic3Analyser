@@ -41,14 +41,29 @@ from .capacity import (
     CapacityBudget,
     compute_capacity_budget,
     construction_cost_per_point,
-    points_per_sector_level,
+    construction_points_per_level,
 )
 from .econ_model import (
     PriceModel,
     add_flows,
     best_pm_in_group,
+    demand_shift_for,
     pm_value_at,
     solve_equilibrium,
+)
+from .fiscal import (
+    ADMIN_BUILDING,
+    admin_capacity_per_level,
+    base_bureaucracy_demand,
+    gov_capacity,
+    tax_capture_factor,
+)
+from .labour import labour_pool, staffing_factor
+from .private_construction import private_construction_points_week
+from .production import (
+    building_throughput_bonus,
+    effective_active_laws,
+    throughput_bonus_by_type,
 )
 from .simulate import (
     WEEKS_PER_MONTH,
@@ -57,7 +72,9 @@ from .simulate import (
     aggregate_holdings,
     economy_value_added,
     evaluate_objective,
+    reserve_required,
     simulate_plan,
+    solvency_headroom,
     _tax_capture_rate,
     total_employment,
 )
@@ -88,6 +105,8 @@ class OptimizeResult:
     final_capacity: float = 0.0  # points/week after construction-sector expansion
     sector_levels_added: int = 0
     notes: list[str] = field(default_factory=list)
+    # Non-dominated (growth, solvency, SoL) plans considered, when multi_objective.
+    pareto: list[dict] = field(default_factory=list)
 
 
 def _main_output(opt: BuildOption, researched: set[str], prices: dict[str, float], defs: GameDefs) -> str | None:
@@ -106,7 +125,12 @@ def _main_output(opt: BuildOption, researched: set[str], prices: dict[str, float
 
 
 def _batch_footprint(
-    opt: BuildOption, batch: float, researched: set[str], prices: dict[str, float], defs: GameDefs
+    opt: BuildOption,
+    batch: float,
+    researched: set[str],
+    prices: dict[str, float],
+    defs: GameDefs,
+    bonus: float = 0.0,
 ) -> tuple[dict[str, float], list[str]] | None:
     add_fp: dict[str, float] = {}
     pms: list[str] = []
@@ -115,7 +139,7 @@ def _batch_footprint(
         if pm is None:
             return None
         pms.append(pm)
-        add_flows(add_fp, pm, batch, defs)
+        add_flows(add_fp, pm, batch, defs, bonus)
     return add_fp, pms
 
 
@@ -127,6 +151,19 @@ def _cs_option(defs: GameDefs) -> BuildOption:
         pm_groups=defs.building_pm_groups(CONSTRUCTION_BUILDING),
         unlocking_techs=defs.building_unlocking_techs(CONSTRUCTION_BUILDING),
         building_group="bg_construction",
+        resource_gated=False,
+        max_added_levels=10_000,
+    )
+
+
+def _admin_option(defs: GameDefs) -> BuildOption:
+    """A synthetic build option for government_administration (bureaucracy)."""
+    return BuildOption(
+        building_type=ADMIN_BUILDING,
+        cost_per_level=defs.building_construction_cost(ADMIN_BUILDING) or 0.0,
+        pm_groups=defs.building_pm_groups(ADMIN_BUILDING),
+        unlocking_techs=defs.building_unlocking_techs(ADMIN_BUILDING),
+        building_group=defs.building_group_of(ADMIN_BUILDING),
         resource_gated=False,
         max_added_levels=10_000,
     )
@@ -153,6 +190,7 @@ def _greedy(
     defs: GameDefs,
     model: PriceModel,
     options: list[BuildOption],
+    cfg: OptimizeConfig,
     base_capacity: float,
     horizon_months: int,
     allow_cs: bool = True,
@@ -164,15 +202,32 @@ def _greedy(
     researched = set(snap.tech.researched)
     holdings = aggregate_holdings(snap)
     cap_budget = compute_capacity_budget(snap, defs)
-    per_sector = points_per_sector_level(snap)
+    active_laws = effective_active_laws(snap, defs, cfg)
+    per_sector = construction_points_per_level(snap, defs, researched, cfg)
     has_cs = allow_cs and _can_expand_construction(defs)
     cs_opt = _cs_option(defs) if has_cs else None
+    # Construction sectors are urban (building-slot- and labour-limited); the save
+    # doesn't expose slot counts, so bound their expansion to a sane multiple of
+    # the current footprint and the player's state count. Without this the
+    # greedy can spam thousands of sectors a 4-state country could never place.
+    # (Phase 3's labour budget makes this a hard, principled cap.)
+    _cur_cs = aggregate_holdings(snap).get(CONSTRUCTION_BUILDING, 0.0)
+    cs_expansion_cap = max(_cur_cs * 2.0, len(snap.states) * 5.0, 15.0)
 
-    base_prices, _, base_chosen = solve_equilibrium(holdings, researched, model, defs)
-    base_value = economy_value_added(holdings, base_chosen, base_prices, defs) or 1.0
+    def tp(h: dict[str, float]) -> dict[str, float]:
+        return throughput_bonus_by_type(h, researched, active_laws, defs, cfg)
+
+    def bonus_for(btype: str, level_after: float) -> float:
+        return building_throughput_bonus(btype, level_after, researched, active_laws, defs, cfg)
+
+    base_prices, _, base_chosen = solve_equilibrium(
+        holdings, researched, model, defs, throughput=tp(holdings)
+    )
+    base_value = economy_value_added(holdings, base_chosen, base_prices, defs, tp(holdings)) or 1.0
     gdp0 = snap.country.gdp if snap.country.gdp not in (None, 0) else base_value
     treasury = snap.country.treasury or 0.0
     credit = snap.country.credit_limit or 0.0
+    reserve = reserve_required(snap, cfg)
     base_balance = snap.country.weekly_balance or 0.0
     tax_rate = _tax_capture_rate(snap, gdp0)
     cpp_base = construction_cost_per_point(base_prices, defs, researched, per_sector)
@@ -188,19 +243,133 @@ def _greedy(
     carry = 0.0
     tech_queue: list[str] = []  # tech handled separately; kept for parity
 
+    # Bureaucracy coverage: expansion raises demand ∝ total levels, so the plan
+    # must build government_administration to stay out of deficit (and keep tax
+    # capacity up). We top admin up at each month before pouring into production.
+    base_total_levels = sum(holdings.values()) or 1.0
+    base_bur_demand = base_bureaucracy_demand(snap)
+    admin_per_bur = admin_capacity_per_level(researched, base_prices, defs)[0]
+    admin_cost = defs.building_construction_cost(ADMIN_BUILDING) or 0.0
+    model_bur = cfg.model_bureaucracy and admin_per_bur > 0 and admin_cost > 0
+    admin_opt = _admin_option(defs) if model_bur else None
+    base_tax_capacity = gov_capacity(
+        holdings, snap, researched, base_prices, defs, active_laws, base_total_levels
+    ).tax_capacity
+
+    pool = labour_pool(snap)
+    emp0_labour = total_employment(holdings, base_chosen, defs) or 1.0
+    sol_for_labour = snap.country.avg_sol or 0.0
+
+    def fiscal_gdp_and_tax(
+        h: dict[str, float], raw_gdp: float, chosen: dict[str, list[str]], prices: dict[str, float], month: int
+    ) -> tuple[float, float]:
+        """Apply labour staffing + bureaucracy penalty + tax-capacity throttle, so
+        the search optimises the same constrained objective the forecast scores."""
+        adj = raw_gdp
+        if cfg.model_labour and pool is not None:
+            emp = total_employment(h, chosen, defs)
+            adj *= staffing_factor(pool, emp / emp0_labour, month, cfg, sol_for_labour)
+        if not cfg.model_bureaucracy:
+            return adj, 1.0
+        gov = gov_capacity(h, snap, researched, prices, defs, active_laws, base_total_levels)
+        adj *= 1.0 - gov.bureaucracy_penalty
+        return adj, tax_capture_factor(gov, adj, gdp0, base_tax_capacity)
+
+    base_admin_levels = aggregate_holdings(snap).get(ADMIN_BUILDING, 0.0)
+
+    def admin_levels_needed(h: dict[str, float], gdp_ratio: float = 1.0) -> int:
+        """Admin levels to keep both bureaucracy *and* tax capacity in step.
+
+        Bureaucracy demand grows with economic size; tax capacity must grow with
+        GDP or the tax throttle chokes income (the solvency trap). We target the
+        larger of the two so administration scales with the economy it serves.
+        """
+        if not model_bur or base_total_levels <= 0:
+            return 0
+        demand = base_bur_demand * (sum(h.values()) / base_total_levels)
+        bur_target = demand / admin_per_bur if admin_per_bur > 0 else 0.0
+        # Tax capacity scales linearly with admin levels, so to tax a GDP that is
+        # ``gdp_ratio`` times the start we need ~that many times the admin.
+        tax_target = base_admin_levels * gdp_ratio if base_admin_levels > 0 else 0.0
+        target = max(bur_target, tax_target)
+        have = h.get(ADMIN_BUILDING, 0.0)
+        return int(target - have + 0.999) if target > have else 0
+
     def cap_room(opt: BuildOption) -> float:
         cap = cap_budget.cap_for(opt.building_type)
         if cap is None and opt.resource_gated and cap_budget.has_known_caps:
             return 0.0
         return float("inf") if cap is None else max(0.0, cap - added[opt.building_type])
 
+    gdp_prev = gdp0
     for month in range(1, horizon_months + 1):
-        prices, footprint, chosen = solve_equilibrium(holdings, researched, model, defs)
-        gdp = gdp0 * (economy_value_added(holdings, chosen, prices, defs) / base_value)
+        demand_shift = (
+            demand_shift_for(gdp_prev / gdp0 - 1.0 if gdp0 else 0.0, model, defs, cfg.demand_elasticity)
+            if cfg.model_endogenous_demand
+            else None
+        )
+        prices, footprint, chosen = solve_equilibrium(
+            holdings, researched, model, defs, throughput=tp(holdings), demand_shift=demand_shift
+        )
+        raw_gdp = gdp0 * (economy_value_added(holdings, chosen, prices, defs, tp(holdings)) / base_value)
+        gdp, tax_factor = fiscal_gdp_and_tax(holdings, raw_gdp, chosen, prices, month)
+        gdp_prev = gdp
         weeks_left = (horizon_months - month + 1) * WEEKS_PER_MONTH
         run_fp = dict(footprint)
-        budget = capacity * WEEKS_PER_MONTH + carry
+        cpp = construction_cost_per_point(prices, defs, researched, per_sector)
+        gov_points = capacity * WEEKS_PER_MONTH
+        private_points = (
+            private_construction_points_week(snap, defs, cfg, cpp) * WEEKS_PER_MONTH
+            if cfg.model_investment_pool
+            else 0.0
+        )
+        budget = gov_points + private_points + carry
+        # Only the government share of construction is paid from the treasury;
+        # the investment pool funds the rest. Attribute spend proportionally.
+        treasury_frac = gov_points / (gov_points + private_points) if (gov_points + private_points) > 0 else 1.0
         spent_month = 0.0
+
+        def solvent_after(extra_cost: float) -> bool:
+            if cfg.solvency_policy != "hard_buffer":
+                return True
+            candidate_spent = spent_month + extra_cost
+            spend_week = (candidate_spent / WEEKS_PER_MONTH) * cpp * treasury_frac
+            base_spend_week = base_spend_capacity * cpp_base
+            weekly_balance = (
+                base_balance + tax_rate * (gdp - gdp0) * tax_factor - (spend_week - base_spend_week)
+            )
+            projected = treasury + weekly_balance * WEEKS_PER_MONTH
+            return solvency_headroom(projected, credit, reserve) >= 0
+
+        # Cover bureaucracy first: build government_administration up to demand so
+        # expansion isn't throttled and tax capacity keeps pace (mandatory
+        # overhead, like a player keeping bureaucracy out of the red).
+        if admin_opt is not None:
+            need = admin_levels_needed(holdings, gdp / gdp0 if gdp0 else 1.0)
+            while need > 0 and budget >= admin_cost and solvent_after(admin_cost):
+                a_bonus = bonus_for(ADMIN_BUILDING, holdings.get(ADMIN_BUILDING, 0.0) + 1.0)
+                abf = _batch_footprint(admin_opt, 1.0, researched, model.prices(run_fp), defs, a_bonus)
+                if abf is None:
+                    break
+                for g, v in abf[0].items():
+                    run_fp[g] = run_fp.get(g, 0.0) + v
+                holdings[ADMIN_BUILDING] = holdings.get(ADMIN_BUILDING, 0.0) + 1.0
+                added[ADMIN_BUILDING] += 1.0
+                budget -= admin_cost
+                spent_month += admin_cost
+                order += 1
+                program.append(BuildStep(building_type=ADMIN_BUILDING, levels=1))
+                trace.append(
+                    StepTrace(
+                        order=order,
+                        building_type=ADMIN_BUILDING,
+                        levels=1,
+                        value_per_point=0.0,
+                        key_output="bureaucracy",
+                        key_output_price_ratio=None,
+                    )
+                )
+                need -= 1
 
         for r in range(rounds_per_month):
             if budget <= 0:
@@ -229,14 +398,19 @@ def _greedy(
                     if batch < 1:
                         continue
                     cost = batch * opt.cost_per_level
-                bf = _batch_footprint(opt, batch, researched, cur_prices, defs)
+                if not solvent_after(cost):
+                    continue
+                level_after = holdings.get(opt.building_type, 0.0) + batch
+                bonus = bonus_for(opt.building_type, level_after)
+                bf = _batch_footprint(opt, batch, researched, cur_prices, defs, bonus)
                 if bf is None:
                     continue
                 add_fp, pms = bf
                 new_fp = dict(run_fp)
                 for g, v in add_fp.items():
                     new_fp[g] = new_fp.get(g, 0.0) + v
-                mv = sum(pm_value_at(pm, model.prices(new_fp), defs) for pm in pms) * batch
+                marg_prices = model.prices(new_fp, demand_shift)
+                mv = sum(pm_value_at(pm, marg_prices, defs, bonus) for pm in pms) * batch
                 score = mv / cost if cost > 0 else 0.0
                 if best is None or score > best[0]:
                     good = _main_output(opt, researched, cur_prices, defs)
@@ -251,10 +425,12 @@ def _greedy(
                 and cs_opt is not None
                 and treasury + credit > 0
                 and cs_opt.cost_per_level <= budget
+                and added[CONSTRUCTION_BUILDING] < cs_expansion_cap
             ):
                 batch_cs = max(1.0, round(slice_pts / cs_opt.cost_per_level))
+                batch_cs = min(batch_cs, cs_expansion_cap - added[CONSTRUCTION_BUILDING])
                 cost_cs = batch_cs * cs_opt.cost_per_level
-                if cost_cs <= budget:
+                if cost_cs <= budget and solvent_after(cost_cs):
                     future_points = per_sector * batch_cs * weeks_left
                     cs_value = future_points * max(best_prod_score, 0.0) * _CS_FORESIGHT_DISCOUNT
                     cs_score = cs_value / cost_cs if cost_cs > 0 else 0.0
@@ -298,15 +474,19 @@ def _greedy(
         carry = budget if budget > 0 else 0.0
         total_spent += spent_month
 
-        # Treasury: observed balance + extra tax on GDP growth − extra
-        # construction goods spend above the player's current build rate.
-        cpp = construction_cost_per_point(prices, defs, researched, per_sector)
-        spend_week = (spent_month / WEEKS_PER_MONTH) * cpp
+        # Treasury: observed balance + extra (capacity-throttled) tax on GDP
+        # growth − extra *government* construction spend (the investment pool
+        # funds the private share for free).
+        spend_week = (spent_month / WEEKS_PER_MONTH) * cpp * treasury_frac
         base_spend_week = base_spend_capacity * cpp_base
-        weekly_balance = base_balance + tax_rate * (gdp - gdp0) - (spend_week - base_spend_week)
+        weekly_balance = (
+            base_balance + tax_rate * (gdp - gdp0) * tax_factor - (spend_week - base_spend_week)
+        )
         treasury += weekly_balance * WEEKS_PER_MONTH
 
-    final_prices, _, chosen_pms = solve_equilibrium(holdings, researched, model, defs)
+    final_prices, _, chosen_pms = solve_equilibrium(
+        holdings, researched, model, defs, throughput=tp(holdings)
+    )
     sectors = int(added.get(CONSTRUCTION_BUILDING, 0.0))
     return OptimizeResult(
         added=dict(added),
@@ -352,27 +532,60 @@ def _quick_objective(
     explore many combinations without a full month-by-month sim each time.
     """
     researched = set(snap.tech.researched)
+    active_laws = effective_active_laws(snap, defs, cfg)
     holdings = dict(aggregate_holdings(snap))
     for t, lv in added.items():
         holdings[t] = holdings.get(t, 0.0) + lv
-    prices, _, chosen = solve_equilibrium(holdings, researched, model, defs)
-    val = economy_value_added(holdings, chosen, prices, defs)
+    tp = throughput_bonus_by_type(holdings, researched, active_laws, defs, cfg)
+    prices, _, chosen = solve_equilibrium(holdings, researched, model, defs, throughput=tp)
+    val = economy_value_added(holdings, chosen, prices, defs, tp)
     gdp_final = gdp0 * (val / base_val) if base_val > 0 else gdp0
+
+    # Labour: understaffing at the horizon scales output down.
+    emp = total_employment(holdings, chosen, defs)
+    if cfg.model_labour:
+        pool = labour_pool(snap)
+        if pool is not None and base_emp > 0:
+            gdp_final *= staffing_factor(
+                pool, emp / base_emp, cfg.horizon_months, cfg, snap.country.avg_sol or 0.0
+            )
+
+    # Government capacity: bureaucracy deficit penalises GDP; tax beyond capacity
+    # isn't collected (keeps the end-state objective consistent with the sim).
+    tax_factor = 1.0
+    if cfg.model_bureaucracy:
+        base_total_levels = sum(aggregate_holdings(snap).values()) or 1.0
+        base_tax_capacity = gov_capacity(
+            aggregate_holdings(snap), snap, researched, prices, defs, active_laws, base_total_levels
+        ).tax_capacity
+        gov = gov_capacity(holdings, snap, researched, prices, defs, active_laws, base_total_levels)
+        gdp_final *= 1.0 - gov.bureaucracy_penalty
+        tax_factor = tax_capture_factor(gov, gdp_final, gdp0, base_tax_capacity)
     growth = (gdp_final - gdp0) / gdp0 if gdp0 else 0.0
 
-    emp = total_employment(holdings, chosen, defs)
     sol_term = (cfg.weight_sol and (emp - base_emp) / (base_emp or 1.0) * 5.0) or 0.0
 
     treasury = snap.country.treasury or 0.0
     credit = snap.country.credit_limit or 0.0
+    reserve = reserve_required(snap, cfg)
     base_balance = snap.country.weekly_balance or 0.0
     inc = snap.country.weekly_income or 0.0
     tax = max(0.0, min(inc / gdp0, 0.05)) if gdp0 else 0.0
-    avg_balance = base_balance + tax * ((gdp_final - gdp0) / 2.0)
+    avg_balance = base_balance + tax * ((gdp_final - gdp0) / 2.0) * tax_factor
     weeks = WEEKS_PER_MONTH * cfg.horizon_months
     end_treasury = treasury + avg_balance * weeks
     insolvent = (end_treasury + credit < 0) or (treasury + credit < 0)
-    solvency_term = (-1.0 + end_treasury / (abs(credit) + 1.0)) if insolvent else 0.1
+    min_headroom = min(
+        solvency_headroom(treasury, credit, reserve),
+        solvency_headroom(end_treasury, credit, reserve),
+    )
+    feasible = min_headroom >= 0
+    if not feasible:
+        solvency_term = -1.0 + (min_headroom / (abs(credit) + reserve + 1.0))
+    elif insolvent:
+        solvency_term = -1.0 + end_treasury / (abs(credit) + 1.0)
+    else:
+        solvency_term = 0.1
 
     if cfg.objective == "gdp":
         score = gdp_final
@@ -382,7 +595,9 @@ def _quick_objective(
         score = end_treasury
     else:
         score = cfg.weight_gdp * growth + cfg.weight_sol * sol_term + cfg.weight_solvency * solvency_term
-    if insolvent and cfg.objective in ("gdp", "growth", "cash"):
+    if cfg.solvency_policy == "hard_buffer" and not feasible:
+        score = -1_000_000_000.0 + solvency_term
+    elif insolvent and cfg.objective in ("gdp", "growth", "cash"):
         score -= abs(score) * 0.5 + 1.0
     return score
 
@@ -424,14 +639,21 @@ def _refine(
     researched = set(snap.tech.researched)
 
     base_holdings = aggregate_holdings(snap)
-    base_prices, _, base_chosen = solve_equilibrium(base_holdings, researched, model, defs)
-    base_val = economy_value_added(base_holdings, base_chosen, base_prices, defs) or 1.0
+    base_active_laws = effective_active_laws(snap, defs, cfg)
+    base_tp = throughput_bonus_by_type(base_holdings, researched, base_active_laws, defs, cfg)
+    base_prices, _, base_chosen = solve_equilibrium(
+        base_holdings, researched, model, defs, throughput=base_tp
+    )
+    base_val = economy_value_added(base_holdings, base_chosen, base_prices, defs, base_tp) or 1.0
     gdp0 = snap.country.gdp if snap.country.gdp not in (None, 0) else base_val
     base_emp = total_employment(base_holdings, base_chosen, defs) or 1.0
 
-    # Keep construction sectors fixed; only shuffle production around them.
-    sectors = {t: lv for t, lv in start.items() if t == CONSTRUCTION_BUILDING}
-    prod = {t: lv for t, lv in start.items() if lv > 0 and t != CONSTRUCTION_BUILDING}
+    # Keep capacity buildings (construction sectors + administration) fixed; only
+    # shuffle production around them, so the hill-climb can't break bureaucracy
+    # coverage or undo a construction-capacity decision.
+    fixed_types = {CONSTRUCTION_BUILDING, ADMIN_BUILDING}
+    sectors = {t: lv for t, lv in start.items() if t in fixed_types}
+    prod = {t: lv for t, lv in start.items() if lv > 0 and t not in fixed_types}
     budget_total = _total_cost(prod, cost_by_type)
 
     def obj(production: dict[str, float]) -> float:
@@ -440,6 +662,14 @@ def _refine(
         )
 
     best_score = obj(prod)
+    # Simulated annealing keeps a *current* state that may be worse than the best
+    # seen, so it can climb out of the local optimum greedy hill-climbing gets
+    # stuck in. Temperature is scaled to the objective and cooled geometrically.
+    anneal = cfg.search_algo == "anneal"
+    cur, cur_score = dict(prod), best_score
+    temp0 = max(abs(best_score) * 0.10, 1e-3)
+    cooling = 0.92
+
     def has_room(o: BuildOption) -> bool:
         cap = cap_budget.cap_for(o.building_type)
         if cap is None and o.resource_gated and cap_budget.has_known_caps:
@@ -458,8 +688,8 @@ def _refine(
     if not buildable:
         return start
 
-    for _ in range(effort):
-        cand = dict(prod)
+    for i in range(effort):
+        cand = dict(cur)
         move = rng.random()
         donors = [t for t, lv in cand.items() if lv > 0]
         opt = rng.choice(buildable)
@@ -483,9 +713,26 @@ def _refine(
         if _violates_caps(cand, cap_budget):
             continue
         score = obj(cand)
-        if score > best_score:
+        if anneal:
+            temp = temp0 * (cooling ** (i * 10.0 / max(effort, 1)))
+            delta = score - cur_score
+            if delta >= 0 or rng.random() < _accept_prob(delta, temp):
+                cur, cur_score = cand, score
+            if score > best_score:
+                best_score, prod = score, cand  # always remember the best seen
+        elif score > best_score:
             best_score, prod = score, cand
+            cur, cur_score = cand, score
     return {**sectors, **prod}
+
+
+def _accept_prob(delta: float, temp: float) -> float:
+    """Metropolis acceptance probability for a worse move (delta < 0)."""
+    if temp <= 0:
+        return 0.0
+    import math
+
+    return math.exp(max(-50.0, delta / temp))
 
 
 # --- tech scheduling --------------------------------------------------------
@@ -548,6 +795,7 @@ def _assemble(
     snap: Snapshot,
     defs: GameDefs,
     model: PriceModel,
+    cfg: OptimizeConfig,
 ) -> OptimizeResult:
     """Build an ordered plan from a greedy result + refined production levels."""
     order_index = {st.building_type: i for i, st in enumerate(greedy.trace)}
@@ -557,8 +805,12 @@ def _assemble(
     holdings = dict(aggregate_holdings(snap))
     for t, lv in refined_added.items():
         holdings[t] = holdings.get(t, 0.0) + lv
+    researched = set(snap.tech.researched)
+    tp = throughput_bonus_by_type(
+        holdings, researched, effective_active_laws(snap, defs, cfg), defs, cfg
+    )
     final_prices, _, chosen_pms = solve_equilibrium(
-        holdings, set(snap.tech.researched), model, defs
+        holdings, researched, model, defs, throughput=tp
     )
     res = OptimizeResult(
         added={t: lv for t, lv in refined_added.items() if lv >= 1},
@@ -573,6 +825,43 @@ def _assemble(
         sector_levels_added=greedy.sector_levels_added,
     )
     return res
+
+
+def _pareto_frontier(candidates: list[tuple]) -> list[dict]:
+    """Non-dominated plans on (GDP growth ↑, min headroom ↑, final SoL ↑).
+
+    Surfaces the genuine trade-offs between the plans the search evaluated, so
+    the report can show "more growth costs solvency headroom" rather than only
+    the single objective-optimal plan.
+    """
+    pts = [
+        {
+            "growth_pct": round(fc.annual_growth_rate * 100, 1),
+            "min_headroom": round(fc.min_headroom),
+            "final_sol": round(fc.final_sol, 1),
+            "feasible": fc.solvency_feasible,
+            "total_levels": int(sum(res.added.values())),
+            "_key": (fc.annual_growth_rate, fc.min_headroom, fc.final_sol),
+        }
+        for res, fc in candidates
+    ]
+
+    def dominated(a: dict, b: dict) -> bool:  # b dominates a?
+        ge = all(b["_key"][i] >= a["_key"][i] for i in range(3))
+        gt = any(b["_key"][i] > a["_key"][i] for i in range(3))
+        return ge and gt
+
+    front = [p for p in pts if not any(dominated(p, q) for q in pts if q is not p)]
+    # Dedup and drop the sort key; biggest growth first.
+    seen: set = set()
+    out: list[dict] = []
+    for p in sorted(front, key=lambda p: -p["_key"][0]):
+        key = p["_key"]
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({k: v for k, v in p.items() if k != "_key"})
+    return out
 
 
 def optimize_growth(
@@ -593,17 +882,31 @@ def optimize_growth(
 
     best_res: OptimizeResult | None = None
     best_score = float("-inf")
+    frontier: list[tuple[OptimizeResult, object]] = []
+
+    def _forecast(res: OptimizeResult):
+        return simulate_plan(snap, defs, model, res.plan, capacity, horizon, cfg=cfg, pace=True)
+
     for allow_cs in (True, False):
-        greedy = _greedy(snap, defs, model, options, capacity, horizon, allow_cs=allow_cs)
+        greedy = _greedy(snap, defs, model, options, cfg, capacity, horizon, allow_cs=allow_cs)
+        # Refinement optimises a fast *proxy* objective, which can diverge from
+        # the full forecast; score the unrefined greedy plan too and keep
+        # whichever actually wins, so refinement can only help.
+        candidates = [_assemble(greedy, greedy.added, snap, defs, model, cfg)]
         refined = _refine(snap, defs, model, options, greedy.added, cfg, cap_budget)
-        res = _assemble(greedy, refined, snap, defs, model)
-        fc = simulate_plan(snap, defs, model, res.plan, capacity, horizon)
-        score, _ = evaluate_objective(fc, cfg, snap.country.credit_limit or 0.0)
-        if score > best_score:
-            best_score, best_res = score, res
+        if refined != greedy.added:
+            candidates.append(_assemble(greedy, refined, snap, defs, model, cfg))
+        for res in candidates:
+            fc = _forecast(res)
+            frontier.append((res, fc))
+            score = evaluate_objective(fc, cfg, snap.country.credit_limit or 0.0)[0]
+            if score > best_score:
+                best_score, best_res = score, res
 
     res = best_res
     assert res is not None
+    if cfg.multi_objective:
+        res.pareto = _pareto_frontier(frontier)
 
     economic_types = {o.building_type for o in options}
     holdings = dict(aggregate_holdings(snap))

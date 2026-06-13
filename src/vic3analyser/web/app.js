@@ -226,6 +226,8 @@ async function runStrategy() {
   params.set("objective", $("#strat-objective").value);
   params.set("horizon", $("#strat-horizon").value || "60");
   params.set("effort", $("#strat-effort").value || "200");
+  params.set("solvency_policy", "hard_buffer");
+  params.set("solvency_buffer_weeks", $("#strat-buffer-weeks").value || "12");
   const cap = $("#strat-capacity").value;
   if (cap) params.set("capacity", cap);
   try {
@@ -246,16 +248,28 @@ function renderStrategy(d) {
   const s = d.summary;
   const cards = $("#strat-cards");
   cards.innerHTML = "";
-  const insolvent = s.ever_insolvent;
+  const feasible = s.solvency_feasible;
   const items = [
     ["GDP uplift", s.gdp_uplift_pct == null ? "—" : signed(s.gdp_uplift_pct, 1) + "%"],
     ["Annual growth", signed(s.annual_growth_pct, 1) + "%"],
     ["GDP " + s.horizon_months + "mo", fmt(s.optimized_gdp)],
     ["Final treasury", fmt(s.final_treasury)],
+    ["Reserve needed", fmt(s.reserve_required)],
+    ["Min headroom", fmt(s.min_headroom)],
+    ["Solvency", feasible ? "Feasible" : "Below reserve"],
     ["Std. of living", `${fmt(s.sol0, 1)} → ${fmt(s.final_sol, 1)}`],
     ["Levels to build", fmt(s.total_levels)],
     ["Construction", `${fmt(s.construction_start_capacity, 0)} → ${fmt(s.construction_final_capacity, 0)}/wk`],
   ];
+  if (s.construction_frame_points_mult > 1) {
+    items.push(["Frame upgrade", `${s.construction_frame_current} → ${s.construction_frame_best} (×${fmt(s.construction_frame_points_mult, 2)})`]);
+  }
+  if (s.economic_law) {
+    items.push(["Economic law", s.economic_law + (s.economic_law_scenario ? " (scenario)" : "")]);
+  }
+  if (s.investment_pool_weekly) {
+    items.push(["Private build", `${fmt(s.investment_pool_weekly, 0)}/wk pool`]);
+  }
   for (const [label, value] of items) {
     cards.append(el("div", { class: "card" }, [el("div", { class: "label" }, label), el("div", { class: "value", html: String(value) })]));
   }
@@ -264,11 +278,24 @@ function renderStrategy(d) {
   const banner = $("#strat-assumptions");
   banner.classList.remove("hidden");
   const notes = (a.notes || []).join(" ");
+  let solvencyNote = "";
+  if (!feasible) {
+    solvencyNote = s.baseline_solvency_feasible
+      ? ' <span class="neg">No growth plan stayed above the reserve; showing the least bad candidate.</span>'
+      : ' <span class="neg">Baseline is already below the reserve; rebuild cash headroom before expanding.</span>';
+  }
   banner.innerHTML =
     `<b>Assumptions (estimates):</b> objective “${s.objective}”, horizon ${s.horizon_months} months, ` +
     `construction ${fmt(a.construction_capacity, 0)}/wk ${a.capacity_from_save ? "(from save)" : "(estimated)"}, ` +
+    `reserve ${fmt(s.reserve_required)} (${fmt(s.solvency_buffer_weeks, 0)} weeks expenses), ` +
     `market share ${fmt(a.world_market_share * 100, 0)}% ${a.elasticity_calibrated ? "(calibrated from history)" : "(assumed)"}. ` +
-    notes + (insolvent ? ' <span class="neg">⚠ plan risks insolvency — consider a safer objective.</span>' : "");
+    notes + solvencyNote +
+    ((d.pareto && d.pareto.length > 1)
+      ? "<br><b>Growth vs solvency trade-off:</b> " +
+        d.pareto
+          .map((p) => `${signed(p.growth_pct, 1)}%/yr @ headroom ${fmt(p.min_headroom)}${p.feasible ? "" : " (below reserve)"}`)
+          .join("  ·  ")
+      : "");
 
   // forecast charts
   const labels = d.series.months;

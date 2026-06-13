@@ -19,11 +19,13 @@ from ..config import OptimizeConfig
 from ..extract.models import Snapshot
 from ..ingest.defs import GameDefs
 from .actions import economic_build_options, tech_options
-from .capacity import CONSTRUCTION_BUILDING, allocate_build_levels
+from .capacity import CONSTRUCTION_BUILDING, allocate_build_levels, construction_pm_upgrade
 from .econ_model import PriceModel, best_pm_in_group, build_price_model, pm_value_at
 from .optimize import OptimizeResult, optimize_growth
+from .production import effective_active_laws, throughput_bonus_by_type
 from .simulate import (
     Forecast,
+    aggregate_holdings,
     estimate_capacity,
     evaluate_objective,
     forecast_baseline,
@@ -42,6 +44,7 @@ class StrategyReport:
     cascade: list[str] = field(default_factory=list)
     price_outlook: list[dict] = field(default_factory=list)
     objective_breakdown: dict = field(default_factory=dict)
+    pareto: list[dict] = field(default_factory=list)
 
 
 def _short(name: str) -> str:
@@ -243,15 +246,43 @@ def build_strategy(
         cfg.construction_capacity if cfg.construction_capacity else estimate_capacity(snap, defs)
     )
 
-    model = build_price_model(snap, defs, share=cfg.world_market_share, history=history)
-    res = optimize_growth(snap, defs, model, cfg, cap, horizon)
+    base_throughput = throughput_bonus_by_type(
+        aggregate_holdings(snap),
+        set(snap.tech.researched),
+        effective_active_laws(snap, defs, cfg),
+        defs,
+        cfg,
+    )
+    model = build_price_model(
+        snap, defs, share=cfg.world_market_share, history=history, throughput=base_throughput
+    )
 
-    opt_fc = simulate_plan(snap, defs, model, res.plan, cap, horizon, label="optimized")
-    base_fc = forecast_baseline(snap, defs, model, cap, horizon)
+    # Upgrading existing construction sectors to the best researched frame is an
+    # instant PM switch (no build), so it lifts the plan's *starting* capacity.
+    # The do-nothing baseline keeps the current frame.
+    cur_frame, best_frame, frame_mult = construction_pm_upgrade(
+        snap, defs, set(snap.tech.researched), cfg
+    )
+    cap_opt = cap * frame_mult
+
+    res = optimize_growth(snap, defs, model, cfg, cap_opt, horizon)
+
+    opt_fc = simulate_plan(
+        snap, defs, model, res.plan, cap_opt, horizon, label="optimized", cfg=cfg, pace=True
+    )
+    base_fc = forecast_baseline(snap, defs, model, cap, horizon, cfg=cfg)
     score, breakdown = evaluate_objective(opt_fc, cfg, snap.country.credit_limit or 0.0)
+
+    econ_law = next(
+        (l for l in effective_active_laws(snap, defs, cfg) if defs.law_group(l) == "lawgroup_economic_system"),
+        None,
+    )
+    pool_week = snap.country.investment_pool_weekly or 0.0
 
     summary = {
         "objective": cfg.objective,
+        "solvency_policy": cfg.solvency_policy,
+        "solvency_buffer_weeks": cfg.solvency_buffer_weeks,
         "horizon_months": horizon,
         "gdp0": round(opt_fc.gdp0),
         "baseline_gdp": round(base_fc.final_gdp),
@@ -262,20 +293,48 @@ def build_strategy(
         "annual_growth_pct": round(opt_fc.annual_growth_rate * 100, 1),
         "final_treasury": round(opt_fc.final_treasury),
         "min_treasury": round(opt_fc.min_treasury),
+        "reserve_required": round(opt_fc.reserve_required),
+        "min_headroom": round(opt_fc.min_headroom),
+        "solvency_feasible": opt_fc.solvency_feasible,
+        "baseline_solvency_feasible": base_fc.solvency_feasible,
         "ever_insolvent": opt_fc.ever_insolvent,
         "sol0": round(opt_fc.sol0, 1),
         "final_sol": round(opt_fc.final_sol, 1),
         "total_levels": int(sum(res.added.values())),
+        "construction_capacity_current": round(cap, 1),
         "construction_start_capacity": round(res.capacity, 1),
         "construction_final_capacity": round(res.final_capacity or res.capacity, 1),
         "construction_sector_levels_added": res.sector_levels_added,
+        "construction_frame_current": _short(cur_frame) if cur_frame else None,
+        "construction_frame_best": _short(best_frame) if best_frame else None,
+        "construction_frame_points_mult": round(frame_mult, 2),
+        "economic_law": _short(econ_law) if econ_law else None,
+        "economic_law_scenario": bool(cfg.assumed_economic_law),
+        "investment_pool_weekly": round(pool_week),
         "score": round(score, 4),
     }
+    if frame_mult > 1.0:
+        res.notes.append(
+            f"Upgrade construction sectors {_short(cur_frame)}→{_short(best_frame)} "
+            f"(an instant PM switch): construction capacity "
+            f"{cap:,.0f}→{cap_opt:,.0f}/wk (×{frame_mult:.2f}) before any new building."
+        )
+
+    # Economic-system law + private (investment-pool-funded) construction.
+    if cfg.model_investment_pool and pool_week > 0:
+        scenario = " (scenario)" if cfg.assumed_economic_law else ""
+        res.notes.append(
+            f"Economic system: {_short(econ_law) if econ_law else 'unknown'}{scenario}; "
+            f"investment pool adds ~{pool_week:,.0f}/wk of private, treasury-free "
+            f"construction on top of the government queue."
+        )
     assumptions = {
         "construction_capacity": round(cap, 1),
         "capacity_from_save": bool(snap.construction.points_per_week),
         "world_market_share": round(model.share, 3),
         "elasticity_calibrated": model.calibrated,
+        "solvency_policy": cfg.solvency_policy,
+        "solvency_buffer_weeks": cfg.solvency_buffer_weeks,
         "notes": res.notes,
         "estimated": True,
     }
@@ -290,4 +349,5 @@ def build_strategy(
         cascade=_cascade_narrative(snap, model, res),
         price_outlook=_price_outlook(model, res),
         objective_breakdown={k: round(v, 4) for k, v in breakdown.items()},
+        pareto=res.pareto,
     )

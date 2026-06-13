@@ -72,6 +72,29 @@ def _defs() -> GameDefs:
     )
 
 
+def _defs_with_construction() -> GameDefs:
+    d = _defs()
+    d.goods["wood"] = {"cost": 20, "category": "industrial", "traded_quantity": 10}
+    d.production_methods["pm_costly_construction"] = {
+        "building_modifiers": {
+            "workforce_scaled": {
+                "goods_input_wood_add": 100,
+                "building_employment_laborers_add": 5000,
+            }
+        },
+        "unlocking_technologies": [],
+    }
+    d.production_method_groups["pmg_construction"] = {
+        "production_methods": ["pm_costly_construction"]
+    }
+    d.building_types["building_construction_sector"] = {
+        "production_method_groups": ["pmg_construction"],
+        "building_group": "bg_construction",
+        "required_construction": "construction_cost_very_low",
+    }
+    return d
+
+
 def _snap(steel_price: float = 95.0, **country_over) -> Snapshot:
     country = dict(
         tag="GBR", gdp=100000.0, treasury=20000.0, weekly_income=700.0,
@@ -244,6 +267,64 @@ def test_simulate_gdp_uses_scale_invariant_ratio():
     assert fc.final_gdp > fc.gdp0
 
 
+def test_objective_prefers_more_growth_when_solvent():
+    d = _defs()
+    s = _snap(treasury=100000.0, credit_limit=100000.0)
+    m = em.build_price_model(s, d, share=0.25)
+    cfg = _cfg(objective="growth")
+    low = sim.simulate_plan(
+        s, d, m, sim.Plan(build_program=[sim.BuildStep("building_iron_mine", 1)]), 50.0, 24, cfg=cfg
+    )
+    high = sim.simulate_plan(
+        s, d, m, sim.Plan(build_program=[sim.BuildStep("building_iron_mine", 8)]), 50.0, 24, cfg=cfg
+    )
+    low_score, _ = sim.evaluate_objective(low, cfg, s.country.credit_limit)
+    high_score, _ = sim.evaluate_objective(high, cfg, s.country.credit_limit)
+    assert high.solvency_feasible and low.solvency_feasible
+    assert high_score > low_score
+
+
+def test_infeasible_plan_loses_to_feasible_plan():
+    d = _defs_with_construction()
+    s = _snap(
+        treasury=8000.0,
+        weekly_income=500.0,
+        weekly_expense=500.0,
+        weekly_balance=0.0,
+        credit_limit=0.0,
+    )
+    cfg = _cfg(objective="growth", solvency_buffer_weeks=12)
+    m = em.build_price_model(s, d, share=0.25)
+    feasible = sim.simulate_plan(s, d, m, sim.Plan(), 80.0, 12, cfg=cfg)
+    infeasible = sim.simulate_plan(
+        s,
+        d,
+        m,
+        sim.Plan(build_program=[sim.BuildStep("building_steel_mill", 20)]),
+        80.0,
+        12,
+        cfg=cfg,
+    )
+    feasible_score, _ = sim.evaluate_objective(feasible, cfg, s.country.credit_limit)
+    infeasible_score, breakdown = sim.evaluate_objective(infeasible, cfg, s.country.credit_limit)
+    assert feasible.solvency_feasible
+    assert not infeasible.solvency_feasible
+    assert breakdown["reserve_required"] == 6000.0
+    assert feasible_score > infeasible_score
+
+
+def test_missing_weekly_expense_means_zero_reserve():
+    d = _defs()
+    s = _snap(weekly_expense=None)
+    cfg = _cfg(objective="growth", solvency_buffer_weeks=12)
+    m = em.build_price_model(s, d, share=0.25)
+    fc = sim.simulate_plan(s, d, m, sim.Plan(), 40.0, 6, cfg=cfg)
+    score, breakdown = sim.evaluate_objective(fc, cfg, s.country.credit_limit)
+    assert fc.reserve_required == 0.0
+    assert breakdown["reserve_required"] == 0.0
+    assert isinstance(score, float)
+
+
 # --- optimizer --------------------------------------------------------------
 
 def _cfg(**over) -> OptimizeConfig:
@@ -261,6 +342,36 @@ def test_optimizer_diversifies_under_feedback():
     assert len(res.added) >= 2
     # building steel raises iron/coal demand, so an input producer is picked too
     assert any(t in res.added for t in ("building_iron_mine", "building_coal_mine"))
+
+
+def test_refinement_never_worse_than_unrefined():
+    # Refinement is scored against the unrefined greedy plan on the *true*
+    # objective, so neither search algorithm can do worse than no refinement.
+    d = _defs()
+    s = _snap()
+    m = em.build_price_model(s, d, share=0.3)
+
+    def score(**over) -> float:
+        cfg = _cfg(objective="growth", **over)
+        res = opt.optimize_growth(s, d, m, cfg, capacity=40.0)
+        fc = sim.simulate_plan(s, d, m, res.plan, 40.0, cfg.horizon_months, cfg=cfg, pace=True)
+        return fc.annual_growth_rate
+
+    baseline = score(search_effort=0)
+    assert score(search_algo="greedy", search_effort=80) >= baseline - 1e-9
+    assert score(search_algo="anneal", search_effort=80) >= baseline - 1e-9
+
+
+def test_multi_objective_emits_pareto_frontier():
+    d = _defs()
+    s = _snap()
+    m = em.build_price_model(s, d, share=0.3)
+    res = opt.optimize_growth(s, d, m, _cfg(multi_objective=True), capacity=40.0)
+    assert res.pareto  # at least one non-dominated plan
+    assert all("growth_pct" in p and "min_headroom" in p for p in res.pareto)
+    # Without the flag the frontier stays empty (no extra cost).
+    res2 = opt.optimize_growth(s, d, m, _cfg(multi_objective=False), capacity=40.0)
+    assert res2.pareto == []
 
 
 def test_optimizer_respects_budget():
@@ -293,6 +404,39 @@ def test_optimizer_beats_naive_single_good():
     naive_score, _ = sim.evaluate_objective(naive_fc, cfg, s.country.credit_limit)
 
     assert opt_score >= naive_score
+
+
+def test_optimizer_rejects_high_growth_construction_plan_that_breaches_reserve():
+    d = _defs_with_construction()
+    s = _snap(
+        treasury=30000.0,
+        weekly_income=5000.0,
+        weekly_expense=2000.0,
+        weekly_balance=0.0,
+        credit_limit=0.0,
+    )
+    s.construction.points_per_week = 40.0
+    s.construction.points_per_sector_level = 40.0
+    cfg = _cfg(objective="growth", horizon_months=36, search_effort=40, solvency_buffer_weeks=12)
+    m = em.build_price_model(s, d, share=0.3)
+
+    aggressive = sim.Plan(
+        build_program=[
+            sim.BuildStep("building_construction_sector", 4),
+            sim.BuildStep("building_iron_mine", 40),
+            sim.BuildStep("building_coal_mine", 40),
+            sim.BuildStep("building_steel_mill", 40),
+            sim.BuildStep("building_tools_workshop", 40),
+        ]
+    )
+    aggressive_fc = sim.simulate_plan(s, d, m, aggressive, 40.0, cfg.horizon_months, cfg=cfg)
+    res = opt.optimize_growth(s, d, m, cfg, capacity=40.0)
+    opt_fc = sim.simulate_plan(s, d, m, res.plan, 40.0, cfg.horizon_months, cfg=cfg)
+
+    assert aggressive_fc.final_gdp > opt_fc.final_gdp
+    assert not aggressive_fc.solvency_feasible
+    assert opt_fc.solvency_feasible
+    assert res.added.get("building_construction_sector", 0) == 0
 
 
 # --- strategy report --------------------------------------------------------

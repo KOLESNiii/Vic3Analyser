@@ -46,10 +46,10 @@
       <div class="strategy-controls">
         <label>Objective
           <select id="strat-objective">
-            <option value="composite">Composite (GDP + SoL + solvency)</option>
-            <option value="gdp">Max GDP</option>
-            <option value="growth">Max growth rate</option>
+            <option value="growth" selected>Max growth, solvent</option>
+            <option value="gdp">Max GDP, solvent</option>
             <option value="cash">Max treasury</option>
+            <option value="composite">Composite (GDP + SoL + solvency)</option>
           </select>
         </label>
         <label>Horizon (months)
@@ -60,6 +60,9 @@
         </label>
         <label>Search effort
           <input id="strat-effort" type="number" min="0" max="2000" step="50" value="200" />
+        </label>
+        <label>Reserve weeks
+          <input id="strat-buffer-weeks" type="number" min="0" max="104" step="1" value="12" />
         </label>
         <button id="strat-run" class="primary">Plan</button>
         <span id="strat-msg" class="hint"></span>

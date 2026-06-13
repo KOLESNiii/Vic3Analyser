@@ -7,7 +7,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from vic3analyser.api.server import create_app
-from vic3analyser.config import Config, Paths
+from vic3analyser.config import Config, Paths, load_config
 
 GAMESTATE = """
 meta_data = { version = "1.13.8" game_date = 1836.2.1 }
@@ -139,11 +139,21 @@ def test_full_api_flow(tmp_path):
 
         strategy = client.get(
             "/api/strategy",
-            params={"horizon": 6, "effort": 0, "objective": "composite"},
+            params={
+                "horizon": 6,
+                "effort": 0,
+                "objective": "growth",
+                "solvency_policy": "hard_buffer",
+                "solvency_buffer_weeks": 8,
+            },
         )
         assert strategy.status_code == 200, strategy.text
         payload = strategy.json()
         assert payload["summary"]["horizon_months"] == 6
+        assert payload["summary"]["objective"] == "growth"
+        assert payload["summary"]["solvency_buffer_weeks"] == 8
+        assert "min_headroom" in payload["summary"]
+        assert "reserve_required" in payload["objective_breakdown"]
         assert "build_order" in payload
         assert "series" in payload and len(payload["series"]["months"]) == 6
 
@@ -190,3 +200,23 @@ def test_on_demand_analysis(tmp_path):
         out = client.post("/api/settings", params={"auto_watch": True}).json()
         assert out["auto_watch"] is True and out["watching"] is True
         assert out["watch_mode"] == "autosave"
+
+
+def test_load_config_reads_solvency_defaults(tmp_path):
+    cfg_file = tmp_path / "config.toml"
+    cfg_file.write_text(
+        """
+        [paths]
+        data_dir = "data"
+
+        [optimize]
+        objective = "growth"
+        solvency_policy = "hard_buffer"
+        solvency_buffer_weeks = 10
+        """
+    )
+
+    cfg = load_config(cfg_file)
+    assert cfg.optimize.objective == "growth"
+    assert cfg.optimize.solvency_policy == "hard_buffer"
+    assert cfg.optimize.solvency_buffer_weeks == 10

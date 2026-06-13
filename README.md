@@ -19,7 +19,7 @@ mill earns far less than the first) and drains iron and coal (their prices rise,
 the next best thing to build).
 
 The Strategy engine models that feedback and searches for the plan that **maximizes economic
-growth** over a multi-year horizon:
+growth while staying solvent** over a multi-year horizon:
 
 - **Cascading prices.** It inverts Vic3's price mechanic (price is clamped to ±75% of base by
   supply/demand), so the *current* price reveals the *current* imbalance. Market depth is anchored
@@ -31,14 +31,19 @@ growth** over a multi-year horizon:
   Real construction points/week are read from the save when a queue exists, and construction-sector
   expansion is modeled as a growth lever: extra sectors add capacity but consume construction goods
   and can strain the treasury.
+- **Hard solvency buffer.** Plans are only treated as feasible if projected treasury plus credit
+  stays above a reserve buffer for the full forecast. The default reserve is 12 weeks of current
+  expenses, so the optimizer can still borrow for growth but will not recommend a plan that runs the
+  country down to the credit limit.
 - **Trying many combinations.** A greedy water-filling pass allocates each slice of construction to
   the best marginal building *at the evolving equilibrium* (so the marginal winner rotates as goods
   saturate — the cascade), then a local search perturbs the plan to escape local optima.
 - **Capacity-aware placement.** Static state-region definitions supply total arable land and
   capped resource deposits, so farms/mines/logging/fishing are bounded by visible state capacity.
   The build order includes state-level placement slices where those levels can actually fit.
-- **Objectives.** Composite (GDP + standard of living + staying solvent), or pure GDP / growth-rate
-  / treasury — switchable on the dashboard.
+- **Objectives.** Growth rate is the default target, constrained by the solvency buffer. GDP,
+  treasury, and the older composite score are still switchable on the dashboard, but infeasible plans
+  are rejected before objective scores are compared.
 
 Open the **Strategy & Forecast** tab and click **Plan**. Everything is an *estimate* from
 player-visible data: absolute world supply/demand and the exact GDP/SoL formulas aren't in saves, so

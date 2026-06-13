@@ -82,6 +82,8 @@ class AppState:
         capacity: float | None = None,
         objective: str | None = None,
         effort: int | None = None,
+        solvency_policy: str | None = None,
+        solvency_buffer_weeks: float | None = None,
     ) -> dict[str, Any] | None:
         """Run the advanced optimizer/forecaster on demand (it's not cheap, so
         it's separate from the per-refresh ``analyse_all``)."""
@@ -96,6 +98,10 @@ class AppState:
             opt = replace(opt, search_effort=max(0, effort))
         if horizon is not None:
             opt = replace(opt, horizon_months=max(6, horizon))
+        if solvency_policy:
+            opt = replace(opt, solvency_policy=solvency_policy)
+        if solvency_buffer_weeks is not None:
+            opt = replace(opt, solvency_buffer_weeks=max(0.0, solvency_buffer_weeks))
         with self._lock:
             report = build_strategy(
                 snap, self.defs, opt, history=history, capacity=capacity
@@ -281,15 +287,25 @@ def create_app(cfg: Config | None = None) -> FastAPI:
         capacity: float | None = Query(default=None),
         objective: str | None = Query(default=None),
         effort: int | None = Query(default=None),
+        solvency_policy: str | None = Query(default=None),
+        solvency_buffer_weeks: float | None = Query(default=None),
     ) -> Any:
         """Growth-maximizing build plan + forecast for the latest snapshot.
 
         Parameters override the ``[optimize]`` config for this run so the
-        dashboard can re-plan with a different horizon, capacity, objective or
-        search effort.
+        dashboard can re-plan with a different horizon, capacity, objective,
+        solvency policy or search effort.
         """
         try:
-            data = state.strategy(player_tag, horizon, capacity, objective, effort)
+            data = state.strategy(
+                player_tag,
+                horizon,
+                capacity,
+                objective,
+                effort,
+                solvency_policy,
+                solvency_buffer_weeks,
+            )
         except Exception as exc:  # noqa: BLE001 - surface optimizer errors to UI
             raise HTTPException(status_code=500, detail=str(exc)) from exc
         if data is None:
